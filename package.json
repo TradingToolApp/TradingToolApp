@@ -1,0 +1,45 @@
+{
+  "name": "papr",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "seed:latest": "node -r dotenv/config ./src/pages/api/migration/latest.js",
+    "seed:rollback": "node -r dotenv/config ./src/pages/api/migration/rollback.js"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^3.7.0",
+    "@prisma/client": "^5.17.0",
+    "@vercel/postgres": "^0.9.0",
+    "axios": "^1.7.2",
+    "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.5",
+    "formidable": "^3.5.1",
+    "gray-matter": "^4.0.3",
+    "luxon": "^3.0.3",
+    "multer": "^1.4.5-lts.1",
+    "next": "^14.2.4",
+    "next-auth": "^4.24.7",
+    "next-connect": "^1.0.0",
+    "react": "18.2.0",
+    "react-bootstrap": "^2.5.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^5.2.1",
+    "react-responsive-masonry": "^2.1.6",
+    "react-slick": "^0.29.0",
+    "remark": "^14.0.2",
+    "remark-html": "^15.0.1",
+    "rsuite": "^5.65.0",
+    "sharp": "^0.31.1",
+    "slugify": "^1.6.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "eslint": "8.23.0",
+    "eslint-config-next": "12.2.5",
+    "prisma": "^5.17.0"
+  }
+}
