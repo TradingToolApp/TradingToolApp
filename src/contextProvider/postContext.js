@@ -1,6 +1,16 @@
 import React, { createContext, useState, useEffect } from 'react';
 import postAPI from "@/services/posts-api";
-export const PostContext = createContext("")
+
+const contextDefaultValues = {
+    posts,
+    setPosts: (posts) => {},
+    language,
+    setLanguage: (language) => {},
+    loading,
+    error
+};
+
+export const PostContext = createContext(contextDefaultValues)
 
 export const PostProvider = ({ children }) => {
     const [posts, setPosts] = useState([])

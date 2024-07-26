@@ -8,7 +8,6 @@ import { signOut } from "next-auth/react"
 import { PostContext } from "@/contextProvider/postContext";
 import { useRouter } from 'next/router'
 
-
 const HeaderThree = () => {
 	// Main Menu Toggle
 	var menuRef = useRef();
