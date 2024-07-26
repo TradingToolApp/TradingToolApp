@@ -1,16 +1,15 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import {
   Input,
   InputGroup,
   Table,
   Stack,
   SelectPicker,
-  ButtonToolbar,
   Button
 } from "rsuite";
 import SearchIcon from "@rsuite/icons/Search";
 import MoreIcon from "@rsuite/icons/legacy/More";
-import { NameCell, ImageCell, CheckCell, ActionCell } from "./members/Cells";
+import { ActionCell } from "./members/Cells";
 import AddTableRowModal from "./members/AddTableRowModal";
 import { PostContext } from "@/contextProvider/postContext";
 
@@ -24,7 +23,7 @@ const cateList = [
 ];
 
 const TableOne = () => {
-  const { posts, setPosts } = useContext(PostContext);
+  const { posts, loading } = useContext(PostContext);
   const [sortColumn, setSortColumn] = useState();
   const [sortType, setSortType] = useState();
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -72,7 +71,7 @@ const TableOne = () => {
     }
     return filtered;
   };
-
+  
   return (
     <div>
       <Stack className="table-toolbar" style={{ marginTop: "10px" }} justifyContent="space-between">

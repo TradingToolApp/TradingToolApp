@@ -1,16 +1,20 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import MenuData from "../../data/menu/HeaderMenu.json";
 import OffcanvasMenu from "./OffcanvasMenu";
 import Dropdown from "react-bootstrap/Dropdown";
 import { signOut } from "next-auth/react"
+import { PostContext } from "@/contextProvider/postContext";
+import { useRouter } from 'next/router'
+
 
 const HeaderThree = () => {
 	// Main Menu Toggle
 	var menuRef = useRef();
-	const isLoggedIn = false;
-	
+	const router = useRouter();
+	const { language, setLanguage } = useContext(PostContext);
+
 	const toggleDropdownMenu = () => {
 		const dropdownSelect = menuRef.current.childNodes;
 		let dropdownList = [];
@@ -183,12 +187,12 @@ const HeaderThree = () => {
 								</button>
 								<Dropdown className="lang-dropdown m-l-xs-10 m-l-md-30">
 									<Dropdown.Toggle className="btn txt-btn dropdown-toggle" id="lang">
-										En
+										{language ? language : "EN"}
 									</Dropdown.Toggle>
 
 									<Dropdown.Menu>
-										<Dropdown.Item href="#" className="">EN</Dropdown.Item>
-										<Dropdown.Item href="#" className="">VI</Dropdown.Item>
+										<Dropdown.Item onClick={() => setLanguage("EN")}>EN</Dropdown.Item>
+										<Dropdown.Item onClick={() => setLanguage("VN")}>VN</Dropdown.Item>
 									</Dropdown.Menu>
 								</Dropdown>
 
@@ -197,9 +201,12 @@ const HeaderThree = () => {
 									<span />
 									<span />
 								</button> */}
-								<div className="nav-btn-group">
-									<button className="btn btn-primary" onClick={() => signOut({ callbackUrl: '/login', redirect: true })}>SignOut</button>
-								</div>
+								{
+									router.pathname === "/admin/dashboard" &&
+									<div className="nav-btn-group">
+										<button className="btn btn-primary" onClick={() => signOut({ callbackUrl: '/login', redirect: true })}>SignOut</button>
+									</div>
+								}
 							</div>
 
 							<div

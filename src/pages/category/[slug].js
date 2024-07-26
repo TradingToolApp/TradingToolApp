@@ -10,14 +10,16 @@ import WidgetSocialShare from "../../components/widget/WidgetSocialShare";
 import WidgetPost from "../../components/widget/WidgetPost";
 import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
 import WidgetCategory from "../../components/widget/WidgetCategory";
+import { PostProvider } from "@/contextProvider/postContext";
+import prisma from "@/lib/prisma";
 
 
 const PostCategory = ({ postData, allPosts }) => {
     const cateContent = postData[0];
 
     return (
-        <>
-            <HeadMeta metaTitle={cateContent.cate}/>
+        <PostProvider>
+            <HeadMeta metaTitle={cateContent.cate} />
             <HeaderOne />
             <Breadcrumb aPage={cateContent.cate} />
             {/* Banner Start here  */}
@@ -40,7 +42,7 @@ const PostCategory = ({ postData, allPosts }) => {
                             <AdBanner />
                             <div className="axil-content">
                                 {postData.map((data) => (
-                                    <PostLayoutTwo data={data} postSizeMd={true} key={data.slug}/>
+                                    <PostLayoutTwo data={data} postSizeMd={true} key={data.slug} />
                                 ))}
                             </div>
                         </div>
@@ -50,50 +52,26 @@ const PostCategory = ({ postData, allPosts }) => {
                                 <WidgetSocialShare />
                                 <WidgetCategory cateData={allPosts} />
                                 <WidgetPost dataPost={allPosts} />
-                                <WidgetAd img="/images/clientbanner/clientbanner3.jpg" height={492} width={320}/>
+                                <WidgetAd img="/images/clientbanner/clientbanner3.jpg" height={492} width={320} />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <FooterOne />
-        </>
+        </PostProvider>
     );
 }
 
 export default PostCategory;
 
-
-export async function getStaticProps({ params }) {
-
-    const postParams = params.slug;
-
-    const allPosts = getAllPosts([
-        'slug',
-        'cate',
-        'cate_img',
-        'title',
-        'excerpt',
-        'featureImg',
-        'date',
-        'post_views',
-        'read_time',
-        'author_name',
-        'author_social'
-    ]);
-    const getCategoryData = allPosts.filter(post => slugify(post.cate) === postParams);
-    const postData = getCategoryData;
-
-    return {
-        props: {
-            postData,
-            allPosts
-        }
-    }
-}
-
 export async function getStaticPaths() {
-    const posts = getAllPosts(['cate']);
+    // const posts = getAllPosts(['cate']);
+    const posts = await prisma.postEnglish.findMany({
+        select: {
+            cate: true
+        }
+    });
 
     const paths = posts.map(post => ({
         params: {
@@ -106,3 +84,33 @@ export async function getStaticPaths() {
         fallback: false,
     }
 }
+
+export async function getStaticProps({ params }) {
+
+    const postParams = params.slug;
+
+    // const allPosts = getAllPosts([
+    //     'slug',
+    //     'cate',
+    //     'cate_img',
+    //     'title',
+    //     'excerpt',
+    //     'featureImg',
+    //     'date',
+    //     'post_views',
+    //     'read_time',
+    //     'author_name',
+    //     'author_social'
+    // ]);
+    const allPosts = await prisma.postEnglish.findMany({});
+    const getCategoryData = allPosts.filter(post => slugify(post.cate) === postParams);
+    const postData = getCategoryData;
+
+    return {
+        props: {
+            postData,
+            allPosts
+        }
+    }
+}
+

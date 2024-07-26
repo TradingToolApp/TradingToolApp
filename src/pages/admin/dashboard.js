@@ -4,8 +4,6 @@ import HeaderThree from "../../components/header/HeaderThree";
 import SideBarThree from "../../components/sidebar/SideBarThree";
 import dynamic from "next/dynamic";
 import { PostProvider } from "@/contextProvider/postContext";
-import { useSession, signIn, signOut } from "next-auth/react"
-import { redirect } from 'next/navigation'
 
 const TableOne = dynamic(() => import("../../components/table/TableOne"), { ssr: false });
 
@@ -30,3 +28,19 @@ const AdminDashboard = ({ allPosts }) => {
     );
 }
 export default AdminDashboard;
+
+// export const getStaticProps = async () => {
+
+//     const feed = await prisma.post.findMany({
+//         // where: { published: true },
+//         // include: {
+//         //     author: {
+//         //         select: { name: true },
+//         //     },
+//         // },
+//     });
+//     return {
+//         props: { feed },
+//         revalidate: 10,
+//     };
+// };

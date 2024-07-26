@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import AdBanner from "../common/AdBanner";
 import WidgetAd from "../widget/WidgetAd";
 import WidgetCategory from "../widget/WidgetCategory";
@@ -7,8 +8,11 @@ import WidgetPost from "../widget/WidgetPost";
 import WidgetSocialShare from "../widget/WidgetSocialShare";
 import WidgetYoutubeList from "../widget/WidgetYoutubeList";
 import PostLayoutTwo from "./layout/PostLayoutTwo";
+import { PostContext } from "@/contextProvider/postContext";
 
 const PostSectionFive = ({postData, adBanner, pClass}) => {
+    const { posts } = useContext(PostContext);
+    postData = posts;
     return ( 
         <div className={`random-posts ${pClass ?? "section-gap"}`}>
             <div className="container">

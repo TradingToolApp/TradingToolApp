@@ -4235,7 +4235,7 @@ label {
   font-size: 1.4rem;
   line-height: 2.2rem;
   color: var(--grey-dark-four);
-  padding: 0 1rem;
+  /* padding: 0 1rem; */
   margin-bottom: 0;
   transition: all 0.2s;
 }

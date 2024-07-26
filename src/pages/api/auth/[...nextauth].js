@@ -1,6 +1,8 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from 'next-auth/providers/google';
+// import { PrismaAdapter } from '@next-auth/prisma-adapter';
+
 // const bcrypt = require("bcrypt");
 
 const authOptions = {
@@ -61,6 +63,7 @@ const authOptions = {
             return session;
         },
     },
+    // adapter: PrismaAdapter(prisma),
     secret: process.env.NEXTAUTH_SECRET,
     // ... Other options ...
 };

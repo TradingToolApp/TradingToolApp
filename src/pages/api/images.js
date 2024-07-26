@@ -1,8 +1,9 @@
 import multer from "multer";
 import path from "path";
-import { sql } from "@vercel/postgres";
 import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "@/lib/constant";
-import { imageUploadDir } from "@/lib/constant";
+import { imageUploadDir, imageGetDir } from "@/lib/constant";
+import prisma from "@/lib/prisma";
+import uploadToGgDrive from "./utils/uploadDrive";
 
 const fs = require('fs');
 
@@ -24,9 +25,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(
       null,
-      `${Date.now()}-${file.fieldname}${file.originalname.substring(
-        file.originalname.lastIndexOf(".")
-      )}`
+      `${Date.now()}-${file.originalname}`
     );
   },
 });
@@ -46,12 +45,20 @@ const postHandler = async (req, res) => {
 
 const getImages = async (req, res) => {
   try {
-    const files = fs.readdirSync(imageUploadDir);
-    const images = files.map((file) => `/uploadImages/${file}`);
+    // // Get all images from local server
+    // const files = fs.readdirSync(imageUploadDir);
+    // const images = files.map((file) => `/uploadImages/${file}`);
+
+    // Get all images from the database
+    const files = await prisma.image.findMany();
+    const images = files.map((file) => {
+      return { ...file, filepath: `${imageGetDir}/${file.filename}` }
+    }
+    );
 
     res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: images });
   } catch (error) {
-    res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+    res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
   }
 }
 
@@ -73,13 +80,33 @@ const createImages = async (req, res) => {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    // Assuming the uploaded file is saved in the public/uploads folder
-    const fileName = uploadedFile.filename;
-    const filePath = path.join(imageUploadDir, fileName);
+    // Upload the image to Google Drive
+    // For now, Google Drive is used as a backup storage, because imageURL can not be used to render now.
+    const result = await uploadToGgDrive({
+      fileName: uploadedFile.filename,
+      folderName: 'TradingToolApp/images',
+      fileData: Buffer.from(JSON.stringify(uploadedFile)),
+      fileMimeType: uploadedFile.mimetype,
+    });
+    const imageURL = `https://drive.google.com/uc?export=view&id=${result.id}`
 
-    res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: { fileName, filePath }});
+    // Save the image to the database
+    const newImage = await prisma.image.create({
+      data: {
+        originalname: uploadedFile.originalname,
+        filename: uploadedFile.filename,
+        filepath: imageGetDir + '/' + uploadedFile.filename,
+        destination: uploadedFile.destination,
+        mimetype: uploadedFile.mimetype,
+        size: uploadedFile.size,
+        url: imageURL,
+      }
+    });
+
+    res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newImage });
   } catch (error) {
-    res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+    console.log(error)
+    res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
   }
 };
 
@@ -87,11 +114,22 @@ const deleteImages = async (req, res) => {
   const { fileName } = req.body;
 
   try {
+    // Delete the image from the local server
     const filePath = path.join(imageUploadDir, fileName);
     fs.unlinkSync(filePath)
+
+    // Delete the image from the database
+    const image = await prisma.user.delete({
+      where: {
+        filename: fileName,
+      },
+    });
+
   } catch (error) {
     res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
   }
 }
+
+
 
 export default postHandler;

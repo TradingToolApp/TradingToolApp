@@ -15,6 +15,8 @@ const Result = () => {
     )
 }
 
+const handleLogIn = async (e) => {}
+
 const ContactForm = () => {
     const form = useRef();
     const [result, showresult] = useState(false);

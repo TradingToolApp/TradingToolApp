@@ -11,7 +11,8 @@ import SocialShareSide from "./elements/SocialShareSide";
 
 const PostFormatVideo = ({ postData, allData }) => {
   const basePathLink = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH ?? "" : "";
-  
+
+  console.log(postData)
   const postContent = postData.content.replaceAll('/images/', basePathLink + '/images/');
   return (
     <>
@@ -24,14 +25,19 @@ const PostFormatVideo = ({ postData, allData }) => {
                 <article className="post-details">
                   <div className="single-blog-wrapper">
                     <SocialShareSide />
-                    <figure className="post-media">
+                    {/* <figure className="post-media">
                       <video className="plyr-post" id="video-player-1" playsInline controls >
                         <source
-                          src={basePathLink + postData.videoLink}
+                          src="https://www.youtube.com/embed/k9UZV6xPJS8?si=-_b86hW5-lHbQaFc"
+                          // src={basePathLink + postData.videoLink}
                           type="video/mp4"
                         />
                       </video>
-                    </figure>
+                    </figure> */}
+                    {postData.videoLink !== "" &&
+                      <div className="product-des" dangerouslySetInnerHTML={{ __html: postData.videoLink }}>
+                      </div>
+                    }
                     <div
                       dangerouslySetInnerHTML={{ __html: postContent }}
                     ></div>

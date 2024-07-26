@@ -1,29 +1,47 @@
 import axios from 'axios'
 import { revalidatePath } from "next/cache";
 
-export function createPost(fileName, mdxContent, data) { 
+function getPosts(language) {
     try {
-        return axios.post('/api/posts', { fileName, mdxContent, data })
-        revalidatePath("/admin/dashboard", { cache: 'no-store' });
+        return axios.get('/api/posts', { params: { language } })
     } catch (error) {
         console.log(error);
     }
 }
-
-export function updatePost(fileName, mdxContent, data) {
+function createPost(fileName, mdxContent, data, language) {
     try {
-        return axios.put('/api/posts', { fileName, mdxContent, data })
-        revalidatePath("/admin/dashboard", { cache: 'no-store' });
-    } catch (error) {     
-        console.log(error);
-    }
-}
-
-export function deletePost(fileName) {
-    try {
-        return axios.delete('/api/posts', { data: { fileName } })
-        revalidatePath("/admin/dashboard", { cache: 'no-store' });
+        return axios.post('/api/posts', { fileName, mdxContent, data, language })
     } catch (error) {
         console.log(error);
     }
+    revalidatePath("/admin/dashboard", { cache: 'no-store' });
+    revalidatePath("/", { cache: 'no-store' });
 }
+
+function updatePost(fileName, mdxContent, data, language) {
+    try {
+        return axios.put('/api/posts', { fileName, mdxContent, data, language })
+    } catch (error) {
+        console.log(error);
+    }
+    revalidatePath("/admin/dashboard", { cache: 'no-store' }); 
+    revalidatePath("/", { cache: 'no-store' });
+}
+
+function deletePost(fileName, language) {
+    try {
+        return axios.delete('/api/posts', { data: { fileName, language } })
+    } catch (error) {
+        console.log(error);
+    }
+    revalidatePath("/admin/dashboard", { cache: 'no-store' });
+    revalidatePath("/", { cache: 'no-store' });
+}
+
+const postAPI = {
+    getPosts,
+    createPost,
+    updatePost,
+    deletePost
+}
+export default postAPI;

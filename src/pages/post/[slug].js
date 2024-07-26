@@ -11,6 +11,7 @@ import PostFormatStandard from "../../components/post/post-format/PostFormatStan
 import PostFormatText from "../../components/post/post-format/PostFormatText";
 import PostFormatVideo from "../../components/post/post-format/PostFormatVideo";
 import PostSectionSix from "../../components/post/PostSectionSix";
+import prisma from "@/lib/prisma";
 
 
 const PostDetails = ({postContent, allPosts}) => {
@@ -45,40 +46,67 @@ const PostDetails = ({postContent, allPosts}) => {
  
 export default PostDetails;
 
-export async function getStaticProps({ params }) {
-    const post = getPostBySlug(params.slug, [
-		'postFormat',
-		'title',
-		'quoteText',
-		'featureImg',
-		'videoLink',
-		'audioLink',
-		'gallery',
-		'date',
-		'slug',
-		'cate',
-		'cate_bg',
-		'author_name',
-		'author_img',
-		'author_bio',
-		'author_social',
-		'post_views',
-        'post_share',
-		'content',
-	])
-	const content = await markdownToHtml(post.content || '')
+export async function getStaticPaths() {
+	// const posts = getAllPosts(['slug'])
+	const posts = await prisma.postEnglish.findMany({
+		select: {
+			slug: true
+		}
+	});
+	const paths = posts.map(post => ({
+		params: {
+			slug: post.slug
+		}
+	}))
+	console.log(paths)
+	return {
+		paths,
+		fallback: true,
+	}
+}
 
-    const allPosts = getAllPosts([
-		'title',
-		'featureImg',
-		'postFormat',
-		'date',
-		'slug',
-		'cate',
-		'cate_bg',
-		'cate_img',
-		'author_name',
-	  ])
+export async function getStaticProps({ params }) {
+    // const post = getPostBySlug(params.slug, [
+	// 	'postFormat',
+	// 	'title',
+	// 	'quoteText',
+	// 	'featureImg',
+	// 	'videoLink',
+	// 	'audioLink',
+	// 	'gallery',
+	// 	'date',
+	// 	'slug',
+	// 	'cate',
+	// 	'cate_bg',
+	// 	'author_name',
+	// 	'author_img',
+	// 	'author_bio',
+	// 	'author_social',
+	// 	'post_views',
+    //     'post_share',
+	// 	'content',
+	// ])
+	// const content = await markdownToHtml(post.content || '')
+
+    // const allPosts = getAllPosts([
+	// 	'title',
+	// 	'featureImg',
+	// 	'postFormat',
+	// 	'date',
+	// 	'slug',
+	// 	'cate',
+	// 	'cate_bg',
+	// 	'cate_img',
+	// 	'author_name',
+	//   ])
+	const post = await prisma.postEnglish.findUnique({
+		where: {
+			slug: params.slug
+		}
+	});
+	
+	const content = await markdownToHtml(post.content || '')
+	const allPosts = await prisma.postEnglish.findMany({});
 
     return {
         props: {
@@ -91,17 +119,4 @@ export async function getStaticProps({ params }) {
     }
 }
 
-export async function getStaticPaths() {
-	const posts = getAllPosts(['slug'])
-	
-	const paths = posts.map(post => ({
-        params: {
-            slug: post.slug
-		}
-	}))
 
-	return {
-		paths,
-		fallback: false,
-	}
-}

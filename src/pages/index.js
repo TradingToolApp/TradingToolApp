@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { getAllPosts } from "../../lib/api";
 import CategoryOne from "../../src/components/category/CategoryOne";
 import HeadMeta from "../../src/components/elements/HeadMeta";
@@ -6,6 +7,7 @@ import HeaderThree from "../../src/components/header/HeaderThree";
 import PostSectionFive from "../../src/components/post/PostSectionFive";
 import SliderTwo from "../../src/components/slider/SliderTwo";
 import { PostProvider } from "../contextProvider/postContext";
+import prisma from "@/lib/prisma";
 
 const HomeThree = ({ allPosts }) => {
   return (
@@ -23,27 +25,46 @@ const HomeThree = ({ allPosts }) => {
 export default HomeThree;
 
 
-export async function getStaticProps() {
-  const allPosts = getAllPosts([
-    'slug',
-    'postFormat',
-    'story',
-    'trending',
-    'title',
-    'excerpt',
-    'featureImg',
-    'cate',
-    'cate_bg',
-    'cate_img',
-    'author_name',
-    'author_img',
-    'date',
-    'post_views',
-    'post_share',
-  ])
+// export async function getStaticProps() {
+//   const allPosts = getAllPosts([
+//     'slug',
+//     'postFormat',
+//     'story',
+//     'trending',
+//     'title',
+//     'excerpt',
+//     'featureImg',
+//     'cate',
+//     'cate_bg',
+//     'cate_img',
+//     'author_name',
+//     'author_img',
+//     'date',
+//     'post_views',
+//     'post_share',
+//   ])
 
-  return {
-    props: { allPosts }
-  }
-}
+//   return {
+//     props: { allPosts }
+//   }
+// }
+
+// export async function getStaticPaths() {
+//   // const posts = getAllPosts(['slug'])
+//   const posts = await prisma.postEnglish.findMany({
+//     select: {
+//       slug: true
+//     }
+//   });
+//   const paths = posts.map(post => ({
+//     params: {
+//       slug: post.slug
+//     }
+//   }))
+
+//   return {
+//     paths,
+//     fallback: false,
+//   }
+// }
 
