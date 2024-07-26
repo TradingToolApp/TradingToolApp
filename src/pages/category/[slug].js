@@ -78,7 +78,7 @@ export async function getStaticPaths() {
             slug: slugify(post.cate)
         }
     }))
-
+    console.log(paths)
     return {
         paths,
         fallback: false,

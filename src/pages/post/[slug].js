@@ -15,8 +15,7 @@ import PostSectionSix from "../../components/post/PostSectionSix";
 import { PostContext } from "@/contextProvider/postContext";
 import prisma from "@/lib/prisma";
 
-const PostDetails = async ({ postContent, allPosts }) => {
-	const { posts, language } = useContext(PostContext);
+const PostDetails = ({ postContent, allPosts }) => {
 	// switch (language) {
 	// 	case "EN":
 
@@ -66,12 +65,12 @@ export default PostDetails;
 //need to modify slug en and slug vn here
 export async function getStaticPaths() {
 
-	// const posts = getAllPosts(['slug'])
-	const posts = await prisma.postEnglish.findMany({
-		select: {
-			slug: true
-		}
-	});
+	const posts = getAllPosts(['slug'])
+	// const posts = await prisma.postEnglish.findMany({
+	// 	select: {
+	// 		slug: true
+	// 	}
+	// });
 	const paths = posts.map(post => ({
 		params: {
 			slug: post.slug
@@ -125,7 +124,7 @@ export async function getStaticProps({ params }) {
 	});
 
 	const content = await markdownToHtml(post.content || '')
-	const allPosts = await prisma.postEnglish.findMany({});
+	const allPosts = await prisma.postEnglish.findMany();
 
 	return {
 		props: {

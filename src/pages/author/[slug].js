@@ -120,8 +120,12 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-    const posts = getAllPosts(['author_name']);
-
+    // const posts = getAllPosts(['author_name']);
+    const posts = await prisma.postEnglish.findMany({
+        select: {
+            author_name: true
+        }
+    });
     const paths = posts.map(post => ({
         params: {
             slug: slugify(post.author_name)
