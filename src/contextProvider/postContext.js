@@ -2,12 +2,12 @@ import React, { createContext, useState, useEffect } from 'react';
 import postAPI from "@/services/posts-api";
 
 const contextDefaultValues = {
-    posts,
+    posts: [],
     setPosts: (posts) => {},
-    language,
+    language: "EN",
     setLanguage: (language) => {},
-    loading,
-    error
+    loading: true,
+    error: ""
 };
 
 export const PostContext = createContext(contextDefaultValues)

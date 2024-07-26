@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { Popover, Whisper, Checkbox, Dropdown, IconButton, Table, CellProps } from "rsuite";
 import MoreIcon from "@rsuite/icons/legacy/More";
 import DeleteTableRowModal from "./DeleteTableRowModal";
 import EditTableRowModal from "./EditTableRowModal";
-import { useRouter } from "next/navigation";
 
 const { Cell } = Table;
 
@@ -47,7 +47,7 @@ export const ImageCell = ({ rowData, dataKey, ...props }: any) => (
         display: "inline-block",
       }}
     >
-      <img src={rowData[dataKey!] ?? ""} width="40" />
+      <Image src={rowData[dataKey!] ?? ""} width="40" alt="Image cell"/>
     </div>
   </Cell>
 );

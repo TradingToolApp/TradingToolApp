@@ -10,6 +10,7 @@ import WidgetCategory from "../../components/widget/WidgetCategory";
 import WidgetPost from "../../components/widget/WidgetPost";
 import WidgetSocialShare from "../../components/widget/WidgetSocialShare";
 import { slugify } from "../../utils";
+import prisma from "@/lib/prisma";
 
 const PostAuthor = ({postData, allPosts}) => {
     const authorContent = postData[0];
@@ -93,20 +94,20 @@ export async function getStaticProps({ params }) {
 
     const postParams = params.slug;
 
-    const allPosts = getAllPosts([
-        'slug',
-        'cate',
-        'cate_img',
-        'title',
-        'excerpt',
-        'featureImg',
-        'date',
-        'author_name',
-        'author_img',
-        'author_social',
-        'author_bio'
-    ]);
-
+    // const allPosts = getAllPosts([
+    //     'slug',
+    //     'cate',
+    //     'cate_img',
+    //     'title',
+    //     'excerpt',
+    //     'featureImg',
+    //     'date',
+    //     'author_name',
+    //     'author_img',
+    //     'author_social',
+    //     'author_bio'
+    // ]);
+    const allPosts = await prisma.postEnglish.findMany();
     const getAuthorData = allPosts.filter(post => slugify(post.author_name) === postParams);
     const postData = getAuthorData;
 

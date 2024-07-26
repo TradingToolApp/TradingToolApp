@@ -120,7 +120,7 @@ const FormTwo = ({ formData, handleClose, action, ...rests }: any) => {
     if (featureImg.length !== 0) {
       newPost = { ...newPost, featureImg: featureImg };
     }
-    console.log(newPost);
+
     switch (action) {
       case "CREATE":
         await postAPI.createPost(newPost.slug, mdxContent, newPost, language);
@@ -128,7 +128,7 @@ const FormTwo = ({ formData, handleClose, action, ...rests }: any) => {
         break;
       case "UPDATE":
         await postAPI.updatePost(newPost.slug, mdxContent, newPost, language);
-        const updatedPosts = posts.filter((post: any) => post.slug !== formValue.slug);
+        const updatedPosts: any[] = posts.filter((post: any) => post.slug !== formValue.slug);
         const index = posts.findIndex((post: any) => post.slug === formValue.slug);
         updatedPosts.splice(index, 0, newPost);
         setPosts(updatedPosts);

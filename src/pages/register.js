@@ -3,17 +3,15 @@ import HeaderThree from "../components/header/HeaderThree";
 import FooterOne from "../components/footer/FooterOne";
 import SignUp from "../components/authenticate/SignUp";
 
-const LogIn = () => {
+const Register = () => {
     return (
-        <div>
-            <>
-                <HeadMeta metaTitle="LogIn" />
-                <HeaderThree />
-                <SignUp />
-                <FooterOne />
-            </>
-        </div>
+        <>
+            <HeadMeta metaTitle="LogIn" />
+            <HeaderThree />
+            <SignUp />
+            <FooterOne />
+        </>
     );
 }
 
-export default LogIn;
+export default Register;

@@ -102,7 +102,7 @@ export async function getStaticProps({ params }) {
     //     'author_name',
     //     'author_social'
     // ]);
-    const allPosts = await prisma.postEnglish.findMany({});
+    const allPosts = await prisma.postEnglish.findMany();
     const getCategoryData = allPosts.filter(post => slugify(post.cate) === postParams);
     const postData = getCategoryData;
 

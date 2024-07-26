@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import { getAllPosts } from "../../lib/api";
 import Breadcrumb from "../components/common/Breadcrumb";
 import BreadcrumbBanner from "../components/common/BreadcrumbBanner";
@@ -7,9 +8,11 @@ import FooterOne from "../components/footer/FooterOne";
 import HeaderOne from "../components/header/HeaderOne";
 import TeamOne from "../components/team/TeamOne";
 import { removeDuplicates } from "../utils";
+import { PostContext } from "@/contextProvider/postContext";
 
 const TeamPage = ({ allPosts }) => {
-
+    const { posts } = useContext(PostContext);
+    allPosts = posts;
     const AuthorList = removeDuplicates(allPosts, 'author_name');
 
     return (
@@ -60,27 +63,26 @@ const TeamPage = ({ allPosts }) => {
 
 export default TeamPage;
 
+// export async function getStaticProps() {
 
-export async function getStaticProps() {
+//     const allPosts = getAllPosts([
+//         'slug',
+//         'title',
+//         'featureImg',
+//         'cate',
+//         'cate_bg',
+//         'author_name',
+//         'author_img',
+//         'author_desg',
+//         'author_social'
+//     ])
 
-    const allPosts = getAllPosts([
-        'slug',
-        'title',
-        'featureImg',
-        'cate',
-        'cate_bg',
-        'author_name',
-        'author_img',
-        'author_desg',
-        'author_social'
-    ])
-
-    return {
-        props: {
-            allPosts
-        }
-    }
-}
+//     return {
+//         props: {
+//             allPosts
+//         }
+//     }
+// }
 
 
 

@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { getAllPosts, getPostBySlug } from "../../../lib/api";
 import markdownToHtml from "../../../lib/markdownToHtml";
 import Breadcrumb from "../../components/common/Breadcrumb";
@@ -11,42 +12,60 @@ import PostFormatStandard from "../../components/post/post-format/PostFormatStan
 import PostFormatText from "../../components/post/post-format/PostFormatText";
 import PostFormatVideo from "../../components/post/post-format/PostFormatVideo";
 import PostSectionSix from "../../components/post/PostSectionSix";
+import { PostContext } from "@/contextProvider/postContext";
 import prisma from "@/lib/prisma";
 
+const PostDetails = async ({ postContent, allPosts }) => {
+	const { posts, language } = useContext(PostContext);
+	// switch (language) {
+	// 	case "EN":
 
-const PostDetails = ({postContent, allPosts}) => {
+	// }
+	// const post = await prisma.postEnglish.findUnique({
+	// 	where: {
+	// 		slug: params.slug
+	// 	}
+	// });
+	// const content = await markdownToHtml(post.content || '')
+	// const allPosts = await prisma.postEnglish.findMany({});
+	// const postContent = {
+	// 	...post,
+	// 	content
+	// }
 
 	const PostFormatHandler = () => {
 		if (postContent.postFormat === 'video') {
-			return <PostFormatVideo postData={postContent} allData={allPosts}/>
+			return <PostFormatVideo postData={postContent} allData={allPosts} />
 		} else if (postContent.postFormat === 'gallery') {
 			return <PostFormatGallery postData={postContent} allData={allPosts} />
-		}  else if (postContent.postFormat === 'audio') {
+		} else if (postContent.postFormat === 'audio') {
 			return <PostFormatAudio postData={postContent} allData={allPosts} />
 		} else if (postContent.postFormat === 'quote') {
 			return <PostFormatQuote postData={postContent} allData={allPosts} />
 		} else if (postContent.postFormat === 'text') {
 			return <PostFormatText postData={postContent} allData={allPosts} />
-		}else {
-			return <PostFormatStandard  postData={postContent} allData={allPosts} />
+		} else {
+			return <PostFormatStandard postData={postContent} allData={allPosts} />
 		}
 	}
 
-    return ( 
-        <>
-		<HeadMeta metaTitle="Post Details"/>
-        <HeaderOne />
-        <Breadcrumb bCat={postContent.cate} aPage={postContent.title}/>
-		<PostFormatHandler />
-		<PostSectionSix postData={allPosts} />
-        <FooterOne />
-        </>
-     );
+	return (
+		<>
+			<HeadMeta metaTitle="Post Details" />
+			<HeaderOne />
+			<Breadcrumb bCat={postContent.cate} aPage={postContent.title} />
+			<PostFormatHandler />
+			<PostSectionSix postData={allPosts} />
+			<FooterOne />
+		</>
+	);
 }
- 
+
 export default PostDetails;
 
+//need to modify slug en and slug vn here
 export async function getStaticPaths() {
+
 	// const posts = getAllPosts(['slug'])
 	const posts = await prisma.postEnglish.findMany({
 		select: {
@@ -58,7 +77,7 @@ export async function getStaticPaths() {
 			slug: post.slug
 		}
 	}))
-	console.log(paths)
+
 	return {
 		paths,
 		fallback: true,
@@ -66,7 +85,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-    // const post = getPostBySlug(params.slug, [
+	// const post = getPostBySlug(params.slug, [
 	// 	'postFormat',
 	// 	'title',
 	// 	'quoteText',
@@ -83,12 +102,12 @@ export async function getStaticProps({ params }) {
 	// 	'author_bio',
 	// 	'author_social',
 	// 	'post_views',
-    //     'post_share',
+	//     'post_share',
 	// 	'content',
 	// ])
 	// const content = await markdownToHtml(post.content || '')
 
-    // const allPosts = getAllPosts([
+	// const allPosts = getAllPosts([
 	// 	'title',
 	// 	'featureImg',
 	// 	'postFormat',
@@ -104,19 +123,19 @@ export async function getStaticProps({ params }) {
 			slug: params.slug
 		}
 	});
-	
+
 	const content = await markdownToHtml(post.content || '')
 	const allPosts = await prisma.postEnglish.findMany({});
 
-    return {
-        props: {
-            postContent : {
-                ...post,
-                content
-            },
-            allPosts
-        }
-    }
+	return {
+		props: {
+			postContent: {
+				...post,
+				content
+			},
+			allPosts
+		}
+	}
 }
 
 
