@@ -58,7 +58,7 @@ const ContactForm = () => {
                             </button>
                         </div>
                         <div className="col-12 d-flex justify-content-center">
-                            <button className="btn p-2 m-2" onClick={() => signIn("google", { callbackUrl: process.env.NEXT_PUBLIC_DOMAIN + "/admin/dashboard" })}>
+                            <button className="btn p-2 m-2" onClick={() => signIn("google", { callbackUrl: "/admin/dashboard" })}>
                                 <FcGoogle size="2em" />
                             </button>
                             <button className="btn p-2 m-2">
