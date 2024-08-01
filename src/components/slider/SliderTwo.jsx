@@ -2,12 +2,15 @@ import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Slider from "react-slick";
-import { slugify } from "../../utils";
 import { PostContext } from "@/contextProvider/postContext";
+import { useTranslation } from 'react-i18next';
 
 const SliderTwo = ({ slidePost }) => {
+  const { t } = useTranslation()
+
   const { posts } = useContext(PostContext);
   slidePost = posts
+
   function SlickNextArrow(props) {
     const { className, onClick } = props;
     return (
@@ -110,7 +113,7 @@ const SliderTwo = ({ slidePost }) => {
                     </h1>
                     <div className="btn-group">
                       <Link href={`/post/${data.slug}`}>
-                        <span className="btn btn-primary m-r-xs-30">READ MORE</span>
+                        <span className="btn btn-primary m-r-xs-30">{t("button.readMore")}</span>
                       </Link>
                       {/* <Link href={`/category/${slugify(data.cate)}`}>
                                 <span className="btn-link">ALL CURRENT NEWS</span>
@@ -142,7 +145,7 @@ const SliderTwo = ({ slidePost }) => {
               <div className="item" key={data.slug}>
                 <div className="banner-shares slick-banner-shares">
                   <div className="toggle-shares" onClick={ShareToggler}>
-                    Shares <span>+</span>
+                    {t("button.share")} <span>+</span>
                   </div>
                   <div className="social-share-wrapper">
                     <ul className="social-share social-share__with-bg">

@@ -71,7 +71,7 @@ const TableOne = () => {
     }
     return filtered;
   };
-  
+
   return (
     <div>
       <Stack className="table-toolbar" style={{ marginTop: "10px" }} justifyContent="space-between">
@@ -88,7 +88,7 @@ const TableOne = () => {
             </InputGroup.Addon>
           </InputGroup>
         </Stack>
-        <Stack style={{marginRight: "20px"}}>
+        <Stack style={{ marginRight: "20px" }}>
           <SelectPicker
             style={{ marginRight: "10px" }}
             label="Category"
@@ -120,7 +120,7 @@ const TableOne = () => {
           <Cell dataKey="cate" />
         </Column>
 
-        <Column align="center" sortable width={150}>
+        <Column align="center" width={150} sortable>
           <HeaderCell>Date</HeaderCell>
           <Cell dataKey="date" />
         </Column>

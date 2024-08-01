@@ -60,6 +60,7 @@ const authOptions = {
         },
         async session({ session, token, user }) {
             session.account = token.account;
+            session.role = token.role;
             return session;
         },
     },

@@ -6,16 +6,17 @@ import ContactInfo from "../components/contact/ContactInfo";
 import HeadMeta from "../components/elements/HeadMeta";
 import SectionTitleTwo from "../components/elements/SectionTitleTwo";
 import FooterOne from "../components/footer/FooterOne";
-import HeaderOne from "../components/header/HeaderOne";
+import HeaderThree from "../components/header/HeaderThree";
+import { useTranslation } from "react-i18next";
 
 const ContactPage = () => {
-
+    const { t } = useTranslation();
     return (
         <>
             <HeadMeta metaTitle="Contact Us" />
-            <HeaderOne />
-            <Breadcrumb aPage="Contact Us" />
-            <BreadcrumbBanner pageTitle="Contact Us" />
+            <HeaderThree />
+            <Breadcrumb aPage={t("page.contact")} />
+            <BreadcrumbBanner pageTitle={t("page.contact")} />
             <div className="axil-about-us section-gap  section-gap-top__with-text">
                 <div className="container">
                     <SectionTitleTwo title="Meet Our Publishing Authors" paragraph="Wherever &amp; whenever you need us. We are here for you - contact us for all your support needs,

@@ -1,19 +1,24 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import MenuData from "../../data/menu/HeaderMenu.json";
-import OffcanvasMenu from "./OffcanvasMenu";
-import Dropdown from "react-bootstrap/Dropdown";
-import { signOut } from "next-auth/react"
-import { PostContext } from "@/contextProvider/postContext";
 import { useRouter } from 'next/router'
+import { signOut } from "next-auth/react"
+import { Dropdown, Button } from 'rsuite';
+import HeaderMenu from "../../data/menu/HeaderMenu.json";
+import OffcanvasMenu from "./OffcanvasMenu";
+import { PostContext } from "@/contextProvider/postContext";
+import { useTranslation } from 'react-i18next'
+import { FaChevronDown } from "react-icons/fa6";
+import { useSession } from "next-auth/react";
 
 const HeaderThree = () => {
 	// Main Menu Toggle
 	var menuRef = useRef();
 	const router = useRouter();
-	const { language, setLanguage } = useContext(PostContext);
-
+	const { language, handleLanguageChange } = useContext(PostContext);
+	const { data: session } = useSession();
+	console.log(session)
+	const MenuData = HeaderMenu.filter((menu) => menu.language === language)[0].data;
 	const toggleDropdownMenu = () => {
 		const dropdownSelect = menuRef.current.childNodes;
 		let dropdownList = [];
@@ -115,14 +120,20 @@ const HeaderThree = () => {
 										data.submenu ? (
 											<li className="has-dropdown" key={index}>
 												<Link href={data.path}>
-													<span>{data.label}</span>
+													<span>
+														{data.label}
+														<FaChevronDown style={{ top: "-100px", marginLeft: "3px" }} />
+													</span>
 												</Link>
 												<ul className="submenu">
 													{data.submenu.map((data, index) =>
 														data.thirdmenu ? (
 															<li className="has-dropdown" key={index}>
 																<Link href={data.subpath}>
-																	<span>{data.sublabel}</span>
+																	<span>
+																		{data.sublabel}
+																		{/* <FaChevronDown size={"2em"} /> */}
+																	</span>
 																</Link>
 																<ul className="submenu">
 																	{data.thirdmenu.map((data, index) => (
@@ -184,27 +195,22 @@ const HeaderThree = () => {
 								>
 									<i className="far fa-search" />
 								</button>
-								<Dropdown className="lang-dropdown m-l-xs-10 m-l-md-30">
-									<Dropdown.Toggle className="btn txt-btn dropdown-toggle" id="lang">
-										{language ? language : "EN"}
-									</Dropdown.Toggle>
-
-									<Dropdown.Menu>
-										<Dropdown.Item onClick={() => setLanguage("EN")}>EN</Dropdown.Item>
-										<Dropdown.Item onClick={() => setLanguage("VN")}>VN</Dropdown.Item>
-									</Dropdown.Menu>
+								<Dropdown title={language.toUpperCase()} size="lg" className="rsuite-langDropdown">
+									<Dropdown.Item onClick={() => handleLanguageChange("en")} style={{ width: "72px", fontSize: "1.6rem", fontFamily: "Roboto", fontWeight: 700 }}>EN</Dropdown.Item>
+									<Dropdown.Item onClick={() => handleLanguageChange("vi")} style={{ width: "72px", fontSize: "1.6rem", fontFamily: "Roboto", fontWeight: 700 }}>VI</Dropdown.Item>
 								</Dropdown>
-
 								{/* <button className="side-nav-toggler" onClick={handleShow}>
 									<span />
 									<span />
 									<span />
 								</button> */}
 								{
-									router.pathname === "/admin/dashboard" &&
-									<div className="nav-btn-group">
-										<button className="btn btn-primary" onClick={() => signOut({ callbackUrl: '/login', redirect: true })}>SignOut</button>
-									</div>
+									session?.role === "admin" && 
+									(
+										router.pathname === "/admin/dashboard" ?
+											<Link className="btn btn-outline-danger text-danger p-4 m-2" href="/login" onClick={() => signOut({ callbackUrl: '/login', redirect: true })}>Sign Out</Link>
+											: <Link className="btn btn-outline-danger text-danger p-4 m-2" href="/admin/dashboard">My Dashboard</Link>
+									)
 								}
 							</div>
 

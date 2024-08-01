@@ -1,21 +1,23 @@
 import { Tab, Nav } from "react-bootstrap";
 import PostVideoTwo from "../post/layout/PostVideoTwo";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 const WidgetPost = ({ dataPost }) => {
+    const { t } = useTranslation();
 
     return (
         <div className="post-widget sidebar-post-widget m-b-xs-40">
             <Tab.Container id="widget-post" defaultActiveKey="recent">
                 <Nav variant="pills" className="row no-gutters">
                     <Nav.Item className="col">
-                        <Nav.Link eventKey="recent">RECENT</Nav.Link>
+                        <Nav.Link eventKey="recent">{t("widget.recent")}</Nav.Link>
                     </Nav.Item>
                     <Nav.Item className="col">
-                        <Nav.Link eventKey="popular">POPULAR</Nav.Link>
+                        <Nav.Link eventKey="popular">{t("widget.popular")}</Nav.Link>
                     </Nav.Item>
                     <Nav.Item className="col">
-                        <Nav.Link eventKey="comments">COMMENTS</Nav.Link>
+                        <Nav.Link eventKey="comments">{t("widget.comment")}</Nav.Link>
                     </Nav.Item>
                 </Nav>
 

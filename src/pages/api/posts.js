@@ -103,10 +103,10 @@ const getPosts = async (req, res) => {
         let posts;
         posts = await prisma.postEnglish.findMany();
         switch (req.query.language) {
-            case "EN":
+            case "en":
                 posts = await prisma.postEnglish.findMany({});
                 break;
-            case "VN":
+            case "vi":
                 posts = await prisma.postVietnamese.findMany({});
                 break;
             default:
@@ -128,7 +128,7 @@ const createPost = async (req, res) => {
         let result; 
         console.log(newPost)
         switch (language) {
-            case "EN":
+            case "en":
                 //save data to database
                 newPost = await prisma.postEnglish.create({
                     data: {
@@ -162,18 +162,18 @@ const createPost = async (req, res) => {
                 // // Upload MDX to GG Drive
                 // result = await uploadToGgDrive({
                 //     fileName: fileName,
-                //     folderName: 'TradingToolApp/posts/EN',
+                //     folderName: 'TradingToolApp/posts/en',
                 //     fileData: Buffer.from(mdxContent),
                 //     fileMimeType: "text/markdown",
                 // });
 
                 // //write markdown file to server
-                // fs.writeFile(`./public/uploadPosts/EN/${fileName}.md`, mdxContent, function (err) {
+                // fs.writeFile(`./public/uploadPosts/en/${fileName}.md`, mdxContent, function (err) {
                 //     if (err) throw err;
                 //     console.log('File is created successfully.');
                 // })
                 break;
-            case "VN":
+            case "vi":
                 newPost = await prisma.postVietnamese.create({
                     data: {
                         slug: data.slug,
@@ -206,13 +206,13 @@ const createPost = async (req, res) => {
                 // // Upload MDX to GG Drive
                 // result = await uploadToGgDrive({
                 //     fileName: fileName,
-                //     folderName: 'TradingToolApp/posts/VN',
+                //     folderName: 'TradingToolApp/posts/vi',
                 //     fileData: Buffer.from(mdxContent),
                 //     fileMimeType: "text/markdown",
                 // });
 
                 // //write markdown file to server
-                // fs.writeFile(`./public/uploadPosts/VN/${fileName}.md`, mdxContent, function (err) {
+                // fs.writeFile(`./public/uploadPosts/vi/${fileName}.md`, mdxContent, function (err) {
                 //     if (err) throw err;
                 //     console.log('File is created successfully.');
                 // })
@@ -238,7 +238,7 @@ const updatePost = async (req, res) => {
         // })
 
         switch (language) {
-            case "EN":
+            case "en":
                 //save data to database
                 updatedPost = await prisma.postEnglish.update({
                     where: {
@@ -272,7 +272,7 @@ const updatePost = async (req, res) => {
                     }
                 })
                 break;
-            case "VN":
+            case "vi":
                 //save data to database
                 updatedPost = await prisma.postVietnamese.update({
                     where: {
@@ -322,7 +322,7 @@ const deletePost = async (req, res) => {
         console.log(fileName, language)
         
         switch (language) {
-            case "EN":
+            case "en":
                 //delete from local DB
                 deletedPost = await prisma.postEnglish.delete({
                     where: {
@@ -330,12 +330,12 @@ const deletePost = async (req, res) => {
                     },
                 })
                 // //delete from local DB
-                // fs.unlink(`./public/uploadPosts/EN/${fileName}.md`, function (err) {
+                // fs.unlink(`./public/uploadPosts/en/${fileName}.md`, function (err) {
                 //     if (err) throw err;
                 //     console.log('File is deleted successfully.');
                 // })
                 break;
-            case "VN":
+            case "vi":
                 //delete from local DB
                 deletedPost = await prisma.postVietnamese.delete({
                     where: {
@@ -343,7 +343,7 @@ const deletePost = async (req, res) => {
                     },
                 })
                 // //delete from local DB
-                // fs.unlink(`./public/uploadPosts/VN/${fileName}.md`, function (err) {
+                // fs.unlink(`./public/uploadPosts/vi/${fileName}.md`, function (err) {
                 //     if (err) throw err;
                 //     console.log('File is deleted successfully.');
                 // })

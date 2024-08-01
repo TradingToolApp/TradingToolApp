@@ -4,6 +4,7 @@ import "../styles/style.css";
 import Script from 'next/script'
 import { SessionProvider } from "next-auth/react"
 import { PostProvider } from "@/contextProvider/postContext";
+import "../i18n.ts";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
@@ -31,4 +32,4 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   )
 }
 
-export default MyApp
+export default MyApp;

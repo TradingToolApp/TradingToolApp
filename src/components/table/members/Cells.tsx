@@ -26,7 +26,7 @@ export const NameCell = ({ rowData, dataKey, ...props }: any) => {
   );
 
   return (
-    <Cell {...props}>
+    <Cell {...props} style={{ padding: "4px" }}>
       <Whisper placement="top" speaker={speaker}>
         <a>{dataKey ? rowData[dataKey] : null}</a>
       </Whisper>
@@ -62,7 +62,7 @@ export const CheckCell = ({
   checkedKeys: number[];
   onChange: (value: any, checked: boolean) => void;
 }) => (
-  <Cell {...props} style={{ padding: 0 }}>
+  <Cell {...props} style={{ padding: "4px" }}>
     <div style={{ lineHeight: "46px" }}>
       <Checkbox value={rowData[dataKey!]} inline onChange={onChange} checked={checkedKeys.some((item: any) => item === rowData[dataKey!])} />
     </div>
@@ -114,20 +114,10 @@ export const ActionCell = ({ rowData, ...rests }: any) => {
     );
   };
 
-  // useEffect(() => {
-  //   const handleDeletePost = async () => {
-  //     if (confirmDelete) {
-  //       await deletePost(rowData.slug);
-  //       // handleClose();
-  //     }
-  //   };
-  //   handleDeletePost();
-  // }, [confirmDelete]);
-
   return (
     <>
-      <Cell {...rests} className="link-group">
-        <Whisper placement="autoVerticalEnd" trigger="click" speaker={renderMenu}>
+      <Cell {...rests} className="link-group" style={{padding: "4px"}}>
+        <Whisper placement="autoVerticalStart" trigger="click" speaker={renderMenu}>
           <IconButton appearance="subtle" icon={<MoreIcon />} />
         </Whisper>
       </Cell>

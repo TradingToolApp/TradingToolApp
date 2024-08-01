@@ -1,0 +1,27 @@
+{
+    "button": {
+        "readMore": "Đọc thêm",
+        "share": "Chia sẻ"
+    },
+    "category": {
+        "news": "Tin tức",
+        "tools": "Công cụ",
+        "study": "Nghiên cứu",
+        "discussion": "Thảo luận"
+    },
+    "page": {
+        "home": "Trang chủ",
+        "blog": "Blog",
+        "team": "Đội ngũ",
+        "contact": "Liên hệ"
+    },
+    "widget": {
+        "recent": "GẦN ĐÂY",
+        "popular": "PHỔ BIẾN",
+        "comment": "BÌNH LUẬN"
+    },
+    "vietnamese": "vietnamese",
+    "welcome": "xin chao 123",
+    "aboutUs": "vai",
+    "contact": "1232d wasdasvcx"
+}

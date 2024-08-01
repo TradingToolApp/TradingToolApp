@@ -24,15 +24,18 @@ const PostFormatAudio = ({ postData, allData }) => {
                 <article className="post-details">
                   <div className="single-blog-wrapper">
                     <SocialShareSide />
-                    <div className="audio mb-5">
+                    {/* <div className="audio mb-5">
                       <iframe
                         height={300}
                         width="100%"
                         allow="autoplay"
                         src={postData.audioLink}
                       />
-                    </div>
-
+                    </div> */}
+                    {postData.audioLink !== "" &&
+                      <div className="audio mb-5" dangerouslySetInnerHTML={{ __html: postData.audioLink }}>
+                      </div>
+                    }
                     <div
                       dangerouslySetInnerHTML={{ __html: postContent }}
                     ></div>

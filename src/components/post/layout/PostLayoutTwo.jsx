@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { slugify } from "../../../utils";
+import { useTranslation } from "react-i18next";
 
 const PostLayoutTwo = ({data, postSizeMd, postBgDark}) => {
+  const { t } = useTranslation();
+
   return (
       	<div className={`media post-block m-b-xs-30 ${postSizeMd === true ? "post-block__mid" : ""} ${postBgDark === true ? "post-block__on-dark-bg": "" }`}>
             <Link href={`/post/${data.slug}`}>
@@ -20,7 +23,7 @@ const PostLayoutTwo = ({data, postSizeMd, postBgDark}) => {
          <div className="media-body">
            <div className="post-cat-group m-b-xs-10">
             <Link href={`/category/${slugify(data.cate)}`}>
-                <span className={`post-cat cat-btn ${data.cate_bg ?? "bg-color-blue-one"}`}>{data.cate}</span>
+                <span className={`post-cat cat-btn ${data.cate_bg ?? "bg-color-blue-one"}`}>{t(`category.${data.cate.toLowerCase()}`)}</span>
             </Link>
            </div>
            <h3 className="axil-post-title hover-line hover-line">

@@ -1,0 +1,26 @@
+{
+    "button": {
+        "readMore": "Read More",
+        "share": "Share"
+    },
+    "category": {
+        "news": "News",
+        "tools": "Tools",
+        "study": "Study",
+        "discussion": "Discussion"
+    },
+    "page": {
+        "home": "Home",
+        "blog": "Blog",
+        "team": "About Us",
+        "contact": "Contact Us"
+    },
+    "widget": {
+        "recent": "RECENT",
+        "popular": "POPULAR",
+        "comment": "COMMENT"
+    },
+    "english": "english",
+    "welcome": "welcome to my blog"
+
+}

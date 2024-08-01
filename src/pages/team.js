@@ -5,12 +5,14 @@ import BreadcrumbBanner from "../components/common/BreadcrumbBanner";
 import HeadMeta from "../components/elements/HeadMeta";
 import SectionTitleTwo from "../components/elements/SectionTitleTwo";
 import FooterOne from "../components/footer/FooterOne";
-import HeaderOne from "../components/header/HeaderOne";
+import HeaderThree from "../components/header/HeaderThree";
 import TeamOne from "../components/team/TeamOne";
 import { removeDuplicates } from "../utils";
 import { PostContext } from "@/contextProvider/postContext";
+import { useTranslation } from "react-i18next";
 
 const TeamPage = ({ allPosts }) => {
+    const { t } = useTranslation();
     const { posts } = useContext(PostContext);
     allPosts = posts;
     const AuthorList = removeDuplicates(allPosts, 'author_name');
@@ -18,9 +20,9 @@ const TeamPage = ({ allPosts }) => {
     return (
         <>
             <HeadMeta metaTitle="Team" />
-            <HeaderOne />
-            <Breadcrumb aPage="Our Team" />
-            <BreadcrumbBanner pageTitle="Our Team" />
+            <HeaderThree />
+            <Breadcrumb aPage={t("page.team")} />
+            <BreadcrumbBanner pageTitle={t("page.team")} />
             <div className="axil-our-team section-gap">
                 <div className="container">
                     <p className="m-b-xs-30 big">Meet the amazing people who make papr possible through their energy,

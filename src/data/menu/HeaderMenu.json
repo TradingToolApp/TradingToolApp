@@ -1,47 +1,71 @@
 [
     {
-        "label": "Posts",
-        "path": "#",
-        "submenu": [
-            {
-                "sublabel": "Post Standard",
-                "subpath": "/post/vr-is-the-use-of-computer-technology-to-create-a-simulated-environment."
-            },
-            {
-                "sublabel": "Post Video",
-                "subpath": "/post/want-to-win-a-travelPro-bag"
-            }
-        ]
+        "language": "en",
+        "data": [
+        {
+            "label": "News",
+            "path": "/category/news"
+        },
+        {
+            "label": "Tools",
+            "path": "/category/tools"
+        },
+        {
+            "label": "Study",
+            "path": "/category/study"
+        },
+        {
+            "label": "Discussion",
+            "path": "/category/discussion"
+        },
+        {
+            "label": "About Us",
+            "path": "#",
+            "submenu": [
+                {
+                    "sublabel": "Team",
+                    "subpath": "/team"
+                },
+                {
+                    "sublabel": "Contact Us",
+                    "subpath": "/contact"
+                }
+            ]
+        }]
     },
     {
-        "label": "News",
-        "path": "/category/news"
-    },
-    {
-        "label": "Tools",
-        "path": "/category/tools"
-    },
-    {
-        "label": "Study",
-        "path": "/category/study"
-    },
-    {
-        "label": "Discussion",
-        "path": "/category/discussion"
-    },
-    {
-        "label": "About Us",
-        "path": "#",
-        "submenu": [
-            {
-                "sublabel": "Team",
-                "subpath": "/team"
-            },
-            {
-                "sublabel": "Contact Us",
-                "subpath": "/contact"
-            }
-        ]
+        "language": "vi",
+        "data": [
+        {
+            "label": "Tin tức",
+            "path": "/category/news"
+        },
+        {
+            "label": "Công cụ",
+            "path": "/category/tools"
+        },
+        {
+            "label": "Nghiên cứu",
+            "path": "/category/study"
+        },
+        {
+            "label": "Thảo luận",
+            "path": "/category/discussion"
+        },
+        {
+            "label": "Về chúng tôi",
+            "path": "#",
+            "submenu": [
+                {
+                    "sublabel": "Đội ngũ",
+                    "subpath": "/team"
+                },
+                {
+                    "sublabel": "Liên hệ",
+                    "subpath": "/contact"
+                }
+            ]
+        }]
     }
    
 ]

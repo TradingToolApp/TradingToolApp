@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getAllPosts, getPostBySlug } from "../../../lib/api";
 import markdownToHtml from "../../../lib/markdownToHtml";
 import Breadcrumb from "../../components/common/Breadcrumb";
@@ -14,25 +14,22 @@ import PostFormatVideo from "../../components/post/post-format/PostFormatVideo";
 import PostSectionSix from "../../components/post/PostSectionSix";
 import { PostContext } from "@/contextProvider/postContext";
 import prisma from "@/lib/prisma";
+import { useRouter } from 'next/router'
+import { language } from "gray-matter";
 
-const PostDetails = ({ postContent, allPosts }) => {
-	// switch (language) {
-	// 	case "EN":
+const PostDetails = ({ allPosts }) => {
+	const router = useRouter()
+	const { posts } = useContext(PostContext);
+	const [postContent, setPostContent] = useState("");
+	allPosts = posts;
 
-	// }
-	// const post = await prisma.postEnglish.findUnique({
-	// 	where: {
-	// 		slug: params.slug
-	// 	}
-	// });
-	// const content = await markdownToHtml(post.content || '')
-	// const allPosts = await prisma.postEnglish.findMany({});
-	// const postContent = {
-	// 	...post,
-	// 	content
-	// }
+	useEffect(() => {
+		const post = allPosts.filter(post => post.slug === router.query.slug);
+		setPostContent(post[0]);
+	}, [allPosts, router.query.slug]);
 
 	const PostFormatHandler = () => {
+		if(!postContent) return null;
 		if (postContent.postFormat === 'video') {
 			return <PostFormatVideo postData={postContent} allData={allPosts} />
 		} else if (postContent.postFormat === 'gallery') {
@@ -51,7 +48,7 @@ const PostDetails = ({ postContent, allPosts }) => {
 	return (
 		<>
 			<HeadMeta metaTitle="Post Details" />
-			<HeaderOne />
+			{/* <HeaderOne /> */}
 			<Breadcrumb bCat={postContent.cate} aPage={postContent.title} />
 			<PostFormatHandler />
 			<PostSectionSix postData={allPosts} />
@@ -63,78 +60,102 @@ const PostDetails = ({ postContent, allPosts }) => {
 export default PostDetails;
 
 //need to modify slug en and slug vn here
-export async function getStaticPaths() {
+// export async function getStaticPaths() {
 
-	const posts = getAllPosts(['slug'])
-	// const posts = await prisma.postEnglish.findMany({
-	// 	select: {
-	// 		slug: true
-	// 	}
-	// });
-	const paths = posts.map(post => ({
-		params: {
-			slug: post.slug
-		}
-	}))
+// 	// const posts = getAllPosts(['slug'])
+// 	const postEN = await prisma.postEnglish.findMany({
+// 		select: {
+// 			slug: true
+// 		}
+// 	});
+// 	const postVN = await prisma.postVietnamese.findMany({
+// 		select: {
+// 			slug: true
+// 		}
+// 	});
+// 	const pathEN = postEN.map(post => ({
+// 		params: {
+// 			slug: post.slug
+// 		}
+// 	}))
+// 	const pathVN = postVN.map(post => ({
+// 		params: {
+// 			slug: post.slug
+// 		}
+// 	}))
+// 	const paths = [...pathEN, ...pathVN];
 
-	return {
-		paths,
-		fallback: true,
-	}
-}
+// 	return {
+// 		paths,
+// 		fallback: true,
+// 	}
+// }
 
-export async function getStaticProps({ params }) {
-	// const post = getPostBySlug(params.slug, [
-	// 	'postFormat',
-	// 	'title',
-	// 	'quoteText',
-	// 	'featureImg',
-	// 	'videoLink',
-	// 	'audioLink',
-	// 	'gallery',
-	// 	'date',
-	// 	'slug',
-	// 	'cate',
-	// 	'cate_bg',
-	// 	'author_name',
-	// 	'author_img',
-	// 	'author_bio',
-	// 	'author_social',
-	// 	'post_views',
-	//     'post_share',
-	// 	'content',
-	// ])
-	// const content = await markdownToHtml(post.content || '')
+// export async function getStaticProps({ params }) {
+// 	// // const post = getPostBySlug(params.slug, [
+// 	// // 	'postFormat',
+// 	// // 	'title',
+// 	// // 	'quoteText',
+// 	// // 	'featureImg',
+// 	// // 	'videoLink',
+// 	// // 	'audioLink',
+// 	// // 	'gallery',
+// 	// // 	'date',
+// 	// // 	'slug',
+// 	// // 	'cate',
+// 	// // 	'cate_bg',
+// 	// // 	'author_name',
+// 	// // 	'author_img',
+// 	// // 	'author_bio',
+// 	// // 	'author_social',
+// 	// // 	'post_views',
+// 	// //     'post_share',
+// 	// // 	'content',
+// 	// // ])
+// 	// // const content = await markdownToHtml(post.content || '')
 
-	// const allPosts = getAllPosts([
-	// 	'title',
-	// 	'featureImg',
-	// 	'postFormat',
-	// 	'date',
-	// 	'slug',
-	// 	'cate',
-	// 	'cate_bg',
-	// 	'cate_img',
-	// 	'author_name',
-	//   ])
-	const post = await prisma.postEnglish.findUnique({
-		where: {
-			slug: params.slug
-		}
-	});
+// 	// // const allPosts = getAllPosts([
+// 	// // 	'title',
+// 	// // 	'featureImg',
+// 	// // 	'postFormat',
+// 	// // 	'date',
+// 	// // 	'slug',
+// 	// // 	'cate',
+// 	// // 	'cate_bg',
+// 	// // 	'cate_img',
+// 	// // 	'author_name',
+// 	// //   ])
+// 	// const postEN = await prisma.postEnglish.findUnique({
+// 	// 	where: {
+// 	// 		slug: params.slug
+// 	// 	}
+// 	// });
+// 	// const postVN = await prisma.postVietnamese.findUnique({
+// 	// 	where: {
+// 	// 		slug: params.slug
+// 	// 	}
+// 	// });
 
-	const content = await markdownToHtml(post.content || '')
-	const allPosts = await prisma.postEnglish.findMany();
+// 	// const contentEN = await markdownToHtml(postEN?.content || '')
+// 	// const contentVN = await markdownToHtml(postVN?.content || '')
 
-	return {
-		props: {
-			postContent: {
-				...post,
-				content
-			},
-			allPosts
-		}
-	}
-}
+// 	// const content = [contentEN, contentVN];
+// 	// return {
+// 	// 	props: {
+// 	// 		postContent: [
+// 	// 			{
+// 	// 				...postEN,
+// 	// 				content,
+// 	// 				language: "EN"
+// 	// 			},
+// 	// 			{
+// 	// 				...postVN,
+// 	// 				content,
+// 	// 				language: "VN"
+// 	// 			}]
+// 	// 	}
+// 	// }
+// 	return { props: {} }
+// }
 
 

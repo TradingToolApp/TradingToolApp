@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Modal, Uploader, Stack, Divider, Panel, ButtonGroup, Button } from 'rsuite';
 import CameraRetroIcon from '@rsuite/icons/legacy/CameraRetro';
-import { getImages, createImages } from '@/services/image-api';
+import { getImages, createImages } from '../../../../services/image-api';
 
 const ModalImage = ({ open, handleClose, typeSelectImg, setURLImg, setFeatureImg }) => {
     const [loading, setLoading] = useState(false);

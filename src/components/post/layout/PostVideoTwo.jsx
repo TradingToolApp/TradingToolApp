@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { slugify } from "../../../utils";
+import { useTranslation } from "react-i18next";
 
 const PostVideoTwo = ({ data, pClass, videoIcon }) => {
+  const { t } = useTranslation();
+
   return (
     <div className={`media post-block post-block__small ${pClass ?? "post-block__on-dark-bg m-b-xs-30"}`}>
       <Link href={`/post/${data.slug}`}>
@@ -20,7 +23,7 @@ const PostVideoTwo = ({ data, pClass, videoIcon }) => {
       <div className="media-body">
         <div className="post-cat-group">
           <Link href={`/category/${slugify(data.cate)}`}>
-            <span className={`post-cat ${data.cate_bg ?? "bg-color-blue-one"}`}>{data.cate}</span>
+            <span className={`post-cat ${data.cate_bg ?? "bg-color-blue-one"}`}>{t(`category.${data.cate.toLowerCase()}`)}</span>
           </Link>
         </div>
         <h3 className="axil-post-title hover-line hover-line">

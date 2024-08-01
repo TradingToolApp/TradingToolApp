@@ -3,8 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { slugify } from "../../utils";
 import { PostContext } from "@/contextProvider/postContext";
+import { useTranslation } from "react-i18next";
 
 const CategoryOne = ({ cateData }) => {
+  const { t } = useTranslation();
   const { posts } = useContext(PostContext);
   cateData = posts;
   const categories = cateData.map(data => {
@@ -50,7 +52,7 @@ const CategoryOne = ({ cateData }) => {
                       <div className="counter-inner">
                         <span className="counter">{data.count}</span>+
                       </div>
-                      <h4 className="cat-title">{data.name}</h4>
+                      <h4 className="cat-title">{t(`category.${data.name.toLowerCase()}`)}</h4>
                     </div>
                   </span>
                 </Link>

@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { slugify } from "../../utils";
+import { useTranslation } from "react-i18next";
 
 const Breadcrumb = ({bCat, aPage}) => {
+  const { t } = useTranslation();
+
   return (
     <div className="breadcrumb-wrapper">
       <div className="container">
@@ -9,7 +12,7 @@ const Breadcrumb = ({bCat, aPage}) => {
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
                 <Link href="/">
-                    <span>Home</span>
+                    <span>{t("page.home")}</span>
                 </Link>
             </li>
             {bCat ? 
