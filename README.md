@@ -32,3 +32,50 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Usage instruction
+
+Public URL: https://tradingtoolapp.vercel.app/
+Login URL : https://tradingtoolapp.vercel.app/login
+
+When login: 
+-   Please login with google by clicking the google icon
+-   This site can only login with gmail: duchoan99.com@gmail.com
+
+When logged in:
+This project has 2 different databases which mean:
+-   if you create a post in the VI language, you can only see it whenever you change the language to VI, and it is also true on the opposite.
+
+Text format's styles:<br />
+\<b> - Bold text \</b><br />
+\<strong> - Important text \</strong><br />
+\<i> - Italic text \</i><br />
+\<em> - Emphasized text \</em><br />
+\<mark> - Marked text \</mark><br />
+\<small> - Smaller text \</small><br />
+\<del> - Deleted text \</del> <br />
+\<ins> - Inserted text \</ins><br />
+\<sup> - Superscript text \</sup><br />
+\<sub> - Subscript text \</sub><br />
+
+When it comes to creating posts in video and audio formats, please provide an embed URL(not the public URL).  
+How to get the embed URL:  
+
+For video(example on youtube): 
+-   Open youtube video .
+-   Find share button right below the video and click on it.
+-   On small windows open, choose embed icon.
+-   CLick copy URL (which begin with <iframe>) and paste it into videoURL.  
+
+For audio(example with soundcloud):
+-   Open soundcloud audio .
+-   Find share button right below the video and click on it.
+-   On small windows open, choose embed tab.
+-   Copy the whole URL inside code area (which begin with <iframe>) and paste it into audioURL.
+
+Report issues:
+Please report issues with the following format:  
+-   name issue:
+-   actual result:
+-   expected result:
+-   how to create it step by step:

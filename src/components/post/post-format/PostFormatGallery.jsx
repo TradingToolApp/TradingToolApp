@@ -14,7 +14,8 @@ import Masonry from "react-responsive-masonry"
 const PostFormatGallery = ({ postData, allData }) => {
   const basePathLink = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH ?? "" : "";
   
-  const postContent = postData.content.replaceAll('/images/', basePathLink + '/images/');
+  let postContent = postData.content.replaceAll('/images/', basePathLink + '/images/');
+  postContent = postContent.replaceAll('\n', '<br />');
 
   return (
     <>

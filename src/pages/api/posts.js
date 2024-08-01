@@ -126,7 +126,7 @@ const createPost = async (req, res) => {
         const { fileName, mdxContent, data, language } = req.body;
         let newPost;
         let result; 
-        console.log(newPost)
+        console.log(data)
         switch (language) {
             case "en":
                 //save data to database
