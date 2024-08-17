@@ -37,10 +37,10 @@ const PostFormatVideo = ({ postData, allData }) => {
                       </video>
                     </figure> */}
                     {postData.videoLink !== "" &&
-                      <div className="product-des" dangerouslySetInnerHTML={{ __html: postData.videoLink }}>
+                      <div className="product-des " dangerouslySetInnerHTML={{ __html: postData.videoLink }}>
                       </div>
                     }
-                    <div
+                    <div className="content-post"
                       dangerouslySetInnerHTML={{ __html: postContent }}
                     ></div>
                   </div>
@@ -55,7 +55,7 @@ const PostFormatVideo = ({ postData, allData }) => {
               <div className="post-sidebar">
                 <WidgetAd />
                 <WidgetNewsletter />
-                <WidgetSocialShare />
+                {/* <WidgetSocialShare /> */}
                 <WidgetPost dataPost={allData} />
                 <WidgetInstagram />
               </div>

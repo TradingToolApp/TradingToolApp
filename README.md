@@ -46,7 +46,9 @@ When logged in:
 This project has 2 different databases which mean:
 -   if you create a post in the VI language, you can only see it whenever you change the language to VI, and it is also true on the opposite.
 
-Text format's styles:<br />
+Post Types:
+
+Text format's styles:  
 \<b> - Bold text \</b><br />
 \<strong> - Important text \</strong><br />
 \<i> - Italic text \</i><br />
@@ -58,6 +60,12 @@ Text format's styles:<br />
 \<sup> - Superscript text \</sup><br />
 \<sub> - Subscript text \</sub><br />
 
+List format:
+\<ul><li>List 1</li><li>List 2</li><li>List 3</li>\</ul><br />
+
+Link format:
+\<a href="https://www.google.com">Google\</a><br />
+
 When it comes to creating posts in video and audio formats, please provide an embed URL(not the public URL).  
 How to get the embed URL:  
 
@@ -65,13 +73,17 @@ For video(example on youtube):
 -   Open youtube video .
 -   Find share button right below the video and click on it.
 -   On small windows open, choose embed icon.
--   CLick copy URL (which begin with <iframe>) and paste it into videoURL.  
+-   CLick copy URL (which begin with <iframe>) and paste it into videoURL.
+-   You can also change the size of the video by changing the width and height in the URL. (Ex: width="100%" height="400")
 
 For audio(example with soundcloud):
 -   Open soundcloud audio .
 -   Find share button right below the video and click on it.
 -   On small windows open, choose embed tab.
 -   Copy the whole URL inside code area (which begin with <iframe>) and paste it into audioURL.
+
+For picture:
+-   The size will automatically be adjusted to the screen size.
 
 Report issues:
 Please report issues with the following format:  

@@ -74,7 +74,7 @@ const WidgetCategory = ({ cateData }) => {
 												<div className="counter-inner">
 													<span className="counter">{data.count}</span>+
 												</div>
-												<h4 className="cat-title">{t(`category.${data.name.toLowerCase()}`)}</h4>
+												<h4 className="cat-title">{data.name}</h4>
 											</div>
 										</span>
 									</Link>

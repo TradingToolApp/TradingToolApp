@@ -3,6 +3,7 @@ import WidgetInstagram from "../../widget/WidgetInstagram";
 import WidgetNewsletter from "../../widget/WidgetNewsletter";
 import WidgetPost from "../../widget/WidgetPost";
 import WidgetSocialShare from "../../widget/WidgetSocialShare";
+import WidgetYoutubeList from "../../widget/WidgetYoutubeList";
 import MetaDataThree from "./elements/meta/MetaDataThree";
 import PostAuthor from "./elements/PostAuthor";
 import PostComment from "./elements/PostComment";
@@ -38,7 +39,7 @@ const PostFormatAudio = ({ postData, allData }) => {
                       <div className="audio mb-5" dangerouslySetInnerHTML={{ __html: postData.audioLink }}>
                       </div>
                     }
-                    <div
+                    <div className="content-post"
                       dangerouslySetInnerHTML={{ __html: postContent }}
                     ></div>
                   </div>
@@ -51,11 +52,8 @@ const PostFormatAudio = ({ postData, allData }) => {
             </div>
             <div className="col-lg-4">
               <div className="post-sidebar">
-                <WidgetAd />
-                <WidgetNewsletter />
-                <WidgetSocialShare />
                 <WidgetPost dataPost={allData} />
-                <WidgetInstagram />
+                <WidgetYoutubeList dataPost={allData} />
               </div>
             </div>
           </div>

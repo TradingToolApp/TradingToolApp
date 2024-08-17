@@ -23,7 +23,7 @@ const PostLayoutTwo = ({data, postSizeMd, postBgDark}) => {
          <div className="media-body">
            <div className="post-cat-group m-b-xs-10">
             <Link href={`/category/${slugify(data.cate)}`}>
-                <span className={`post-cat cat-btn ${data.cate_bg ?? "bg-color-blue-one"}`}>{t(`category.${data.cate.toLowerCase()}`)}</span>
+                <span className={`post-cat cat-btn ${data.cate_bg ?? "bg-color-blue-one"}`}>{data.cate}</span>
             </Link>
            </div>
            <h3 className="axil-post-title hover-line hover-line">

@@ -6,7 +6,7 @@ const EditTableRowModal = ({ modalData, openEditRow, handleCloseEditRow }) => {
     return (
         <Modal size={"full"} open={openEditRow} onClose={handleCloseEditRow}>
             <Modal.Header>
-                <Modal.Title>Modal Title</Modal.Title>
+                <Modal.Title>Edit Post</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <FormTwo formData={modalData} handleClose={handleCloseEditRow} action={POSTACTION.UPDATE} />

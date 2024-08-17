@@ -4,16 +4,19 @@ import Link from "next/link";
 import { slugify } from "../../utils";
 import { PostContext } from "@/contextProvider/postContext";
 import { useTranslation } from "react-i18next";
+import { prisma } from "@/lib/prisma";
 
 const CategoryOne = ({ cateData }) => {
   const { t } = useTranslation();
   const { posts } = useContext(PostContext);
   cateData = posts;
+  console.log(cateData)
   const categories = cateData.map(data => {
     const obj = {
       name: data.cate,
       thumb: data.cate_img
     }
+    // console.log(obj)
     return obj;
   });
 
@@ -21,6 +24,7 @@ const CategoryOne = ({ cateData }) => {
     prev[curr.name] = (prev[curr.name] || 0) + 1
     return prev;
   }, {})
+  // console.log(categories)
 
   var cateList = Object.keys(category).map(cateTitle => {
     const imgGet = categories.filter(post => post.name === cateTitle);
@@ -32,6 +36,7 @@ const CategoryOne = ({ cateData }) => {
       cateImg: imgGet[0].thumb
     };
   });
+
 
   return (
     <div className="axil-banner-cat-counter">
@@ -52,7 +57,7 @@ const CategoryOne = ({ cateData }) => {
                       <div className="counter-inner">
                         <span className="counter">{data.count}</span>+
                       </div>
-                      <h4 className="cat-title">{t(`category.${data.name.toLowerCase()}`)}</h4>
+                      <h4 className="cat-title">{data.name}</h4>
                     </div>
                   </span>
                 </Link>

@@ -1,16 +1,16 @@
 import axios from 'axios'
 import { revalidatePath } from "next/cache";
 
-function getPosts(language) {
+function getPosts() {
     try {
-        return axios.get('/api/posts', { params: { language } })
+        return axios.get('/api/posts')
     } catch (error) {
         console.log(error);
     }
 }
-function createPost(fileName, mdxContent, data, language) {
+function createPost(data) {
     try {
-        return axios.post('/api/posts', { fileName, mdxContent, data, language })
+        return axios.post('/api/posts', { data })
     } catch (error) {
         console.log(error);
     }
@@ -18,9 +18,9 @@ function createPost(fileName, mdxContent, data, language) {
     revalidatePath("/", { cache: 'no-store' });
 }
 
-function updatePost(fileName, mdxContent, data, language) {
+function updatePost(data) {
     try {
-        return axios.put('/api/posts', { fileName, mdxContent, data, language })
+        return axios.put('/api/posts', { data })
     } catch (error) {
         console.log(error);
     }
@@ -28,9 +28,9 @@ function updatePost(fileName, mdxContent, data, language) {
     revalidatePath("/", { cache: 'no-store' });
 }
 
-function deletePost(fileName, language) {
+function deletePost(slug) {
     try {
-        return axios.delete('/api/posts', { data: { fileName, language } })
+        return axios.delete('/api/posts', { data: { slug  } })
     } catch (error) {
         console.log(error);
     }

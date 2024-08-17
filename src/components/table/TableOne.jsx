@@ -12,7 +12,6 @@ import MoreIcon from "@rsuite/icons/legacy/More";
 import { ActionCell } from "./members/Cells";
 import AddTableRowModal from "./members/AddTableRowModal";
 import { PostContext } from "@/contextProvider/postContext";
-
 const { Column, HeaderCell, Cell } = Table;
 
 const cateList = [
@@ -24,7 +23,7 @@ const cateList = [
 
 const TableOne = () => {
   const { posts, loading } = useContext(PostContext);
-  const [sortColumn, setSortColumn] = useState();
+  const [sortColumn, setSortColumn] = useState("id");
   const [sortType, setSortType] = useState();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [cate, setCate] = useState("");

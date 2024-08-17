@@ -18,7 +18,7 @@ const Breadcrumb = ({bCat, aPage}) => {
             {bCat ? 
             <li className="breadcrumb-item">
                 <Link href={`/category/${slugify(bCat)}`} >
-                    <span>{bCat}</span>
+                  <span>{bCat.toLowerCase()}</span>
                 </Link>
             </li>: ""
             }

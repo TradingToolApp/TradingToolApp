@@ -4,6 +4,8 @@ import Link from "next/link";
 import Slider from "react-slick";
 import { PostContext } from "@/contextProvider/postContext";
 import { useTranslation } from 'react-i18next';
+import { FaChevronLeft } from "react-icons/fa6";
+import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 
 const SliderTwo = ({ slidePost }) => {
   const { t } = useTranslation()
@@ -15,7 +17,8 @@ const SliderTwo = ({ slidePost }) => {
     const { className, onClick } = props;
     return (
       <button className={className} onClick={onClick}>
-        <i className="feather icon-chevron-right"></i>
+        <FaChevronCircleRight size={"3em"} color="#F8F8FF" />
+        {/* <i className="feather icon-chevron-right"></i> */}
       </button>
     );
   }
@@ -24,7 +27,9 @@ const SliderTwo = ({ slidePost }) => {
     const { className, onClick } = props;
     return (
       <button className={className} onClick={onClick}>
-        <i className="feather icon-chevron-left"></i>
+        <FaChevronCircleLeft size={"3em"} color="#F8F8FF" />
+
+        {/* <i className="feather icon-chevron-left"></i> */}
       </button>
     );
   }
@@ -144,9 +149,9 @@ const SliderTwo = ({ slidePost }) => {
             {slidePost.slice(0, 3).map((data) => (
               <div className="item" key={data.slug}>
                 <div className="banner-shares slick-banner-shares">
-                  <div className="toggle-shares" onClick={ShareToggler}>
+                  {/* <div className="toggle-shares" onClick={ShareToggler}>
                     {t("button.share")} <span>+</span>
-                  </div>
+                  </div> */}
                   <div className="social-share-wrapper">
                     <ul className="social-share social-share__with-bg">
                       <li>

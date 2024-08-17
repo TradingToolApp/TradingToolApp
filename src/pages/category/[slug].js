@@ -21,7 +21,7 @@ const PostCategory = ({ allPosts, params }) => {
 
     const { posts } = useContext(PostContext);
     allPosts = posts;
-    const getCategoryData = allPosts.filter(post => slugify(post.cate) === router.query.slug);
+    const getCategoryData = allPosts.filter(post => post.cate_slug === router.query.slug);
     const postData = getCategoryData;
 
     const cateContent = postData[0];
@@ -29,14 +29,14 @@ const PostCategory = ({ allPosts, params }) => {
         <>
             <HeadMeta metaTitle={cateContent.cate} />
             <HeaderThree />
-            <Breadcrumb aPage={t(`category.${cateContent.cate.toLowerCase()}`)} />
+            <Breadcrumb aPage={cateContent.cate} />
             {/* Banner Start here  */}
             <div className="banner banner__default bg-grey-light-three">
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-lg-12">
                             <div className="post-title-wrapper">
-                                <h2 className="m-b-xs-0 axil-post-title hover-line">{t(`category.${cateContent.cate.toLowerCase()}`)}</h2>
+                                <h2 className="m-b-xs-0 axil-post-title hover-line">{cateContent.cate}</h2>
                             </div>
                         </div>
                     </div>
@@ -47,7 +47,6 @@ const PostCategory = ({ allPosts, params }) => {
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-8">
-                            <AdBanner />
                             <div className="axil-content">
                                 {postData.map((data) => (
                                     <PostLayoutTwo data={data} postSizeMd={true} key={data.slug} />
@@ -56,11 +55,8 @@ const PostCategory = ({ allPosts, params }) => {
                         </div>
                         <div className="col-lg-4">
                             <div className="post-sidebar">
-                                <WidgetAd />
-                                <WidgetSocialShare />
                                 <WidgetCategory cateData={allPosts} />
                                 <WidgetPost dataPost={allPosts} />
-                                <WidgetAd img="/images/clientbanner/clientbanner3.jpg" height={492} width={320} />
                             </div>
                         </div>
                     </div>
@@ -72,37 +68,6 @@ const PostCategory = ({ allPosts, params }) => {
 }
 
 export default PostCategory;
-
-// export async function getStaticPaths() {
-//     // const posts = getAllPosts(['cate']);
-//     const postEN = await prisma.postEnglish.findMany({
-//         select: {
-//             cate: true
-//         }
-//     });
-//     const postVN = await prisma.postVietnamese.findMany({
-//         select: {
-//             cate: true
-//         }
-//     });
- 
-//     const pathEN = postEN.map(post => ({
-//         params: {
-//             slug: slugify(post.cate)
-//         }
-//     }))
-//     const pathVN = postVN.map(post => ({
-//         params: {
-//             slug: slugify(post.cate)
-//         }
-//     }))
-//     const paths = [...pathEN, ...pathVN];
-
-//     return {
-//         paths,
-//         fallback: false,
-//     }
-// }
 
 // export async function getStaticProps({ params }) {
 

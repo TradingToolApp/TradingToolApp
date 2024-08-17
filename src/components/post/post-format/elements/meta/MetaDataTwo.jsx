@@ -67,12 +67,12 @@ const MetaDataTwo = ({ metaData }) => {
                   </li>
                   <li>
                     <i className="feather icon-activity" />
-                    {metaData.post_views}
+                    {metaData.post_views} Views
                   </li>
-                  <li>
+                  {/* <li>
                     <i className="feather icon-share-2" />
                     {metaData.post_share}
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </div>

@@ -6,7 +6,7 @@ const AddTableRowModal = ({ openAddRow, handleCloseAddRow }) => {
     return (
         <Modal size={"full"} open={openAddRow} onClose={handleCloseAddRow}>
             <Modal.Header>
-                <Modal.Title>Modal Title</Modal.Title>
+                <Modal.Title>Add Post</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <FormTwo handleClose={handleCloseAddRow} action={POSTACTION.CREATE} />

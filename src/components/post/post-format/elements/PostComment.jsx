@@ -14,16 +14,13 @@ const PostComment = () => {
       {/* End of .comment-box */}
       <form action="#" className="comment-form row m-b-xs-60">
         <div className="col-12">
-          <FormGroup pClass="comment-message-field" label="Comment" type="textarea" name="comment-message" rows={6}/>
+          <FormGroup pClass="comment-message-field" label="Comment" type="textarea" name="comment-message" rows={6} />
         </div>
         <div className="col-md-4">
-			<FormGroup type="text" name="name" label="Name" />
+          <FormGroup type="text" name="name" label="Name" />
         </div>
         <div className="col-md-4">
-			<FormGroup type="text" name="email" label="Email" />
-        </div>
-        <div className="col-md-4">
-		<FormGroup type="text" name="website" label="Website" />
+          <FormGroup type="text" name="email" label="Email" />
         </div>
         <div className="col-12">
           <button className="btn btn-primary">POST COMMENT</button>

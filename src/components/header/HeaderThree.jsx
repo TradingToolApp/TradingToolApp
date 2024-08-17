@@ -17,7 +17,6 @@ const HeaderThree = () => {
 	const router = useRouter();
 	const { language, handleLanguageChange } = useContext(PostContext);
 	const { data: session } = useSession();
-	console.log(session)
 	const MenuData = HeaderMenu.filter((menu) => menu.language === language)[0].data;
 	const toggleDropdownMenu = () => {
 		const dropdownSelect = menuRef.current.childNodes;

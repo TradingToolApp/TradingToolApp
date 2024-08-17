@@ -1,13 +1,5 @@
-import multer from "multer";
-import matter from 'gray-matter'
-import path from "path";
-import { sql } from "@vercel/postgres";
-import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "@/lib/constant";
-import { postUploadDir } from "@/lib/constant";
-import prisma from "@/lib/prisma";
-import uploadToGgDrive from "./utils/uploadDrive";
-
-const fs = require('fs');
+import {SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE} from "../../../lib/constant";
+import prisma from "../../../lib/prisma";
 
 const postHandler = async (req, res) => {
     switch (req.method) {
@@ -22,338 +14,199 @@ const postHandler = async (req, res) => {
     }
 };
 
-export function getPostSlugs() {
-    return fs.readdirSync(postUploadDir)
-}
-
-export function getPostBySlug(slug, fields = []) {
-    const realSlug = slug.replace(/\.md$/, '')
-    const fullPath = path.join(postUploadDir, `${realSlug}.md`)
-    const fileContents = fs.readFileSync(fullPath, 'utf8')
-    const { data, content } = matter(fileContents)
-
-    const items = {}
-
-    // Ensure only the minimal needed data is exposed
-    fields.forEach((field) => {
-        if (field === 'slug') {
-            items[field] = realSlug
-        }
-        if (field === 'content') {
-            items[field] = content
-        }
-
-        if (typeof data[field] !== 'undefined') {
-            items[field] = data[field]
-        }
-    })
-    return items
-}
-
-export function getAllPosts(fields = []) {
-    // slugs is fileName of posts
-    const slugs = getPostSlugs()
-    const posts = slugs
-        .map((slug) => getPostBySlug(slug, fields))
-
-    return posts
-}
-
-// Get Markdown File Content 
-
-export function getFileContentBySlug(fileName, postsPath) {
-
-    const postFilePath = path.join(postsPath, `${fileName}.md`)
-    const fileContents = fs.readFileSync(postFilePath, 'utf8')
-
-    const { data, content } = matter(fileContents)
-
-    return {
-        data,
-        content
-    }
-}
-
 const getPosts = async (req, res) => {
     try {
-        ////get from local DB(Markdown)
-        // const posts = getAllPosts([
-        //     'slug',
-        //     'title',
-        //     'excerpt',
-        //     'postFormat',
-        //     'featureImg',
-        //     'date',
-        //     'cate',
-        //     'cate_img',
-        //     'cate_bg',
-        //     'content',
-        //     'author_name',
-        //     'author_img',
-        //     'author_social',
-        //     'author_bio',
-        //     'story',
-        //     'trending',
-        //     'post_views',
-        //     'post_share'
-        // ])
+        const posts = await prisma.post.findMany({
+            include: {
+                translations: true,
+                tags: {
+                    include: {
+                        translations: true,
+                    }
+                },
+                author: {
+                    include: {
+                        translations: true,
+                    }
+                },
+                category: {
+                    include: {
+                        translations: true,
+                    }
+                },
+            },
+            orderBy: {
+                id: 'asc'
+            }
+        });
 
-        ////get from vercel DB
-
-        let posts;
-        posts = await prisma.postEnglish.findMany();
-        switch (req.query.language) {
-            case "en":
-                posts = await prisma.postEnglish.findMany({});
-                break;
-            case "vi":
-                posts = await prisma.postVietnamese.findMany({});
-                break;
-            default:
-                posts = await prisma.postEnglish.findMany({});
-                break;
-        }
-
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: posts });
+        res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: posts});
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        res.status(500).json({success: true, code: ERROR_CODE, message: error, data: []});
     }
 }
 
 const createPost = async (req, res) => {
     try {
-        const { fileName, mdxContent, data, language } = req.body;
-        let newPost;
-        let result; 
-        console.log(data)
-        switch (language) {
-            case "en":
-                //save data to database
-                newPost = await prisma.postEnglish.create({
-                    data: {
-                        slug: data.slug,
-                        title: data.title,
-                        excerpt: data.excerpt,
-                        postFormat: data.postFormat,
-                        featureImg: data.featureImg,
-                        date: data.date,
-                        content: data.content,
-                        quoteText: data.quoteText,
-                        videoLink: data.videoLink,
-                        audioLink: data.audioLink,
-                        gallery: data.gallery,
-                        cate: data.cate,
-                        cate_img: data.cate_img,
-                        cate_bg: data.cate_bg,
-                        author_name: data.author_name,
-                        author_desg: data.author_desg,
-                        author_img: data.author_img,
-                        author_bio: data.author_bio,
-                        tags: data.tags,
-                        post_views: data.post_views,
-                        post_share: data.post_share,
-                        author_social: data.author_social,
-                        story: data.story,
-                        trending: data.trending,
-                        published: data.published,
+        const { data } = req.body;
+        console.log(data.tags.map(tag => {
+                    return {
+                        tag_slug: tag
                     }
-                })
-                // // Upload MDX to GG Drive
-                // result = await uploadToGgDrive({
-                //     fileName: fileName,
-                //     folderName: 'TradingToolApp/posts/en',
-                //     fileData: Buffer.from(mdxContent),
-                //     fileMimeType: "text/markdown",
-                // });
+                }))
+        const newPost = await prisma.post.create({
+            data: {
+                postFormat: data.postFormat,
+                slug: data.slug,
+                featureImg: data.featureImg,
+                date: data.date,
+                post_views: data.post_views,
+                post_share: data.post_share,
+                videoLink: data.videoLink ? data.videoLink : "",
+                audioLink: data.audioLink ? data.audioLink : "",
+                gallery: data.gallery ? data.gallery : [],
+                story: data.story ? data.story : false,
+                trending: data.trending ? data.trending : false,
+                published: data.published ? data.published : false,
+                translations: {
+                    create: [{
+                        title: data.titleEN,
+                        excerpt: data.excerptEN,
+                        content: data.contentEN,
+                        quoteText: data.quoteTextEN,
+                        language: {connect: {code: "en"}},
+                    }, {
+                        title: data.titleVI,
+                        excerpt: data.excerptVI,
+                        content: data.contentVI,
+                        quoteText: data.quoteTextVI,
+                        language: {connect: {code: "vi"}},
+                    }],
+                },
+                author: {
+                    connect: {author_slug: data.author_slug},
+                },
+                category: {
+                    connect: {cate_slug: data.cate_slug},
+                },
+                tags: {
+                    connect: data.tags.map(tag => {
+                        return {
+                            tag_slug: tag
+                        }
+                    })
+                }
+            },
+        });
 
-                // //write markdown file to server
-                // fs.writeFile(`./public/uploadPosts/en/${fileName}.md`, mdxContent, function (err) {
-                //     if (err) throw err;
-                //     console.log('File is created successfully.');
-                // })
-                break;
-            case "vi":
-                newPost = await prisma.postVietnamese.create({
-                    data: {
-                        slug: data.slug,
-                        title: data.title,
-                        excerpt: data.excerpt,
-                        postFormat: data.postFormat,
-                        featureImg: data.featureImg,
-                        date: data.date,
-                        content: data.content,
-                        quoteText: data.quoteText,
-                        videoLink: data.videoLink,
-                        audioLink: data.audioLink,
-                        gallery: data.gallery,
-                        cate: data.cate,
-                        cate_img: data.cate_img,
-                        cate_bg: data.cate_bg,
-                        author_name: data.author_name,
-                        author_desg: data.author_desg,
-                        author_img: data.author_img,
-                        author_bio: data.author_bio,
-                        tags: data.tags,
-                        post_views: data.post_views,
-                        post_share: data.post_share,
-                        author_social: data.author_social,
-                        story: data.story,
-                        trending: data.trending,
-                        published: data.published,
-                    }
-                })
-                // // Upload MDX to GG Drive
-                // result = await uploadToGgDrive({
-                //     fileName: fileName,
-                //     folderName: 'TradingToolApp/posts/vi',
-                //     fileData: Buffer.from(mdxContent),
-                //     fileMimeType: "text/markdown",
-                // });
-
-                // //write markdown file to server
-                // fs.writeFile(`./public/uploadPosts/vi/${fileName}.md`, mdxContent, function (err) {
-                //     if (err) throw err;
-                //     console.log('File is created successfully.');
-                // })
-                break;
-            default:
-                break;
-        }
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newPost });
+        res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newPost});
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
 const updatePost = async (req, res) => {
     try {
-        const { fileName, mdxContent, data, language } = req.body;
-        let updatedPost;
-        // // deletePost(fileName);
-        // fs.writeFile(`./public/uploadPosts/${fileName}.md`, mdxContent, function (err) {
-        //     if (err) throw err;
-        //     console.log('File is created successfully.');
-        // })
+        const { data } = req.body;
 
-        switch (language) {
-            case "en":
-                //save data to database
-                updatedPost = await prisma.postEnglish.update({
-                    where: {
-                        slug: fileName,
-                    },
-                    data: {
-                        title: data.title,
-                        excerpt: data.excerpt,
-                        postFormat: data.postFormat,
-                        featureImg: data.featureImg,
-                        date: data.date,
-                        cate: data.cate,
-                        cate_img: data.cate_img,
-                        cate_bg: data.cate_bg,
-                        tags: data.tags,
-                        content: data.content,
-                        quoteText: data.quoteText,
-                        videoLink: data.videoLink,
-                        audioLink: data.audioLink,
-                        gallery: data.gallery,
-                        author_name: data.author_name,
-                        author_desg: data.author_desg,
-                        author_img: data.author_img,
-                        author_bio: data.author_bio,
-                        author_social: data.author_social,
-                        story: data.story,
-                        trending: data.trending,
-                        post_views: data.post_views,
-                        post_share: data.post_share,
-                        published: data.published,
-                    }
-                })
-                break;
-            case "vi":
-                //save data to database
-                updatedPost = await prisma.postVietnamese.update({
-                    where: {
-                        slug: fileName,
-                    },
-                    data: {
-                        title: data.title,
-                        excerpt: data.excerpt,
-                        postFormat: data.postFormat,
-                        featureImg: data.featureImg,
-                        date: data.date,
-                        cate: data.cate,
-                        cate_img: data.cate_img,
-                        cate_bg: data.cate_bg,
-                        tags: data.tags,
-                        content: data.content,
-                        quoteText: data.quoteText,
-                        videoLink: data.videoLink,
-                        audioLink: data.audioLink,
-                        gallery: data.gallery,
-                        author_name: data.author_name,
-                        author_desg: data.author_desg,
-                        author_img: data.author_img,
-                        author_bio: data.author_bio,
-                        author_social: data.author_social,
-                        story: data.story,
-                        trending: data.trending,
-                        post_views: data.post_views,
-                        post_share: data.post_share,
-                        published: data.published,
-                    }
-                })
-                break;
-        }
+        const updatedPostTranslationsEN = await prisma.postTranslation.update({
+            where: {
+                postId_languageCode: {
+                    postId: data.id,
+                    languageCode: "en"
+                }
+            },
+            data: {
+                title: data.titleEN,
+                excerpt: data.excerptEN,
+                content: data.contentEN,
+                quoteText: data.quoteTextEN,
+            }
+        })
+        const updatedPostTranslationsVN = await prisma.postTranslation.update({
+            where: {
+                postId_languageCode: {
+                    postId: data.id,
+                    languageCode: "vi"
+                }
+            },
+            data: {
+                title: data.titleVI,
+                excerpt: data.excerptVI,
+                content: data.contentVI,
+                quoteText: data.quoteTextVI,
+            }
+        })
 
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedPost });
-    } catch (error) {
+        const updatedPost = await prisma.post.update({
+            where: {
+                id: data.id
+            },
+            data: {
+                postFormat: data.postFormat,
+                featureImg: data.featureImg,
+                date: data.date,
+                post_views: data.post_views,
+                post_share: data.post_share,
+                videoLink: data.videoLink ? data.videoLink : "",
+                audioLink: data.audioLink ? data.audioLink : "",
+                gallery: data.gallery ? data.gallery : [],
+                story: data.story ? data.story : false,
+                trending: data.trending ? data.trending : false,
+                published: data.published ? data.published : false,
+                author: {
+                    connect: {author_slug: data.author_slug},
+                },
+                category: {
+                    connect: {cate_slug: data.cate_slug},
+                },
+                tags: {
+                    connect: data.tags.map(tag => {
+                        return {
+                            tag_slug: tag
+                        }
+                    })
+                },
+            }
+        });
+
+        res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedPost});
+    } catch
+        (error) {
         console.log(error)
-        res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
 const deletePost = async (req, res) => {
     try {
-        const { fileName, language } = req.body;
-        let deletedPost;
-        console.log(fileName, language)
-        
-        switch (language) {
-            case "en":
-                //delete from local DB
-                deletedPost = await prisma.postEnglish.delete({
-                    where: {
-                        slug: fileName,
-                    },
-                })
-                // //delete from local DB
-                // fs.unlink(`./public/uploadPosts/en/${fileName}.md`, function (err) {
-                //     if (err) throw err;
-                //     console.log('File is deleted successfully.');
-                // })
-                break;
-            case "vi":
-                //delete from local DB
-                deletedPost = await prisma.postVietnamese.delete({
-                    where: {
-                        slug: fileName,
-                    },
-                })
-                // //delete from local DB
-                // fs.unlink(`./public/uploadPosts/vi/${fileName}.md`, function (err) {
-                //     if (err) throw err;
-                //     console.log('File is deleted successfully.');
-                // })
-                break;
-        }
+        const { slug } = req.body;
+        const {id} = await prisma.post.findUnique({
+            where: {
+                slug: slug
+            },
+            select: {
+                id: true
+            }
+        });
 
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedPost });
+        const deletedPostTranslate = await prisma.postTranslation.deleteMany({
+            where: {
+                postId: id
+            }
+        });
+        const deletedPost = await prisma.post.delete({
+            where: {
+                id: id
+            }
+        });
+
+        res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedPost});
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 

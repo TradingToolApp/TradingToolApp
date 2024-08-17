@@ -30,14 +30,14 @@ const ModalImage = ({ open, handleClose, typeSelectImg, setURLImg, setFeatureImg
         handleOpenFullScreen();
         setFullScreen(index);
     }
-
+    console.log(selectedImg)
     const handleSelect = async () => {
         switch (typeSelectImg) {
             case "featureImg":
                 setFeatureImg(selectedImg[0]);
                 break;
             case "contentImg":
-                setURLImg(selectedImg.map(item => `![Single Post Images](${item})`).join("\n"));
+                setURLImg(selectedImg.map(item => `<Image src="${item}" width="100%" height="100%" alt="Image" />`).join("\n"));
                 break;
         }
         handleClose();
@@ -71,8 +71,9 @@ const ModalImage = ({ open, handleClose, typeSelectImg, setURLImg, setFeatureImg
     }, [])
 
     if (images.length === 0) return;
+    console.log(images)
     return (
-        <Modal size={"80%"} open={open} onClose={handleClose}>
+        <Modal open={open} onClose={handleClose}>
             <Modal.Header>
                 <Modal.Title>Images</Modal.Title>
             </Modal.Header>
@@ -128,7 +129,7 @@ const ModalImage = ({ open, handleClose, typeSelectImg, setURLImg, setFeatureImg
 
                     <ButtonGroup>
                         <button className="btn btn-primary" onClick={handleSelect}>Select</button>
-                        <button className="btn btn-danger" onClick={() => handleClose()}>Cancel</button>
+                        <button className="btn btn-danger" onClick={handleClose}>Cancel</button>
                     </ButtonGroup>
                 </Stack>
             </Modal.Footer>

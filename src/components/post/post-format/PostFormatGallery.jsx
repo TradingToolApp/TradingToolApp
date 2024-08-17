@@ -10,6 +10,7 @@ import PostComment from "./elements/PostComment";
 import SocialShareBottom from "./elements/SocialShareBottom";
 import SocialShareSide from "./elements/SocialShareSide";
 import Masonry from "react-responsive-masonry"
+import WidgetYoutubeList from "../../widget/WidgetYoutubeList";
 
 const PostFormatGallery = ({ postData, allData }) => {
   const basePathLink = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH ?? "" : "";
@@ -44,7 +45,7 @@ const PostFormatGallery = ({ postData, allData }) => {
 							))}
 						</Masonry>
                     </ul>
-                    <div
+                    <div className="content-post"
                       dangerouslySetInnerHTML={{ __html: postContent }}
                     ></div>
                   </div>
@@ -57,11 +58,8 @@ const PostFormatGallery = ({ postData, allData }) => {
             </div>
             <div className="col-lg-4">
               <div className="post-sidebar">
-                <WidgetAd />
-                <WidgetNewsletter />
-                <WidgetSocialShare />
                 <WidgetPost dataPost={allData} />
-                <WidgetInstagram />
+                <WidgetYoutubeList dataPost={allData} />
               </div>
             </div>
           </div>

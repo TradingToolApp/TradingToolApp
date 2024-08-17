@@ -3,6 +3,7 @@ import WidgetInstagram from "../../widget/WidgetInstagram";
 import WidgetNewsletter from "../../widget/WidgetNewsletter";
 import WidgetPost from "../../widget/WidgetPost";
 import WidgetSocialShare from "../../widget/WidgetSocialShare";
+import WidgetYoutubeList from "../../widget/WidgetYoutubeList";
 import MetaDataFour from "./elements/meta/MetaDataFour";
 import PostAuthor from "./elements/PostAuthor";
 import PostComment from "./elements/PostComment";
@@ -26,7 +27,7 @@ const PostFormatQuote = ({ postData, allData }) => {
                   <div className="single-blog-wrapper">
                     <SocialShareSide />
 					<MetaDataFour metaData={postData} />
-                    <div
+                    <div className="content-post"
                       dangerouslySetInnerHTML={{ __html: postContent }}
                     ></div>
                   </div>
@@ -39,11 +40,8 @@ const PostFormatQuote = ({ postData, allData }) => {
             </div>
             <div className="col-lg-4">
               <div className="post-sidebar">
-                <WidgetAd />
-                <WidgetNewsletter />
-                <WidgetSocialShare />
                 <WidgetPost dataPost={allData} />
-                <WidgetInstagram />
+                <WidgetYoutubeList dataPost={allData} />
               </div>
             </div>
           </div>
