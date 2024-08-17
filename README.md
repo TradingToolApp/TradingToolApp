@@ -82,7 +82,7 @@ List format:<br />
 \</ul><br />
 
 Link format:
-``<a href="https:\/\/www.google.com">Google</a>``<br />
+``<a href="https://www.google.com">Google</a>``<br />
 
 When it comes to creating posts in video and audio formats, please provide an embed URL(not the public URL).  
 How to get the embed URL:  
