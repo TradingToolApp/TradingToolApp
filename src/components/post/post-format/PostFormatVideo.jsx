@@ -8,13 +8,14 @@ import PostAuthor from "./elements/PostAuthor";
 import PostComment from "./elements/PostComment";
 import SocialShareBottom from "./elements/SocialShareBottom";
 import SocialShareSide from "./elements/SocialShareSide";
+import WidgetYoutubeList from "../../widget/WidgetYoutubeList";
 
 const PostFormatVideo = ({ postData, allData }) => {
   const basePathLink = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH ?? "" : "";
 
   console.log(postData)
   let postContent = postData.content.replaceAll('/images/', basePathLink + '/images/');
-  postContent = postContent.replaceAll('\n', '<br />');
+  // postContent = postContent.replaceAll('\n', '<br />');
 
   return (
     <>
@@ -53,11 +54,8 @@ const PostFormatVideo = ({ postData, allData }) => {
             </div>
             <div className="col-lg-4">
               <div className="post-sidebar">
-                <WidgetAd />
-                <WidgetNewsletter />
-                {/* <WidgetSocialShare /> */}
                 <WidgetPost dataPost={allData} />
-                <WidgetInstagram />
+                <WidgetYoutubeList dataPost={allData} />
               </div>
             </div>
           </div>

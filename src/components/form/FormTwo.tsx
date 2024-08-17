@@ -113,13 +113,6 @@ const FormTwo = ({formData, handleClose, action, ...rests}: any) => {
     const renderPostFormat = () => {
         if (hasFormValue)
             switch (formValue.postFormat) {
-                case "quote":
-                    return (
-                        <Form.Group controlId="quoteText">
-                            <Form.ControlLabel>Quote Text</Form.ControlLabel>
-                            <Form.Control name="quoteText"/>
-                        </Form.Group>
-                    );
                 case "video":
                     return (
                         <Form.Group controlId="videoLink">
@@ -219,6 +212,10 @@ const FormTwo = ({formData, handleClose, action, ...rests}: any) => {
                                 <Form.ControlLabel>Excerpt</Form.ControlLabel>
                                 <Form.Control name="excerptEN"/>
                             </Form.Group>
+                            {formValue.postFormat === "quote" && <Form.Group controlId="quoteTextEN">
+                                <Form.ControlLabel>Quote</Form.ControlLabel>
+                                <Form.Control name="quoteTextEN"/>
+                            </Form.Group>}
                             <Form.Group controlId="contentEN">
                                 <Form.ControlLabel>Content</Form.ControlLabel>
                                 <Form.Control name="contentEN" accepter={Textarea} rows={28}/>
@@ -237,6 +234,10 @@ const FormTwo = ({formData, handleClose, action, ...rests}: any) => {
                                 <Form.ControlLabel>Excerpt</Form.ControlLabel>
                                 <Form.Control name="excerptVI"/>
                             </Form.Group>
+                            {formValue.postFormat === "quote" && <Form.Group controlId="quoteTextVI">
+                                <Form.ControlLabel>Quote</Form.ControlLabel>
+                                <Form.Control name="quoteTextVI"/>
+                            </Form.Group>}
                             <Form.Group controlId="contentVI">
                                 <Form.ControlLabel>Content</Form.ControlLabel>
                                 <Form.Control name="contentVI" accepter={Textarea} rows={28}/>

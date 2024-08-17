@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5666e1f1-37f4-4524-8029-eb6e834acead" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/contextProvider/postContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/contextProvider/postContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/formatPosts.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/formatPosts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/table/TableOne.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/table/TableOne.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +132,7 @@
       <workItem from="1723629655301" duration="4379000" />
       <workItem from="1723706820258" duration="10778000" />
       <workItem from="1723798638793" duration="20987000" />
-      <workItem from="1723841630174" duration="16610000" />
+      <workItem from="1723841630174" duration="20741000" />
     </task>
     <servers />
   </component>

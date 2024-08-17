@@ -114,14 +114,29 @@ const TableOne = () => {
           <Cell dataKey="title" />
         </Column>
 
+        <Column sortable>
+          <HeaderCell>Post Format</HeaderCell>
+          <Cell dataKey="postFormatName" />
+        </Column>
+
         <Column align="center" width={150} sortable>
           <HeaderCell>Category</HeaderCell>
           <Cell dataKey="cate" />
         </Column>
 
         <Column align="center" width={150} sortable>
-          <HeaderCell>Date</HeaderCell>
+          <HeaderCell>Create Date</HeaderCell>
           <Cell dataKey="date" />
+        </Column>
+
+        <Column align="center" width={150} sortable>
+          <HeaderCell>Last Update</HeaderCell>
+          <Cell dataKey="updatedAt" />
+        </Column>
+
+        <Column align="center" width={150} sortable>
+          <HeaderCell>Comments</HeaderCell>
+          <Cell dataKey="post_share" />
         </Column>
 
         <Column align="center" width={150}>

@@ -10617,9 +10617,10 @@ li {
 .content-post {
     display: flex;
     flex-direction: column;
-    word-wrap: break-word;
-
+    word-break: break-word;
+    white-space: pre-wrap;
 }
+
 .content-post img {
     justify-content: center;
 
@@ -10632,4 +10633,8 @@ li {
 .content-post a:hover {
     color: var(--primary-color);
     text-decoration: none;
+}
+
+.content-post ul, li {
+    white-space: initial;
 }

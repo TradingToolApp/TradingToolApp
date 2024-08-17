@@ -14,7 +14,7 @@ const PostFormatQuote = ({ postData, allData }) => {
   const basePathLink = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH ?? "" : "";
   
   let postContent = postData.content.replaceAll('/images/', basePathLink + '/images/');
-  postContent = postContent.replaceAll('\n', '<br />');
+  // postContent = postContent.replaceAll('\n', '<br />');
   
   return (
     <>
