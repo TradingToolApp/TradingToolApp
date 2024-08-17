@@ -61,10 +61,14 @@ Text format's styles:
 \<sub> - Subscript text \</sub><br />
 
 List format:
-\<ul>\<li>List 1\</li>\<li>List 2\</li>\<li>List 3\</li>\</ul><br />
+\<ul>
+\<li>List 1\</li>
+\<li>List 2\</li>
+\<li>List 3\</li>
+\</ul><br />
 
 Link format:
-\<a href=\"https:\/\/www.google.com\">Google\<\/a><br />
+``<a href="https:\/\/www.google.com">Google</a>``<br />
 
 When it comes to creating posts in video and audio formats, please provide an embed URL(not the public URL).  
 How to get the embed URL:  
