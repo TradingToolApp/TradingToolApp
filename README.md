@@ -56,7 +56,7 @@ text:<br />
 video:<br />
     <img src="https://github.com/user-attachments/assets/2e434294-6e3d-4810-9c34-335e64ad072f" width=50% height=50%>
     
-autio:<br />
+audio:<br />
     <img src="https://github.com/user-attachments/assets/72ed0535-87cd-4957-a401-6b34ad757dbb" width=50% height=50%>
     
 quote:<br />
