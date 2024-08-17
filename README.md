@@ -46,17 +46,17 @@ When logged in:
 This project has 2 different databases which mean:
 -   if you create a post in the VI language, you can only see it whenever you change the language to VI, and it is also true on the opposite.
 
-Post Types:
+Post Types:<br />
 standard:
-![image](https://github.com/user-attachments/assets/3fef3c2c-f1eb-4afd-b9bb-8fd3e07524ab)
+    ![image](https://github.com/user-attachments/assets/3fef3c2c-f1eb-4afd-b9bb-8fd3e07524ab | width=100)
 text:
-![image](https://github.com/user-attachments/assets/96f85b78-8f78-4745-a9bc-82c41d588795)
+    ![image](https://github.com/user-attachments/assets/96f85b78-8f78-4745-a9bc-82c41d588795 | width=100)
 video:
-![image](https://github.com/user-attachments/assets/2e434294-6e3d-4810-9c34-335e64ad072f)
+    ![image](https://github.com/user-attachments/assets/2e434294-6e3d-4810-9c34-335e64ad072f | width=100)
 autio:
-![image](https://github.com/user-attachments/assets/72ed0535-87cd-4957-a401-6b34ad757dbb)
+    ![image](https://github.com/user-attachments/assets/72ed0535-87cd-4957-a401-6b34ad757dbb | width=100)
 quote:
-![image](https://github.com/user-attachments/assets/b48bbf87-f238-446b-8a6e-f03a5a56ac12)
+    ![image](https://github.com/user-attachments/assets/b48bbf87-f238-446b-8a6e-f03a5a56ac12 | width=100)
 
 Text format's styles:  
 \<b> - Bold text \</b><br />
