@@ -2,15 +2,14 @@ import { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { slugify } from "../../utils";
-import { PostContext } from "@/contextProvider/postContext";
+import { AppContext } from "@/providers/appProvider";
 import { useTranslation } from "react-i18next";
 import { prisma } from "@/lib/prisma";
 
 const CategoryOne = ({ cateData }) => {
   const { t } = useTranslation();
-  const { posts } = useContext(PostContext);
+  const { posts } = useContext(AppContext);
   cateData = posts;
-  console.log(cateData)
   const categories = cateData.map(data => {
     const obj = {
       name: data.cate,

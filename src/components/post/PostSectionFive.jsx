@@ -8,10 +8,10 @@ import WidgetPost from "../widget/WidgetPost";
 import WidgetSocialShare from "../widget/WidgetSocialShare";
 import WidgetYoutubeList from "../widget/WidgetYoutubeList";
 import PostLayoutTwo from "./layout/PostLayoutTwo";
-import { PostContext } from "@/contextProvider/postContext";
+import { AppContext } from "@/providers/appProvider";
 
 const PostSectionFive = ({postData, adBanner, pClass}) => {
-    const { posts } = useContext(PostContext);
+    const { posts } = useContext(AppContext);
     postData = posts;
     return ( 
         <div className={`random-posts ${pClass ?? "section-gap"}`}>

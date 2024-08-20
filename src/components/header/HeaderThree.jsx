@@ -3,19 +3,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from 'next/router'
 import { signOut } from "next-auth/react"
-import { Dropdown, Button } from 'rsuite';
+import { Dropdown } from 'rsuite';
 import HeaderMenu from "../../data/menu/HeaderMenu.json";
 import OffcanvasMenu from "./OffcanvasMenu";
-import { PostContext } from "@/contextProvider/postContext";
-import { useTranslation } from 'react-i18next'
-import { FaChevronDown } from "react-icons/fa6";
+import { AppContext } from '@/providers/appProvider';
 import { useSession } from "next-auth/react";
+import { FaChevronDown } from "react-icons/fa6";
 
 const HeaderThree = () => {
 	// Main Menu Toggle
 	var menuRef = useRef();
 	const router = useRouter();
-	const { language, handleLanguageChange } = useContext(PostContext);
+	const { language, handleLanguageChange } = useContext(AppContext);
 	const { data: session } = useSession();
 	const MenuData = HeaderMenu.filter((menu) => menu.language === language)[0].data;
 	const toggleDropdownMenu = () => {
@@ -206,9 +205,9 @@ const HeaderThree = () => {
 								{
 									session?.role === "admin" && 
 									(
-										router.pathname === "/admin/dashboard" ?
+										router.pathname === "/admin/dashboard/posts" ?
 											<Link className="btn btn-outline-danger text-danger p-4 m-2" href="/login" onClick={() => signOut({ callbackUrl: '/login', redirect: true })}>Sign Out</Link>
-											: <Link className="btn btn-outline-danger text-danger p-4 m-2" href="/admin/dashboard">My Dashboard</Link>
+											: <Link className="btn btn-outline-danger text-danger p-4 m-2" href="/admin/dashboard/posts">My Dashboard</Link>
 									)
 								}
 							</div>

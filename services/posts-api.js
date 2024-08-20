@@ -1,41 +1,29 @@
 import axios from 'axios'
-import { revalidatePath } from "next/cache";
 
 function getPosts() {
-    try {
-        return axios.get('/api/posts')
-    } catch (error) {
-        console.log(error);
-    }
-}
-function createPost(data) {
-    try {
-        return axios.post('/api/posts', { data })
-    } catch (error) {
-        console.log(error);
-    }
-    revalidatePath("/admin/dashboard", { cache: 'no-store' });
-    revalidatePath("/", { cache: 'no-store' });
+    return axios.get('/api/posts')
+        .then(res => res.data)
+        .catch(err => err.response.data);
+
 }
 
-function updatePost(data) {
-    try {
-        return axios.put('/api/posts', { data })
-    } catch (error) {
-        console.log(error);
-    }
-    revalidatePath("/admin/dashboard", { cache: 'no-store' }); 
-    revalidatePath("/", { cache: 'no-store' });
+function createPost( data ) {
+    return axios.post('/api/posts', { data })
+        .then(res => res.data)
+        .catch(err => err.response.data)
 }
 
-function deletePost(slug) {
-    try {
-        return axios.delete('/api/posts', { data: { slug  } })
-    } catch (error) {
-        console.log(error);
-    }
-    revalidatePath("/admin/dashboard", { cache: 'no-store' });
-    revalidatePath("/", { cache: 'no-store' });
+function updatePost( data ) {
+    // revalidatePath("/", "layout");
+    return axios.put('/api/posts', { data })
+        .then(res => res.data)
+        .catch(err => err.response.data)
+}
+
+function deletePost( slug ) {
+    return axios.delete('/api/posts', { data: { slug } })
+        .then(res => res.data)
+        .catch(err => err.response.data);
 }
 
 const postAPI = {

@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "../styles/style.css";
 import Script from 'next/script'
 import { SessionProvider } from "next-auth/react"
-import { PostProvider } from "@/contextProvider/postContext";
+import { AppProvider } from "@/providers/appProvider";
 import "../i18n.ts";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
@@ -24,9 +24,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
       `}
       </Script>
       <SessionProvider session={session}>
-        <PostProvider>
+        <AppProvider>
           <Component {...pageProps} />
-        </PostProvider>
+        </AppProvider>
       </SessionProvider>
     </>
   )

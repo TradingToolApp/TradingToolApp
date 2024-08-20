@@ -5,9 +5,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5666e1f1-37f4-4524-8029-eb6e834acead" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/formatPosts.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/formatPosts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/table/TableOne.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/table/TableOne.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/constant/config.constant.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/constant/config.constant.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/formatPosts.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/formatData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/image-api.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/image-api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/posts-api.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/posts-api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/authenticate/SignIn.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/authenticate/SignIn.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/category/CategoryOne.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/category/CategoryOne.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/form/FormTwo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/form/FormPosts.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/form/basic/BasicForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/form/basic/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/form/basic/styles.less" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/form/members/ModalImage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modal/ModalImage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/header/HeaderThree.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/header/HeaderThree.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/post/PostSectionFive.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/post/PostSectionFive.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/sidebar/SideBarThree.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sidebar/SideBarThree.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/slider/SliderTwo.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/slider/SliderTwo.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/table/TableOne.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/table/posts/TablePosts.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/table/members/AddTableRowModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modal/posts/ModalAddPost.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/table/members/Cells.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/table/posts/CellPosts.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/table/members/DeleteTableRowModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modal/posts/ModalDeletePost.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/table/members/EditTableRowModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modal/posts/ModalEditPost.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/table/members/styles.less" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contextProvider/postContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/providers/appProvider.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/middleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/404.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/404.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/_app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/_app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/about-us.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/about-us.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/admin/dashboard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/admin/pending-users.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/admin/users/pending.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/admin/subscripted-users.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/admin/users/subscribed.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/api/migration/latest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/api/migration/rollback.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/api/posts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/api/posts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/author/[slug].js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/author/[slug].js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/category/[slug].js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/category/[slug].js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/post/[slug].js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/post/[slug].js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/team.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/team.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,30 +95,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/hoanApp/client",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "aDefault",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "D:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.1.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/hoanApp/client&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;aDefault&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;E:\\hoanApp\\client\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\hoanApp\client\public\images" />
@@ -89,14 +127,6 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\hoanApp\client\src\components\table\ChevronDownIcon.jsx" />
     </key>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.17890.1" />
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.17890.1" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -133,6 +163,7 @@
       <workItem from="1723706820258" duration="10778000" />
       <workItem from="1723798638793" duration="20987000" />
       <workItem from="1723841630174" duration="20741000" />
+      <workItem from="1724195547921" duration="103000" />
     </task>
     <servers />
   </component>

@@ -12,9 +12,12 @@ import WidgetNewsletter from "../components/widget/WidgetNewsletter";
 import WidgetPost from "../components/widget/WidgetPost";
 import WidgetSocialShare from "../components/widget/WidgetSocialShare";
 import { removeDuplicates } from "../utils";
+import { AppContext } from "@/providers/appProvider";
+import { useContext } from "react";
 
 const AboutUs = ({ aboutData, allPosts }) => {
-
+    const { posts } = useContext(AppContext);
+    allPosts = posts;
     const AuthorList = removeDuplicates(allPosts, 'author_name');
 
     return (

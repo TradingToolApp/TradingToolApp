@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Slider from "react-slick";
-import { PostContext } from "@/contextProvider/postContext";
+import { AppContext } from "@/providers/appProvider";
 import { useTranslation } from 'react-i18next';
 import { FaChevronLeft } from "react-icons/fa6";
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
@@ -10,7 +10,7 @@ import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 const SliderTwo = ({ slidePost }) => {
   const { t } = useTranslation()
 
-  const { posts } = useContext(PostContext);
+  const { posts } = useContext(AppContext);
   slidePost = posts
 
   function SlickNextArrow(props) {

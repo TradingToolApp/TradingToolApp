@@ -19,7 +19,7 @@
       "@/components/*": ["./src/components/*"],
       "@/services/*": ["./services/*"],
       "@/lib/*": ["./lib/*"],
-      "@/contextProdiver/*": ["./src/contextProdiver/*"],
+      "@/providers/*": ["./src/providers/*"],
     }
   },
   "include": [

@@ -1,35 +1,35 @@
 import { useContext } from "react";
-import { getAllPosts } from "../../../lib/api";
 import FooterOne from "../../components/footer/FooterOne";
 import HeaderThree from "../../components/header/HeaderThree";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import { slugify } from "../../utils";
 import HeadMeta from "../../components/elements/HeadMeta";
-import AdBanner from "../../components/common/AdBanner";
-import WidgetAd from "../../components/widget/WidgetAd";
-import WidgetSocialShare from "../../components/widget/WidgetSocialShare";
 import WidgetPost from "../../components/widget/WidgetPost";
 import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
 import WidgetCategory from "../../components/widget/WidgetCategory";
-import { PostContext } from "@/contextProvider/postContext";
+import { AppContext } from "@/providers/appProvider";
 import { useRouter } from 'next/router'
 import { useTranslation } from "react-i18next";
 
-const PostCategory = ({ allPosts, params }) => {
+const PostCategory = ( { allPosts, params } ) => {
     const { t } = useTranslation();
-    const router = useRouter()
+    const router = useRouter();
+    const { posts, categories } = useContext(AppContext);
 
-    const { posts } = useContext(PostContext);
+    const isExisted = categories.find(category => slugify(category.cate) === router.query.slug);
+    if (!isExisted) {
+        router.push('/404');
+        return null;
+    }
     allPosts = posts;
-    const getCategoryData = allPosts.filter(post => post.cate_slug === router.query.slug);
-    const postData = getCategoryData;
-
+    const postData = allPosts.filter(post => slugify(post.cate_slug) === router.query.slug);
     const cateContent = postData[0];
+
     return (
         <>
-            <HeadMeta metaTitle={cateContent.cate} />
-            <HeaderThree />
-            <Breadcrumb aPage={cateContent.cate} />
+            <HeadMeta metaTitle={cateContent.cate}/>
+            <HeaderThree/>
+            <Breadcrumb aPage={cateContent.cate}/>
             {/* Banner Start here  */}
             <div className="banner banner__default bg-grey-light-three">
                 <div className="container">
@@ -48,21 +48,21 @@ const PostCategory = ({ allPosts, params }) => {
                     <div className="row">
                         <div className="col-lg-8">
                             <div className="axil-content">
-                                {postData.map((data) => (
-                                    <PostLayoutTwo data={data} postSizeMd={true} key={data.slug} />
+                                {postData.map(( data ) => (
+                                    <PostLayoutTwo data={data} postSizeMd={true} key={data.slug}/>
                                 ))}
                             </div>
                         </div>
                         <div className="col-lg-4">
                             <div className="post-sidebar">
-                                <WidgetCategory cateData={allPosts} />
-                                <WidgetPost dataPost={allPosts} />
+                                <WidgetCategory cateData={allPosts}/>
+                                <WidgetPost dataPost={allPosts}/>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <FooterOne />
+            <FooterOne/>
         </>
     );
 }

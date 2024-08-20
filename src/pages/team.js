@@ -8,12 +8,12 @@ import FooterOne from "../components/footer/FooterOne";
 import HeaderThree from "../components/header/HeaderThree";
 import TeamOne from "../components/team/TeamOne";
 import { removeDuplicates } from "../utils";
-import { PostContext } from "@/contextProvider/postContext";
+import { AppContext } from "@/providers/appProvider";
 import { useTranslation } from "react-i18next";
 
 const TeamPage = ({ allPosts }) => {
     const { t } = useTranslation();
-    const { posts } = useContext(PostContext);
+    const { posts } = useContext(AppContext);
     allPosts = posts;
     const AuthorList = removeDuplicates(allPosts, 'author_name');
 

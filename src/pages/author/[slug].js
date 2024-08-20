@@ -12,16 +12,15 @@ import WidgetPost from "../../components/widget/WidgetPost";
 import WidgetSocialShare from "../../components/widget/WidgetSocialShare";
 import { slugify } from "../../utils";
 import prisma from "@/lib/prisma";
-import { PostContext } from "@/contextProvider/postContext";
+import { AppContext } from "@/providers/appProvider";
 import { useRouter } from 'next/router'
 
 const PostAuthor = ({ allPosts }) => {
     const router = useRouter()
 
-    const { posts } = useContext(PostContext);
-    allPosts = posts;
-    const getAuthorData = allPosts.filter(post => slugify(post.author_name) === router.query.slug);
-    const postData = getAuthorData;
+    const { categories } = useContext(AppContext);
+    allPosts = categories;
+    const postData = allPosts.filter(post => slugify(post.author_name) === router.query.slug);
     const authorContent = postData[0];
 
     return (
@@ -129,13 +128,13 @@ export default PostAuthor;
 // }
 
 // export async function getStaticPaths() {
-//     // const posts = getAllPosts(['author_name']);
-//     const posts = await prisma.postEnglish.findMany({
+//     // const categories = getAllPosts(['author_name']);
+//     const categories = await prisma.postEnglish.findMany({
 //         select: {
 //             author_name: true
 //         }
 //     });
-//     const paths = posts.map(post => ({
+//     const paths = categories.map(post => ({
 //         params: {
 //             slug: slugify(post.author_name)
 //         }
