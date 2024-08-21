@@ -16,13 +16,13 @@ const PostCategory = ( { allPosts, params } ) => {
     const router = useRouter();
     const { posts, categories } = useContext(AppContext);
 
-    const isExisted = categories.find(category => slugify(category.cate) === router.query.slug);
+    const isExisted = categories.find(category => category.cate_slug === router.query.slug);
     if (!isExisted) {
         router.push('/404');
         return null;
     }
     allPosts = posts;
-    const postData = allPosts.filter(post => slugify(post.cate_slug) === router.query.slug);
+    const postData = allPosts.filter(post => post.cate_slug === router.query.slug);
     const cateContent = postData[0];
 
     return (

@@ -4,42 +4,54 @@ import useLocalStorage from "@/hooks/useLocalStorage";
 import postAPI from "@/services/posts-api";
 import authorAPI from "@/services/author-api";
 import { formatData, formatAuthors, formatCategories } from "@/lib/formatData";
-import { prisma } from "@/lib/prisma";
 import categoryAPI from "@/services/category-api";
 
-const contextDefaultValues = {
+interface Category {
+    id: number,
+    value: string,
+    label: string,
+    cate_slug: string,
+    cate_bg: string,
+    cate_img: string,
+    cateEN: string,
+    descriptionEN: string,
+    cateVI: string,
+}
+
+interface contextDefaultValues {
     language: "en",
-    setLanguage: ( language ) => { },
+    setLanguage: ( language: string ) => void,
     posts: [],
-    setPosts: ( posts ) => { },
+    setPosts: ( posts: object ) => void,
     authors: [],
-    setAuthors: ( authors ) => { },
-    categories: [],
-    setCategories: ( categories ) => { },
+    setAuthors: ( authors: object ) => void,
+    categories: Category[],
+    setCategories: ( categories: object ) => void,
     tags: [],
-    setTags: ( tags ) => { },
+    setTags: ( tags: object ) => void,
     fetching: true,
-    setFetching: ( fetching ) => { },
-    error: ""
-};
+    setFetching: ( fetching: object ) => void,
+    error: "",
+    handleLanguageChange: (language: string) => void,
+}
 
-export const AppContext = createContext(contextDefaultValues)
+export const AppContext = createContext<contextDefaultValues>({} as contextDefaultValues)
 
-export const AppProvider = ( { children } ) => {
-    const [ allDataPosts, setAllDataPosts ] = useState([])
-    const [ allDataCategories, setAllDataCategories ] = useState([])
-    const [ allDataAuthors, setAllDataAuthors ] = useState([])
-    const [ allDataTags, setAllDataTags ] = useState([])
-    const [ posts, setPosts ] = useState([])
-    const [ categories, setCategories ] = useState([]);
-    const [ authors, setAuthors ] = useState([]);
-    const [ tags, setTags ] = useState([]);
-    const [ fetching, setFetching ] = useState(false);
-    const [ error, setError ] = useState(null);
+export const AppProvider: React.FC<{children: React.ReactNode}> = ( { children } ) => {
     const { i18n, t } = useTranslation();
-    const [ language, setLanguage ] = useLocalStorage("language", "en");
+    const [ allDataPosts, setAllDataPosts ] = useState<any>([])
+    const [ allDataCategories, setAllDataCategories ] = useState<any>([])
+    const [ allDataAuthors, setAllDataAuthors ] = useState<any>([])
+    const [ allDataTags, setAllDataTags ] = useState<any>([])
+    const [ posts, setPosts ]: any = useState<any>([])
+    const [ categories, setCategories ]: any = useState<any>([]);
+    const [ authors, setAuthors ]: any = useState<any>([]);
+    const [ tags, setTags ]: any = useState<any>([]);
+    const [ fetching, setFetching ]: any = useState<any>(false);
+    const [ error, setError ]: any = useState<any>();
+    const [ language, setLanguage ]: any = useLocalStorage("language", "en");
 
-    const handleLanguageChange = ( language ) => {
+    const handleLanguageChange = (language: string) => {
         setLanguage(language);
         i18n.changeLanguage(language);
     }
@@ -69,7 +81,6 @@ export const AppProvider = ( { children } ) => {
             setPosts(posts);
             const authors = formatAuthors(allDataAuthors, language);
             setAuthors(authors);
-            console.log(authors)
             const categories = formatCategories(allDataCategories, language);
             setCategories(categories);
         } catch (error) {
@@ -93,6 +104,6 @@ export const AppProvider = ( { children } ) => {
         setFetching,
         error
     }}>
-        {posts.length !== 0 && children}
+        {posts.length !== 0 && categories.length !== 0 && authors.length !== 0 && children}
     </AppContext.Provider>)
 }

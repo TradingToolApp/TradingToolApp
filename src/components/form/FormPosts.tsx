@@ -31,6 +31,11 @@ Textarea.displayName = "Textarea";
 
 const {StringType} = Schema.Types;
 
+interface Category {
+    cate_slug: string;
+    label: string;
+}
+
 const model = Schema.Model({
     postFormat: StringType().isRequired("This field is required."),
     // featureImg: StringType().isRequired("This field is required."),
@@ -75,16 +80,18 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
             console.error("Form error");
             return;
         }
-        //on create => generate new slug(fileName), else use the old one
+        categories.filter((cate: any) => {
+            console.log(cate);
+        })
         try {
-
+            //on create => generate new slug(fileName), else use the old one
             const newPost = {
                 ...formValue,
                 slug: action === "CREATE" ? slugify(formValue.titleEN, {lower: true}) : formValue.slug,
                 postFormatLabel: postFormatList.filter((format: any) => format.value === formValue.postFormat)[0].label,
                 title: language === "en" ? formValue.titleEN : formValue.titleVI,
                 content: language === "en" ? formValue.contentEN : formValue.contentVI,
-                cate: cateList.filter((cate: any) => cate.value === formValue.cate_slug)[0].label,
+                cate: categories.filter((cate: Category) => cate.cate_slug === formValue.cate_slug)[0].label,
                 featureImg: featureImg.length !== 0 ? featureImg[0] : formValue.featureImg,
                 updatedAt: action === "CREATE" ? formValue.date : formValue.updatedAt,
             };
@@ -92,14 +99,14 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
             switch (action) {
                 case "CREATE":
                     const resCreate = await postAPI.createPost(newPost);
-                    if(resCreate.success === false) {
+                    if (resCreate.success === false) {
                         return toaster.push(<Message type={"error"}>{resCreate.message}</Message>);
                     }
                     setPosts([...posts, newPost]);
                     break;
                 case "UPDATE":
                     const resUpdate = await postAPI.updatePost(newPost);
-                    if(resUpdate.success === false) {
+                    if (resUpdate.success === false) {
                         return toaster.push(<Message type={"error"}>{resUpdate.message}</Message>);
                     }
                     const updatedPosts: any[] = posts.filter((post: any) => post.slug !== formValue.slug);
@@ -164,7 +171,7 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                                     <Col xs={2} md={4} style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                                         <Form.Group controlId="cate_slug">
                                             <Form.ControlLabel>Category</Form.ControlLabel>
-                                            <Form.Control name="cate_slug" accepter={SelectPicker} data={cateList}/>
+                                            <Form.Control name="cate_slug" accepter={SelectPicker} data={categories}/>
                                         </Form.Group>
                                     </Col>
                                     <Col xs={2} md={4} style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
