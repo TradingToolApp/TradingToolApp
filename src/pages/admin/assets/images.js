@@ -18,7 +18,7 @@ const Images = ( { allPosts } ) => {
     const [ sortColumn, setSortColumn ] = useState("id");
     const [ sortType, setSortType ] = useState();
     const [ searchKeyword, setSearchKeyword ] = useState("");
-    const [ fullScreenId, setFullScreenId ] = useState(-1);
+    const [ fullScreenURL, setFullScreenURL ] = useState("");
     const [ openFullScreen, setOpenFullScreen ] = useState(false);
     const [ openAdd, setOpenAdd ] = React.useState(false);
     const [ openDelete, setOpenDelete ] = useState(false);
@@ -30,9 +30,9 @@ const Images = ( { allPosts } ) => {
     const handleOpenDelete = () => setOpenDelete(true);
     const handleCloseDelete = () => setOpenDelete(false);
 
-    const handleDoubleClick = ( index ) => {
+    const handleDoubleClick = ( url ) => {
         handleOpenFullScreen();
-        setFullScreenId(index);
+        setFullScreenURL(url);
     }
 
     const handleSelectImg = ( img ) => {
@@ -68,7 +68,7 @@ const Images = ( { allPosts } ) => {
             return true;
         });
     }, [ images, searchKeyword ]);
-    console.log(images)
+
     return (
         <>
             <Grid className="d-flex flex-column vh-100 vw-100" fluid>
@@ -104,13 +104,13 @@ const Images = ( { allPosts } ) => {
                                style={{ overflowY: "scroll" }}>
                             {!loading && filteredData.map(( item, index ) =>
                                 <Panel key={index}
-                                       className={`${selectedImg.includes(item.filepath) ? "border-2 border-info" : ""} m-2`}
-                                       onClick={() => handleSelectImg(item.filepath)}
-                                       onDoubleClick={() => handleDoubleClick(index)}
+                                       className={`${selectedImg.includes(item.url) ? "border-2 border-info" : ""} m-2`}
+                                       onClick={() => handleSelectImg(item.url)}
+                                       onDoubleClick={() => handleDoubleClick(item.url)}
                                        shaded bordered bodyFill
                                 >
                                     <Image
-                                        src={item.filepath}
+                                        src={item.url}
                                         width={200}
                                         height={200}
                                         style={{
@@ -125,7 +125,7 @@ const Images = ( { allPosts } ) => {
                     </Col>
                 </Row>
             </Grid>
-            <ModalFullScreenImage open={openFullScreen} handleClose={handleCloseFullScreen} images={images} fullScreenId={fullScreenId}/>
+            <ModalFullScreenImage open={openFullScreen} handleClose={handleCloseFullScreen} images={images} fullScreenURL={fullScreenURL}/>
             <ModalAddImage open={openAdd} handleClose={handleCloseAdd} images={images} setImages={setImages}/>
             <ModalDeleteImage open={openDelete} handleClose={handleCloseDelete} images={images} setImages={setImages} selectedImg={selectedImg}
                               setSelectedImg={setSelectedImg}/>

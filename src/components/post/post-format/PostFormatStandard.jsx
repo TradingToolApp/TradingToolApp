@@ -12,10 +12,8 @@ import SocialShareSide from "./elements/SocialShareSide";
 
 const PostFormatStandard = ({ postData, allData }) => {
   const basePathLink = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH ?? "" : "";
+  const postContent = postData.content;
 
-  let postContent = postData.content.replaceAll('/images/', basePathLink + '/images/');
-  // postContent = postContent.replaceAll('\n', '<br />');
-  console.log(postData)
   return (
     <>
       <MetaDataOne metaData={postData} />

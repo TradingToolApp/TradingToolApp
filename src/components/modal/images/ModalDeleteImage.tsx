@@ -25,7 +25,7 @@ const ModalDeleteImage = ( { open, handleClose, images, setImages, selectedImg, 
                 return;
             }
 
-            setImages(images.filter((item: any) => !selectedImg.includes(item.filepath)));
+            setImages(images.filter((item: any) => !selectedImg.includes(item.url)));
             setSelectedImg([]);
             handleClose();
         } catch (error) {

@@ -12,9 +12,10 @@ import SocialShareSide from "./elements/SocialShareSide";
 const PostFormatText = ({ postData, allData }) => {
   const basePathLink = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH ?? "" : "";
   
-  let postContent = postData.content.replaceAll('/images/', basePathLink + '/images/');
+  // let postContent = postData.content.replaceAll('/images/', basePathLink + '/images/');
   // postContent = postContent.replaceAll('\n', '<br />');
-  
+  const postContent = postData.content;
+
   return (
     <>
       <div className="post-single-wrapper p-t-xs-60">

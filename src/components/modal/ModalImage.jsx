@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Modal, Uploader, Stack, Divider, Panel, ButtonGroup, Button, Message, useToaster } from 'rsuite';
 import CameraRetroIcon from '@rsuite/icons/legacy/CameraRetro';
 import imageAPI from '../../../services/image-api';
+import ModalFullScreenImage from "@/components/modal/images/ModalFullScreenImage";
 
 const ModalImage = ( { open, handleClose, multiple = false, setReturnedImg } ) => {
     const toaster = useToaster();
@@ -10,14 +11,14 @@ const ModalImage = ( { open, handleClose, multiple = false, setReturnedImg } ) =
     const [ images, setImages ] = useState([]);
     const [ selectedImg, setSelectedImg ] = useState([]);
     const [ openFullScreen, setOpenFullScreen ] = useState(false);
-    const [ fullScreen, setFullScreen ] = useState(-1);
+    const [ fullScreenURL, setFullScreenURL ] = useState("");
 
     const handleOpenFullScreen = () => setOpenFullScreen(true);
     const handleCloseFullScreen = () => setOpenFullScreen(false);
 
-    const handleDoubleClick = ( index ) => {
+    const handleDoubleClick = ( url ) => {
         handleOpenFullScreen();
-        setFullScreen(index);
+        setFullScreenURL(url);
     }
 
     const handleReturn = async () => {
@@ -52,55 +53,50 @@ const ModalImage = ( { open, handleClose, multiple = false, setReturnedImg } ) =
     }, [])
 
     return (
-        <Modal size={"80%"} open={open} onClose={handleClose}>
-            <Modal.Header>
-                <Modal.Title>Images</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                {loading ? <div>Loading...</div> :
-                    <div>
-                        <Divider/>
-                        <div style={{ height: "500px" }}>
-                            <Stack justifyContent='center' wrap>
-                                {images.map(( item, index ) =>
-                                    <Panel key={index}
-                                           className={`${selectedImg.includes(item.filepath) ? "border-2 border-info" : ""} m-4`}
-                                           style={{ display: 'inline-block', width: 200, height: 200 }}
-                                           onClick={() => handleSelectImg(item.filepath)}
-                                           onDoubleClick={() => handleDoubleClick(index)}
-                                           shaded bordered bodyFill
-                                    >
-                                        <Image
-                                            src={item.filepath}
-                                            width={200}
-                                            height={200}
-                                            style={{
-                                                objectFit: 'contain', // cover, contain, none
-                                            }}
-                                            alt="Image"
-                                        />
-                                    </Panel>
-                                )}
-                            </Stack>
-                        </div>
+        <>
+            <Modal size={"80%"} open={open} onClose={handleClose}>
+                <Modal.Header>
+                    <Modal.Title>Images</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {loading ? <div>Loading...</div> :
                         <div>
-                            <Modal size={"full"} open={openFullScreen} onClose={handleCloseFullScreen}>
-                                <Modal.Body>
-                                    {fullScreen !== -1 && <Image src={images[fullScreen].filepath} layout='fill'
-                                            objectFit='contain' alt="Picture of the author"/>}
-                                </Modal.Body>
-                            </Modal>
+                            <Divider/>
+                            <div style={{ height: "500px" }}>
+                                <Stack justifyContent='center' wrap>
+                                    {images.map(( item, index ) =>
+                                        <Panel key={index}
+                                               className={`${selectedImg.includes(item.url) ? "border-2 border-info" : ""} m-4`}
+                                               style={{ display: 'inline-block', width: 200, height: 200 }}
+                                               onClick={() => handleSelectImg(item.url)}
+                                               onDoubleClick={() => handleDoubleClick(item.url)}
+                                               shaded bordered bodyFill
+                                        >
+                                            <Image
+                                                src={item.url}
+                                                width={200}
+                                                height={200}
+                                                style={{
+                                                    objectFit: 'contain', // cover, contain, none
+                                                }}
+                                                alt="Image"
+                                            />
+                                        </Panel>
+                                    )}
+                                </Stack>
+                            </div>
                         </div>
-                    </div>
-                }
-            </Modal.Body>
-            <Modal.Footer>
+                    }
+                </Modal.Body>
+                <Modal.Footer>
                     <ButtonGroup>
                         <button className="btn btn-primary" onClick={handleReturn}>Select</button>
                         <button className="btn btn-danger" onClick={handleClose}>Cancel</button>
                     </ButtonGroup>
-            </Modal.Footer>
-        </Modal>
+                </Modal.Footer>
+            </Modal>
+            <ModalFullScreenImage open={openFullScreen} handleClose={handleCloseFullScreen} images={images} fullScreenURL={fullScreenURL}/>
+        </>
     );
 };
 

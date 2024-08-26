@@ -31,8 +31,8 @@ const ModalAddImage = ({ open, handleClose, images, setImages }: ModalAddImagesP
 
             const response = await imageAPI.createImages(formData);
             setImages([ ...images, ...response.data ]);
-            setUpload([]);
             setUploading(false);
+            setUpload([]);
             handleClose();
         } catch (error) {
             console.log(error)
@@ -44,7 +44,7 @@ const ModalAddImage = ({ open, handleClose, images, setImages }: ModalAddImagesP
     return (
         <Modal open={open} onClose={handleClose}>
             <Modal.Header>
-                <Modal.Title>Modal Title</Modal.Title>
+                <Modal.Title>Add Image</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Uploader name="files" autoUpload={false} action="#"

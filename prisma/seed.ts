@@ -8,72 +8,72 @@ import images from "./seeds/images";
 const prisma = new PrismaClient();
 
 async function main() {
-    // // Seed Languages
-    // const english = await prisma.language.create({
-    //     data: {
-    //         code: 'en',
-    //         name: 'English',
-    //     },
-    // });
-    //
-    // const vietnamese = await prisma.language.create({
-    //     data: {
-    //         code: 'vi',
-    //         name: 'Vietnamese',
-    //     },
-    // });
-    //
-    // // Seed Categories
-    // for (const categoryData of categories) {
-    //     await prisma.category.create({
-    //         data: {
-    //             cate_slug: categoryData.cate_slug,
-    //             cate_bg: categoryData.cate_bg,
-    //             cate_img: categoryData.cate_img,
-    //             translations: {
-    //                 create: categoryData.translations.map(translation => ({
-    //                     cate: translation.cate,
-    //                     description: translation.description,
-    //                     language: {connect: {code: translation.languageCode}},
-    //                 })),
-    //             },
-    //         },
-    //     });
-    // }
-    //
-    // // Seed Authors
-    // for (let i in authors) {
-    //     await prisma.author.create({
-    //         data: {
-    //             author_slug: authors[i].author_slug,
-    //             author_name: authors[i].author_name,
-    //             author_img: authors[i].author_img,
-    //             author_social: authors[i].author_social,
-    //             translations: {
-    //                 create: authors[i].translations.map(translation => ({
-    //                     author_desg: translation.author_desg,
-    //                     author_bio: translation.author_bio,
-    //                     language: {connect: {code: translation.languageCode}}
-    //                 })),
-    //             },
-    //         },
-    //     });
-    // }
-    //
-    // // Seed Tags
-    // for (const i in tags) {
-    //     await prisma.tag.create({
-    //         data: {
-    //             tag_slug: tags[i].tag_slug,
-    //             translations: {
-    //                 create: tags[i].translations.map(translation => ({
-    //                     tag: translation.tag,
-    //                     language: {connect: {code: translation.languageCode}}
-    //                 })),
-    //             }
-    //         }
-    //     });
-    // }
+    // Seed Languages
+    const english = await prisma.language.create({
+        data: {
+            code: 'en',
+            name: 'English',
+        },
+    });
+
+    const vietnamese = await prisma.language.create({
+        data: {
+            code: 'vi',
+            name: 'Vietnamese',
+        },
+    });
+
+    // Seed Categories
+    for (const categoryData of categories) {
+        await prisma.category.create({
+            data: {
+                cate_slug: categoryData.cate_slug,
+                cate_bg: categoryData.cate_bg,
+                cate_img: categoryData.cate_img,
+                translations: {
+                    create: categoryData.translations.map(translation => ({
+                        cate: translation.cate,
+                        description: translation.description,
+                        language: {connect: {code: translation.languageCode}},
+                    })),
+                },
+            },
+        });
+    }
+
+    // Seed Authors
+    for (let i in authors) {
+        await prisma.author.create({
+            data: {
+                author_slug: authors[i].author_slug,
+                author_name: authors[i].author_name,
+                author_img: authors[i].author_img,
+                author_social: authors[i].author_social,
+                translations: {
+                    create: authors[i].translations.map(translation => ({
+                        author_desg: translation.author_desg,
+                        author_bio: translation.author_bio,
+                        language: {connect: {code: translation.languageCode}}
+                    })),
+                },
+            },
+        });
+    }
+
+    // Seed Tags
+    for (const i in tags) {
+        await prisma.tag.create({
+            data: {
+                tag_slug: tags[i].tag_slug,
+                translations: {
+                    create: tags[i].translations.map(translation => ({
+                        tag: translation.tag,
+                        language: {connect: {code: translation.languageCode}}
+                    })),
+                }
+            }
+        });
+    }
 
     // Seed Posts
     for (const i in dataEN) {
