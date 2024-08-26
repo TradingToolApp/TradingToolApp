@@ -1,9 +1,9 @@
 import multer from "multer";
 import path from "path";
-import {SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE} from "@/lib/constant";
-import {imageUploadDir, imageGetDir} from "@/lib/constant";
+import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "@/lib/constant";
+import { imageGetDir } from "@/lib/constant";
 import prisma from "@/lib/prisma";
-import uploadToGgDrive from "./utils/uploadDrive";
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 
 const fs = require('fs');
 
@@ -12,17 +12,18 @@ export const config = {
         bodyParser: false,
     },
 };
+const imagesDirectory = path.join(process.cwd(), './public/uploadImages')
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadPath = imageUploadDir;
+    destination: ( req, file, cb ) => {
+        const uploadPath = imagesDirectory;
 
         // Create the folder if it doesn't exist
-        require("fs").mkdirSync(uploadPath, {recursive: true});
+        require("fs").mkdirSync(uploadPath, { recursive: true });
 
         cb(null, uploadPath);
     },
-    filename: (req, file, cb) => {
+    filename: ( req, file, cb ) => {
         cb(
             null,
             `${Date.now()}-${file.originalname}`
@@ -30,9 +31,25 @@ const storage = multer.diskStorage({
     },
 });
 
-const upload = multer({storage});
+const upload = multer({
+    storage,
+    limits: {
+        fileSize: 8000000 // 8MB
+    },
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
-const postHandler = async (req, res) => {
+        if (!allowedTypes.includes(file.mimetype)) {
+            const error = new Error('Invalid file type. Allowed: jpeg, jpg, png');
+            error.code = 'INVALID_FILE_TYPE';
+            return cb(error, false);
+        }
+
+        cb(null, true);
+    }
+});
+
+const postHandler = async ( req, res ) => {
     switch (req.method) {
         case "GET":
             return getImages(req, res);
@@ -43,33 +60,39 @@ const postHandler = async (req, res) => {
     }
 };
 
-const getImages = async (req, res) => {
+const s3 = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+        accessKeyId: process.env.AWS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+});
+
+
+const getImages = async ( req, res ) => {
     try {
-        // // Get all images from local server
-        const files = fs.readdirSync(imageUploadDir);
-        const images = files.map((file) => {
-            return {
-                filepath: `/uploadImages/${file}`
-            }
-        });
+        // Get all images from local server
+        // const files = fs.readdirSync(imageUploadDir);
+        // const images = files.map((file) => {
+        //     return {
+        //         filepath: `/uploadImages/${file}`
+        //     }
+        // });
 
         // Get all images from the database
-        // const files = await prisma.image.findMany();
-        // const images = files.map((file) => {
-        //   return { ...file, filepath: `${imageGetDir}/${file.filename}` }
-        // }
-        // );
+        const images = await prisma.image.findMany();
 
-        res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: images});
+        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: images });
     } catch (error) {
-        res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 
-const createImages = async (req, res) => {
+const createImages = async ( req, res ) => {
     try {
-        await new Promise((resolve, reject) => {
-            upload.single("file")(req, res, (err) => {
+        // Upload to server
+        await new Promise(( resolve, reject ) => {
+            upload.array("file", 5)(req, res, ( err ) => {
                 if (err) {
                     return reject(err);
                 }
@@ -78,52 +101,68 @@ const createImages = async (req, res) => {
         });
 
         // Access the 'file' property after the multer middleware processes the file
-        const uploadedFile = req.file;
+        const files = req.files;
 
-        if (!uploadedFile) {
-            return res.status(400).json({error: "No file uploaded"});
+        if (!files) {
+            return res.status(400).json({ error: "No file uploaded" });
         }
 
-        // Upload the image to Google Drive
-        // For now, Google Drive is used as a backup storage, because imageURL can not be used to render now.
-
-        // Save the image to the database
-        const newImage = await prisma.image.create({
-            data: {
-                originalname: uploadedFile.originalname,
-                filename: uploadedFile.filename,
-                filepath: imageGetDir + '/' + uploadedFile.filename,
-                destination: uploadedFile.destination,
-                mimetype: uploadedFile.mimetype,
-                size: uploadedFile.size,
-                url: imageURL,
+        const images = files.map(( file ) => {
+            return {
+                originalname: file.originalname,
+                filename: file.filename,
+                filepath: imageGetDir + '/' + file.filename,
+                destination: file.destination,
+                mimetype: file.mimetype,
+                size: file.size,
+                url: "", //for now there is nowhere to store the url
             }
+        })
+
+        // // Upload to S3
+        // const key = "images/" + files.originalname;
+        // const command = new PutObjectCommand({
+        //     Bucket: process.env.AWS_S3_BUCKET_NAME,
+        //     Key: key,
+        //     Body: files.buffer,
+        //     ContentType: files.mimetype,
+        //     ACL: 'public-read',
+        // });
+        // const response = await s3.send(command);
+
+        // // Save the image data to the database
+        await prisma.image.createMany({
+            data: images,
         });
 
-        res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newImage});
+        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: images });
     } catch (error) {
         console.log(error)
-        res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 };
 
-const deleteImages = async (req, res) => {
-    const {fileName} = req.body;
-
+const deleteImages = async ( req, res ) => {
+    const rawBody = await buffer(req);
+    const filepaths = JSON.parse(rawBody.toString());
     try {
-        // Delete the image from the local server
-        const filePath = path.join(imageUploadDir, fileName);
-        fs.unlinkSync(filePath)
-
         // Delete the image from the database
-        const image = await prisma.user.delete({
+        const file = await prisma.image.deleteMany({
             where: {
-                filename: fileName,
+                filepath: {
+                    in: filepaths
+                }
             },
         });
 
+        // Delete the image from the local server
+        filepaths.map(async ( filepath ) => {
+            fs.unlinkSync("./public" + filepath)
+        });
+
+        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: file });
     } catch (error) {
-        res.status(500).json({success: true, code: ERROR_CODE, message: error, data: []});
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 

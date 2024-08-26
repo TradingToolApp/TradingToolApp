@@ -156,7 +156,7 @@ model Image {
   id           Int      @id @default(autoincrement())
   originalname String
   filename     String
-  filepath     String
+  filepath     String   @unique
   destination  String
   mimetype     String
   url          String?

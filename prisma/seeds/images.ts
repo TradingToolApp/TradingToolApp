@@ -4,11 +4,11 @@ const data = [
   {
     originalname: "default.jpg",
     filename: "default.jpg",
-    filepath: `${imageUploadDir}/default.jpg`,
-    destination: imageUploadDir,
+    filepath: `/images/posts/default.jpg`,
+    destination: "/images/posts",
     mimetype: "image/jpg",
     size: 5235,
-    url: "https://drive.google.com/uc?id=1Z2",
+    url: "",
   },
 ];
 

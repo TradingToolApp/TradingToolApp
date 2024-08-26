@@ -4,7 +4,6 @@ import Link from "next/link";
 import { slugify } from "../../utils";
 import { AppContext } from "@/providers/appProvider";
 import { useTranslation } from "react-i18next";
-import { prisma } from "@/lib/prisma";
 
 const CategoryOne = ({ cateData }) => {
   const { t } = useTranslation();

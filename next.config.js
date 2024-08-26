@@ -8,6 +8,18 @@ const nextConfig = {
   swcMinify: true,
   images: {
     unoptimized: true,
+    // domains: [''],
+    // domains: ["https://tradingtoolapp.s3.ap-southeast-1.amazonaws.com", "tradingtoolapp.s3.ap-southeast-1.amazonaws.com"],
+    // formats: ["image/webp"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'tradingtoolapp.s3.ap-southeast-1.amazonaws.com',
+        port: '',
+        pathname: '/tradingtoolapp/**',
+        // pathname: '/images/**',
+      },
+    ],
   },
   env: {
     POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL,

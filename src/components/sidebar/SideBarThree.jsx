@@ -5,7 +5,7 @@ import PeoplesIcon from '@rsuite/icons/Peoples';
 import MessageIcon from '@rsuite/icons/Message';
 
 const panelStyles = {
-    padding: '0 20px',
+    padding: '0 30px',
     // color: '#aaa'
 };
 

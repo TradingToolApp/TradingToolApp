@@ -46,7 +46,7 @@ const initialFormValue = {
     label: "",
     cate_slug: "",
     cate_bg: "",
-    cate_img: "/images/defaultCategoryImage.jpg",
+    cate_img: "/images/category/default.jpg",
     cateEN: "",
     descriptionEN: "",
     cateVI: "",

@@ -11,7 +11,7 @@ import SearchIcon from "@rsuite/icons/Search";
 import MoreIcon from "@rsuite/icons/legacy/More";
 import { ActionCell } from "./CellPosts";
 import { AppContext } from "@/providers/appProvider";
-import ModalAddPost from "@/components/modal/posts/ModalAddPost";
+import ModalAddPost from "../../modal/posts/ModalAddPost";
 const { Column, HeaderCell, Cell } = Table;
 
 
@@ -67,7 +67,7 @@ const TablePosts = () => {
 
   return (
     <div>
-      <Stack className="table-toolbar" style={{ marginTop: "10px" }} justifyContent="space-between">
+      <Stack className="table-toolbar my-3" justifyContent="space-between">
         <Stack spacing={6} >
           <InputGroup inside>
             <Input
@@ -108,32 +108,32 @@ const TablePosts = () => {
           <Cell dataKey="title" />
         </Column>
 
-        <Column sortable>
+        <Column width={100} sortable>
           <HeaderCell>Post Format</HeaderCell>
           <Cell dataKey="postFormatLabel" />
         </Column>
 
-        <Column align="center" width={150} sortable>
+        <Column width={100} sortable>
           <HeaderCell>Category</HeaderCell>
           <Cell dataKey="cate" />
         </Column>
 
-        <Column align="center" width={150} sortable>
+        <Column align="center" width={120} sortable>
           <HeaderCell>Create Date</HeaderCell>
           <Cell dataKey="date" />
         </Column>
 
-        <Column align="center" width={150} sortable>
+        <Column align="center" width={120} sortable>
           <HeaderCell>Last Update</HeaderCell>
           <Cell dataKey="updatedAt" />
         </Column>
 
-        <Column align="center" width={150} sortable>
+        <Column align="center" width={100} sortable>
           <HeaderCell>Comments</HeaderCell>
           <Cell dataKey="post_share" />
         </Column>
 
-        <Column align="center" width={150}>
+        <Column align="center" width={100}>
           <HeaderCell>
             <MoreIcon />
           </HeaderCell>

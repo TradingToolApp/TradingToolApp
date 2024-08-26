@@ -1,27 +1,26 @@
 import axios from 'axios'
 
-export function getImages() {
-    try {
-        return axios.get('/api/images')
-    } catch (error) {
-        console.log(error);
-    }
+function getImages() {
+    return axios.get('/api/images')
+        .then(res => res.data)
+        .catch(err => err.response.message);
 }
 
-export function createImages(formData) {
-    try {
-        return axios.post('/api/images', formData)
-    } catch (error) {
-        console.log(error);
-    }
+function createImages( formData ) {
+    return axios.post('/api/images', formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    })
+        .then(res => res.data)
+        .catch(err => err.response.message);
 }
 
-export function deleteImages(fileName) {
-    try {
-        return axios.delete('/api/images', { data: { fileName } })
-    } catch (error) {
-        console.log(error);
-    }
+function deleteImages( data ) {
+    // console.log(filepaths)
+    return axios.delete('/api/images', { data })
+        .then(res => res.data)
+        .catch(err => err.response.message);
 }
 
 const imageAPI = {
