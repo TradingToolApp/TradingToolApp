@@ -19,14 +19,16 @@ import {
 } from "rsuite";
 import slugify from "slugify";
 import ModalImage from "@/components/modal/ModalImage";
-import {AppContext} from "@/providers/appProvider";
+import { AppContext } from "@/providers/appProvider";
+import { CategoryContext } from "@/providers/categoryProvider";
 import Image from "next/image";
 import categoryAPI from "@/services/category-api";
 
 const Textarea = React.forwardRef<HTMLInputElement, any>((props, ref) => <Input {...props} as="textarea" ref={ref}/>);
 Textarea.displayName = "Textarea";
 
-const SelectPickerCustom = React.forwardRef<HTMLInputElement, any>((props, ref) => <SelectPicker searchable={false} menuMaxHeight={200} style={{width: "100px"}} {...props} ref={ref}/>);
+const SelectPickerCustom = React.forwardRef<HTMLInputElement, any>((props, ref) => <SelectPicker searchable={false} menuMaxHeight={200}
+                                                                                                 style={{width: "100px"}} {...props} ref={ref}/>);
 SelectPickerCustom.displayName = "SelectPickerCustom";
 
 const {StringType} = Schema.Types;
@@ -46,7 +48,7 @@ const initialFormValue = {
     label: "",
     cate_slug: "",
     cate_bg: "",
-    cate_img: "/images/category/default.jpg",
+    cate_img: "/images/category/default.png",
     cateEN: "",
     descriptionEN: "",
     cateVI: "",
@@ -106,14 +108,14 @@ const colorList = colorClasses.map(color => ({
 //This component do 2 jobs, create new category and update category
 const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
     const toaster = useToaster();
-    const {language, categories, setCategories} = useContext(AppContext);
-    const [formError, setFormError] = React.useState({});
+    const {language} = useContext(AppContext);
+    const {categories, setCategories} = useContext(CategoryContext);
+    const [, setFormError] = React.useState({});
     const [formValue, setFormValue] = useState<any>(formData || initialFormValue);
     const [openModalImage, setOpenModalImage] = useState(false);
     const [img, setImg] = useState([]);
 
     const formRef: any = useRef(initialFormValue);
-    const hasFormValue = Boolean(formValue);
 
     const handleOpenModalImage = () => setOpenModalImage(true);
     const handleCloseModalImage = () => setOpenModalImage(false);
@@ -130,6 +132,7 @@ const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
             //on create => generate new slug(fileName), else use the old one
             const newCategory = {
                 ...formValue,
+                cate_slug: action === "CREATE" ? slugify(formValue.cateEN, {lower: true}) : formValue.cate_slug,
                 label: language === "en" ? formValue.cateEN : formValue.cateVI,
                 cate_img: img.length !== 0 ? img[0] : formValue.cate_img,
             };
@@ -139,14 +142,14 @@ const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
             switch (action) {
                 case "CREATE":
                     const resCreate = await categoryAPI.createCategory(newCategory);
-                    if(resCreate.success === false) {
+                    if (!resCreate.success) {
                         return toaster.push(<Message type={"error"}>{resCreate.message}</Message>);
                     }
                     setCategories([...categories, newCategory]);
                     break;
                 case "UPDATE":
                     const resUpdate = await categoryAPI.updateCategory(newCategory);
-                    if(resUpdate.success === false) {
+                    if (!resUpdate.success) {
                         return toaster.push(<Message type={"error"}>{resUpdate.message}</Message>);
                     }
                     const updatedCategories: any[] = categories.filter((category: any) => category.cate_slug !== formValue.cate_slug);
@@ -158,7 +161,7 @@ const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
                     break;
             }
 
-            // setFormValue(initialFormValue);
+            setFormValue(initialFormValue);
             handleClose();
         } catch (error) {
             console.log(error);
@@ -216,10 +219,10 @@ const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
                         <Form.Group controlId="cate_img">
                             <Form.ControlLabel>Image</Form.ControlLabel>
                             <Button onClick={handleOpenModalImage}>Select</Button>
-                            {action === "UPDATE" && img.length === 0 && <Image src={formValue.cate_img} alt="Category image" width={100} height={100}/>}
-                            {img.length !== 0 &&
-                                <Image src={img[0]} alt="Category image" width={100} height={100}/>}
                         </Form.Group>
+                        {action === "UPDATE" && img.length === 0 && <Image src={formValue.cate_img} alt="Category image" width={100} height={100}/>}
+                        {img.length !== 0 &&
+                            <Image src={img[0]} alt="Category image" width={100} height={100}/>}
                     </Panel>
                 </Row>
                 <ButtonToolbar style={{marginTop: "20px", marginRight: "10px", float: "right"}}>
@@ -230,7 +233,7 @@ const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
                         Cancel
                     </Button>
                 </ButtonToolbar>
-                <ModalImage open={openModalImage} handleClose={handleCloseModalImage} setReturnedImg={setImg} />
+                <ModalImage open={openModalImage} handleClose={handleCloseModalImage} setReturnedImg={setImg}/>
             </Form>
         </>
     );

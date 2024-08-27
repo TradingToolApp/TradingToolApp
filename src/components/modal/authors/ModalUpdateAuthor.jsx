@@ -1,18 +1,18 @@
 import { Modal } from 'rsuite';
 import { ACTION } from "@/lib/constant";
-import FormCategories from "@/components/form/FormCategories";
+import FormAuthors from "@/components/form/FormAuthors";
 
-const ModalAddCategory = ( { open, handleClose }) => {
+const ModalUpdateAuthor = ( { modalData, open, handleClose }) => {
     return (
         <Modal size={"50%"} open={open} onClose={handleClose}>
             <Modal.Header>
-                <Modal.Title>Add Category</Modal.Title>
+                <Modal.Title>Update Author</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
-                <FormCategories handleClose={handleClose} action={ACTION.CREATE} />
+                <FormAuthors formData={modalData} handleClose={handleClose} action={ACTION.UPDATE} />
             </Modal.Body>
         </Modal>
     );
 };
 
-export default ModalAddCategory;
+export default ModalUpdateAuthor;

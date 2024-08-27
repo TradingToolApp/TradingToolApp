@@ -2,11 +2,9 @@ import { Grid, Row, Col } from 'rsuite';
 import HeadMeta from "@/components/elements/HeadMeta";
 import HeaderThree from "@/components/header/HeaderThree";
 import SideBarThree from "@/components/sidebar/SideBarThree";
-import dynamic from "next/dynamic";
+import TableTags from "@/components/table/tags/TableTags";
 
-const TableOne = dynamic(() => import("@/components/table/posts/TablePosts"), { ssr: false });
-
-const Authors = ({ allPosts }) => {
+const Tags = () => {
     return (
         <Grid className="d-flex flex-column vh-100 vw-100" fluid>
             <Row>
@@ -18,11 +16,10 @@ const Authors = ({ allPosts }) => {
                     <SideBarThree />
                 </Col>
                 <Col className="flex-grow-1 h-100">
-                    This is tags
-                    {/*<TableOne />*/}
+                    <TableTags />
                 </Col>
             </Row>
         </Grid>
     );
 }
-export default Authors;
+export default Tags;

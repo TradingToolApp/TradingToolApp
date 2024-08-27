@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "@/lib/constant";
+import slugify from "slugify";
 
 const APIHandler = async ( req, res ) => {
     switch (req.method) {
@@ -25,68 +26,144 @@ const getAuthors = async ( req, res ) => {
             }
         });
 
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: authors });
+        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: authors });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 
 const createAuthor = async ( req, res ) => {
     try {
         const { data } = req.body;
-        console.log(data)
+
+        const isAuthorExist = await prisma.author.findFirst({
+            where: {
+                author_slug: slugify(data.author_name, { lower: true }),
+            }
+        });
+
+        if(isAuthorExist) {
+            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Author already exist!", data: [] });
+        }
+
         const newAuthor = await prisma.author.create({
             data: {
-                name: data.name,
+                author_slug: slugify(data.author_name, { lower: true }),
+                author_name: data.author_name,
+                author_img: data.author_img,
+                author_social: data.author_social,
                 translations: {
-                    create: data.translations
+                    create: [ {
+                        author_desg: data.author_desgEN,
+                        author_bio: data.author_bioEN,
+                        language: { connect: { code: "en" } },
+                    }, {
+                        author_desg: data.author_desgVI,
+                        author_bio: data.author_bioVI,
+                        language: { connect: { code: "vi" } },
+                    } ],
                 }
             }
         });
 
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newAuthor });
+        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newAuthor });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 
 const updateAuthor = async ( req, res ) => {
     try {
         const { data } = req.body;
-        const updatedAuthor = await prisma.author.update({
+
+        const author = await prisma.author.findUnique({
             where: {
-                id: data.id
-            },
-            data: {
-                name: data.name,
-                translations: {
-                    update: data.translations
-                }
+                author_slug: data.author_slug
             }
         });
 
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedAuthor });
+        if(!author) {
+            return res.status(404).json({ success: false, code: ERROR_CODE, message: "Author not found", data: [] });
+        }
+
+        await prisma.authorTranslation.update({
+            where: {
+                authorId_languageCode: {
+                    authorId: author.id,
+                    languageCode: "en"
+                }
+            },
+            data: {
+                author_desg: data.author_desgEN,
+                author_bio: data.author_bioEN,
+            }
+        })
+
+        await prisma.authorTranslation.update({
+            where: {
+                authorId_languageCode: {
+                    authorId: author.id,
+                    languageCode: "vi"
+                }
+            },
+            data: {
+                author_desg: data.author_desgVI,
+                author_bio: data.author_bioVI,
+            }
+        })
+
+        const updatedAuthor = await prisma.author.update({
+            where: {
+                id: author.id
+            },
+            data: {
+                author_slug: slugify(data.author_name, { lower: true }),
+                author_name: data.author_name,
+                author_img: data.author_img,
+                author_social: data.author_social,
+            }
+        });
+
+        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedAuthor });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 
 const deleteAuthor = async ( req, res ) => {
     try {
-        const { id } = req.body;
-        const deletedAuthor = await prisma.author.delete({
+        const { data } = req.body;
+
+        const author = await prisma.author.findUnique({
             where: {
-                id: id
+                author_slug: slugify(data.author_name, { lower: true }) // when user delete right after update, the author_slug is still the old
+                // one => need to use author_name to find the author
             }
         });
 
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedAuthor });
+        if(!author) {
+            return res.status(404).json({ success: false, code: ERROR_CODE, message: "Author not found", data: [] });
+        }
+
+        await prisma.authorTranslation.deleteMany({
+            where: {
+                authorId: author.id
+            }
+        });
+
+        const deletedAuthor = await prisma.author.delete({
+            where: {
+                id: author.id
+            }
+        });
+
+        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedAuthor });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 

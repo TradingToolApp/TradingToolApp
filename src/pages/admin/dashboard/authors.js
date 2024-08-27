@@ -1,12 +1,11 @@
+import React, { useState, useContext, useEffect } from "react";
 import { Grid, Row, Col } from 'rsuite';
 import HeadMeta from "@/components/elements/HeadMeta";
 import HeaderThree from "@/components/header/HeaderThree";
 import SideBarThree from "@/components/sidebar/SideBarThree";
-import dynamic from "next/dynamic";
+import TableAuthors from "../../../components/table/authors/TableAuthors";
 
-const TableOne = dynamic(() => import("@/components/table/posts/TablePosts"), { ssr: false });
-
-const Authors = ({ allPosts }) => {
+const Authors = () => {
     return (
         <Grid className="d-flex flex-column vh-100 vw-100" fluid>
             <Row>
@@ -18,8 +17,7 @@ const Authors = ({ allPosts }) => {
                     <SideBarThree />
                 </Col>
                 <Col className="flex-grow-1 h-100">
-                    This is authors
-                    {/*<TableOne />*/}
+                    <TableAuthors />
                 </Col>
             </Row>
         </Grid>

@@ -21,10 +21,12 @@ import {
 import slugify from "slugify";
 import ModalImage from "@/components/modal/ModalImage";
 import {AppContext} from "@/providers/appProvider";
-import {initialFormValue, cateList, tagList, postFormatList, authorList} from "@/lib/constant";
+import {AuthorContext} from "@/providers/authorProvider";
+import {CategoryContext} from "@/providers/categoryProvider";
+import {TagContext} from "@/providers/tagProvider";
+import {initialFormValue, tagList, postFormatList} from "@/lib/constant";
 import Image from "next/image";
 import postAPI from "@/services/posts-api";
-import {IoIosAddCircleOutline} from "react-icons/io";
 
 const Textarea = React.forwardRef<HTMLInputElement, any>((props, ref) => <Input {...props} as="textarea" ref={ref}/>);
 Textarea.displayName = "Textarea";
@@ -51,8 +53,11 @@ const model = Schema.Model({
 //This component do 2 jobs, create new post and edit post
 const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
     const toaster = useToaster();
-    const {language, posts, setPosts, categories, setCategories, authors, setAuthors} = useContext(AppContext);
-    const [formError, setFormError] = React.useState({});
+    const {language, posts, setPosts} = useContext(AppContext);
+    const {authors} = useContext(AuthorContext);
+    const {categories} = useContext(CategoryContext);
+    const {tags} = useContext(TagContext);
+    const [, setFormError] = React.useState({});
     const [formValue, setFormValue] = useState<any>(formData || initialFormValue);
     const [selectMultipleImg, setSelectMultipleImg] = useState(false);
     const [featureImg, setFeatureImg] = useState([]);
@@ -80,9 +85,7 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
             console.error("Form error");
             return;
         }
-        categories.filter((cate: any) => {
-            console.log(cate);
-        })
+
         try {
             //on create => generate new slug(fileName), else use the old one
             const newPost = {
@@ -92,6 +95,11 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                 title: language === "en" ? formValue.titleEN : formValue.titleVI,
                 content: language === "en" ? formValue.contentEN : formValue.contentVI,
                 cate: categories.filter((cate: Category) => cate.cate_slug === formValue.cate_slug)[0].label,
+                cate_bg: categories.filter((cate: Category) => cate.cate_slug === formValue.cate_slug)[0].cate_bg,
+                cate_img: categories.filter((cate: Category) => cate.cate_slug === formValue.cate_slug)[0].cate_img,
+                author_name: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_name,
+                author_img: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_img,
+                author_social: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_social,
                 featureImg: featureImg.length !== 0 ? featureImg[0] : formValue.featureImg,
                 updatedAt: action === "CREATE" ? formValue.date : formValue.updatedAt,
             };
@@ -183,7 +191,7 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                                     <Col xs={2} md={4} style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                                         <Form.Group controlId="tags">
                                             <Form.ControlLabel>Tags</Form.ControlLabel>
-                                            <Form.Control name="tags" accepter={CheckPicker} data={tagList}/>
+                                            <Form.Control name="tags" accepter={CheckPicker} data={tags}/>
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -206,48 +214,48 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                             )}
                         </Panel>
                         <Panel header="English Content">
-                            <Form.Group controlId="titleEN">
-                                <Form.ControlLabel>Title</Form.ControlLabel>
-                                <Form.Control
-                                    name="titleEN"
-                                    // readOnly={action === "UPDATE"}
-                                    // style={{backgroundColor: action === "UPDATE" ? "#f5f5f5" : "white"}}
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="excerptEN">
-                                <Form.ControlLabel>Excerpt</Form.ControlLabel>
-                                <Form.Control name="excerptEN"/>
-                            </Form.Group>
-                            {formValue.postFormat === "quote" && <Form.Group controlId="quoteTextEN">
-                                <Form.ControlLabel>Quote</Form.ControlLabel>
-                                <Form.Control name="quoteTextEN"/>
-                            </Form.Group>}
-                            <Form.Group controlId="contentEN">
-                                <Form.ControlLabel>Content</Form.ControlLabel>
-                                <Form.Control name="contentEN" accepter={Textarea} rows={28}/>
-                            </Form.Group>
+                            <Col xs={12}>
+                                <Form.Group controlId="titleEN">
+                                    <Form.ControlLabel>Title</Form.ControlLabel>
+                                    <Form.Control name="titleEN"/>
+                                </Form.Group>
+                                <Form.Group controlId="excerptEN">
+                                    <Form.ControlLabel>Excerpt</Form.ControlLabel>
+                                    <Form.Control name="excerptEN" accepter={Textarea} rows={3}/>
+                                </Form.Group>
+                                {formValue.postFormat === "quote" && <Form.Group controlId="quoteTextEN">
+                                    <Form.ControlLabel>Quote</Form.ControlLabel>
+                                    <Form.Control name="quoteTextEN"/>
+                                </Form.Group>}
+                            </Col>
+                            <Col xs={12}>
+                                <Form.Group controlId="contentEN">
+                                    <Form.ControlLabel>Content</Form.ControlLabel>
+                                    <Form.Control name="contentEN" accepter={Textarea} rows={10}/>
+                                </Form.Group>
+                            </Col>
                         </Panel>
                         <Panel header="Vietnamese Content">
-                            <Form.Group controlId="titleVI">
-                                <Form.ControlLabel>Title</Form.ControlLabel>
-                                <Form.Control
-                                    name="titleVI"
-                                    // readOnly={action === "UPDATE"}
-                                    // style={{backgroundColor: action === "UPDATE" ? "#f5f5f5" : "white"}}
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="excerptVI">
-                                <Form.ControlLabel>Excerpt</Form.ControlLabel>
-                                <Form.Control name="excerptVI"/>
-                            </Form.Group>
-                            {formValue.postFormat === "quote" && <Form.Group controlId="quoteTextVI">
-                                <Form.ControlLabel>Quote</Form.ControlLabel>
-                                <Form.Control name="quoteTextVI"/>
-                            </Form.Group>}
-                            <Form.Group controlId="contentVI">
-                                <Form.ControlLabel>Content</Form.ControlLabel>
-                                <Form.Control name="contentVI" accepter={Textarea} rows={28}/>
-                            </Form.Group>
+                            <Col xs={12}>
+                                <Form.Group controlId="titleVI">
+                                    <Form.ControlLabel>Title</Form.ControlLabel>
+                                    <Form.Control name="titleVI"/>
+                                </Form.Group>
+                                <Form.Group controlId="excerptVI">
+                                    <Form.ControlLabel>Excerpt</Form.ControlLabel>
+                                    <Form.Control name="excerptVI" accepter={Textarea} rows={3}/>
+                                </Form.Group>
+                                {formValue.postFormat === "quote" && <Form.Group controlId="quoteTextVI">
+                                    <Form.ControlLabel>Quote</Form.ControlLabel>
+                                    <Form.Control name="quoteTextVI"/>
+                                </Form.Group>}
+                            </Col>
+                            <Col xs={12}>
+                                <Form.Group controlId="contentVI">
+                                    <Form.ControlLabel>Content</Form.ControlLabel>
+                                    <Form.Control name="contentVI" accepter={Textarea} rows={10}/>
+                                </Form.Group>
+                            </Col>
                         </Panel>
                     </PanelGroup>
                 </Row>

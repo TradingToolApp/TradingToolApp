@@ -1,29 +1,39 @@
 import axios from 'axios'
 
-function getPosts() {
-    return axios.get('/api/posts')
-        .then(res => res.data)
-        .catch(err => err.response.data);
-
+async function getPosts() {
+    try {
+        const res = await axios.get('/api/posts');
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
 }
 
-function createPost( data ) {
-    return axios.post('/api/posts', { data })
-        .then(res => res.data)
-        .catch(err => err.response.data)
+async function createPost( data ) {
+    try {
+        const res = await axios.post('/api/posts', { data });
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
 }
 
-function updatePost( data ) {
-    // revalidatePath("/", "layout");
-    return axios.put('/api/posts', { data })
-        .then(res => res.data)
-        .catch(err => err.response.data)
+async function updatePost( data ) {
+    try {
+        const res = await axios.put('/api/posts', { data });
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
 }
 
-function deletePost( slug ) {
-    return axios.delete('/api/posts', { data: { slug } })
-        .then(res => res.data)
-        .catch(err => err.response.data);
+async function deletePost( data ) {
+    try {
+        const res = await axios.delete('/api/posts', { data: { data } });
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
 }
 
 const postAPI = {

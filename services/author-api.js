@@ -1,28 +1,39 @@
-import axios from 'axios'
-import { revalidatePath } from "next/cache";
+import axios from 'axios';
 
-function getAuthors() {
-    return axios.get('/api/authors')
-        .then(res => res.data)
-        .catch(err => err.response.data);
+async function getAuthors() {
+    try {
+        const res = await axios.get('/api/authors');
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
 }
 
-function createAuthor( data ) {
-    return axios.post('/api/authors', { data })
-        .then(res => res.data)
-        .catch(err => err.response.data);
+async function createAuthor( data ) {
+    try {
+        const res = await axios.post('/api/authors', { data });
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
 }
 
-function updateAuthor( data ) {
-    return axios.put('/api/authors', { data })
-        .then(res => res.data)
-        .catch(err => err.response.data);
+async function updateAuthor( data ) {
+    try {
+        const res = await axios.put('/api/authors', { data });
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
 }
 
-function deleteAuthor( slug ) {
-    return axios.delete('/api/authors', { data: { slug } })
-        .then(res => res.data)
-        .catch(err => err.response.data);
+async function deleteAuthor( data ) {
+    try {
+        const res = await axios.delete('/api/authors', { data: { data } });
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
 }
 
 const authorAPI = {

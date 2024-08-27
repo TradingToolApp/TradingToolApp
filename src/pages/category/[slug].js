@@ -10,19 +10,21 @@ import WidgetCategory from "../../components/widget/WidgetCategory";
 import { AppContext } from "@/providers/appProvider";
 import { useRouter } from 'next/router'
 import { useTranslation } from "react-i18next";
+import WidgetYoutubeList from "@/components/widget/WidgetYoutubeList";
 
 const PostCategory = ( { allPosts, params } ) => {
     const { t } = useTranslation();
     const router = useRouter();
-    const { posts, categories } = useContext(AppContext);
+    const { posts } = useContext(AppContext);
 
-    const isExisted = categories.find(category => category.cate_slug === router.query.slug);
-    if (!isExisted) {
+    allPosts = posts;
+    const postData = allPosts.filter(post => post.cate_slug === router.query.slug);
+
+    if(postData.length === 0) {
         router.push('/404');
         return null;
     }
-    allPosts = posts;
-    const postData = allPosts.filter(post => post.cate_slug === router.query.slug);
+
     const cateContent = postData[0];
 
     return (
@@ -55,8 +57,8 @@ const PostCategory = ( { allPosts, params } ) => {
                         </div>
                         <div className="col-lg-4">
                             <div className="post-sidebar">
-                                <WidgetCategory cateData={allPosts}/>
-                                <WidgetPost dataPost={allPosts}/>
+                                <WidgetPost dataPost={allData} />
+                                <WidgetYoutubeList dataPost={allData} />
                             </div>
                         </div>
                     </div>

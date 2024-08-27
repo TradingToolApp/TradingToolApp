@@ -8,7 +8,7 @@ const ModalUpdateCategory = ( { modalData, open, handleClose }) => {
             <Modal.Header>
                 <Modal.Title>Update Category</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
                 <FormCategories formData={modalData} handleClose={handleClose} action={ACTION.UPDATE} />
             </Modal.Body>
         </Modal>

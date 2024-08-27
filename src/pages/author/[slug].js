@@ -1,6 +1,6 @@
 import { useContext } from "react";
+import { useRouter } from 'next/router'
 import Image from "next/image";
-import { getAllPosts, getPostBySlug } from "../../../lib/api";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import HeadMeta from "../../components/elements/HeadMeta";
 import FooterOne from "../../components/footer/FooterOne";
@@ -10,24 +10,27 @@ import WidgetAd from "../../components/widget/WidgetAd";
 import WidgetCategory from "../../components/widget/WidgetCategory";
 import WidgetPost from "../../components/widget/WidgetPost";
 import WidgetSocialShare from "../../components/widget/WidgetSocialShare";
-import { slugify } from "../../utils";
-import prisma from "@/lib/prisma";
 import { AppContext } from "@/providers/appProvider";
-import { useRouter } from 'next/router'
+import WidgetYoutubeList from "@/components/widget/WidgetYoutubeList";
 
-const PostAuthor = ({ allPosts }) => {
+const PostAuthor = ( { allPosts } ) => {
     const router = useRouter()
+    const { posts } = useContext(AppContext);
+    allPosts = posts;
+    const postData = allPosts.filter(post => post.author_slug === router.query.slug);
 
-    const { categories } = useContext(AppContext);
-    allPosts = categories;
-    const postData = allPosts.filter(post => slugify(post.author_name) === router.query.slug);
+    if(postData.length === 0) {
+        router.push('/404');
+        return null;
+    }
+
     const authorContent = postData[0];
 
     return (
         <>
-            <HeadMeta metaTitle={authorContent.author_name} />
-            <HeaderThree />
-            <Breadcrumb aPage={authorContent.author_name} />
+            <HeadMeta metaTitle={authorContent.author_name}/>
+            <HeaderThree/>
+            <Breadcrumb aPage={authorContent.author_name}/>
             <div className="banner banner__default bg-grey-light-three">
                 <div className="container">
                     <div className="row align-items-center">
@@ -42,7 +45,7 @@ const PostAuthor = ({ allPosts }) => {
                                             height={210}
                                             className="m-r-xs-30"
                                         />
-                                        <div className="grad-overlay__transparent overlay-over" />
+                                        <div className="grad-overlay__transparent overlay-over"/>
                                     </span>
                                     <div className="media-body">
                                         <h2 className="h4 m-b-xs-15">{authorContent.author_name}</h2>
@@ -50,14 +53,14 @@ const PostAuthor = ({ allPosts }) => {
                                         <p className="mid">{authorContent.author_bio}</p>
                                         <div className="post-metas">
                                             <ul className="list-inline">
-                                                <li><span href="#"><i className="fal fa-user-edit" />Total Post ({postData.length})</span></li>
-                                                <li><span href="#"><i className="fal fa-comment" />Comments (12)</span></li>
+                                                <li><span href="#"><i className="fal fa-user-edit"/>Total Post ({postData.length})</span></li>
+                                                <li><span href="#"><i className="fal fa-comment"/>Comments (12)</span></li>
                                             </ul>
                                         </div>
                                         <div className="author-social-share">
                                             <ul className="social-share social-share__with-bg">
-                                                {authorContent.author_social.map((data, index) => (
-                                                    <li key={index}><span href={data.url}><i className={data.icon} /></span></li>
+                                                {authorContent.author_social.map(( data, index ) => (
+                                                    <li key={index}><span href={data.url}><i className={data.icon}/></span></li>
                                                 ))}
                                             </ul>
                                         </div>
@@ -74,24 +77,21 @@ const PostAuthor = ({ allPosts }) => {
                         <div className="col-lg-8">
                             <div className="axil-content">
                                 <h2 className="h3 m-b-xs-40">Articles By This Author</h2>
-                                {postData.map((data) => (
-                                    <PostLayoutTwo data={data} postSizeMd={true} key={data.slug} />
+                                {postData.map(( data ) => (
+                                    <PostLayoutTwo data={data} postSizeMd={true} key={data.slug}/>
                                 ))}
                             </div>
                         </div>
                         <div className="col-lg-4">
                             <div className="post-sidebar">
-                                <WidgetAd />
-                                <WidgetSocialShare />
-                                <WidgetCategory cateData={allPosts} />
-                                <WidgetPost dataPost={allPosts} />
-                                <WidgetAd img="/images/clientbanner/clientbanner3.jpg" height={492} width={320} />
+                                <WidgetPost dataPost={allData} />
+                                <WidgetYoutubeList dataPost={allData} />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <FooterOne />
+            <FooterOne/>
         </>
     );
 }

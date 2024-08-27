@@ -14,6 +14,7 @@ import WidgetSocialShare from "../components/widget/WidgetSocialShare";
 import { removeDuplicates } from "../utils";
 import { AppContext } from "@/providers/appProvider";
 import { useContext } from "react";
+import WidgetYoutubeList from "@/components/widget/WidgetYoutubeList";
 
 const AboutUs = ({ aboutData, allPosts }) => {
     const { posts } = useContext(AppContext);
@@ -46,9 +47,8 @@ const AboutUs = ({ aboutData, allPosts }) => {
                         {/* End of .col-lg-8 */}
                         <div className="col-lg-4">
                             <aside className="post-sidebar">
-                                <WidgetNewsletter />
-                                <WidgetSocialShare />
-                                <WidgetPost dataPost={allPosts} />
+                                <WidgetPost dataPost={allData} />
+                                <WidgetYoutubeList dataPost={allData} />
                             </aside>
                         </div>
                     </div>

@@ -7,63 +7,45 @@ import {
     SelectPicker,
     Button
 } from "rsuite";
+import { AuthorContext } from "@/providers/authorProvider";
+import { ActionCell, ImageCell } from "./CellAuthors";
+import ModalAddAuthor from "../../modal/authors/ModalAddAuthor";
 import SearchIcon from "@rsuite/icons/Search";
 import MoreIcon from "@rsuite/icons/legacy/More";
-import { ActionCell, ImageCell } from "./CellCategories";
-import { CategoryContext } from "@/providers/categoryProvider";
-import ModalAddCategory from "../../modal/categories/ModalAddCategory";
 const { Column, HeaderCell, Cell } = Table;
 
-const TableCategories = () => {
-    const { categories } = useContext(CategoryContext);
-    const [sortColumn, setSortColumn] = useState("id");
-    const [sortType, setSortType] = useState();
-    const [searchKeyword, setSearchKeyword] = useState("");
-    const [openAddCategory, setOpenAddCategory] = useState(false);
+const TableAuthors = () => {
+    const { authors } = useContext(AuthorContext);
+    const [ sortColumn, setSortColumn ] = useState("id");
+    const [ sortType, setSortType ] = useState();
+    const [ searchKeyword, setSearchKeyword ] = useState("");
+    const [ openAddAuthor, setOpenAddAuthor ] = useState(false);
 
-    const handleOpenAddCategory = () => setOpenAddCategory(true);
-    const handleCloseAddCategory = () => setOpenAddCategory(false);
+    const handleOpenAddAuthor = () => setOpenAddAuthor(true);
+    const handleCloseAddAuthor = () => setOpenAddAuthor(false);
 
-    const handleSortColumn = (sortColumn, sortType) => {
+    const handleSortColumn = ( sortColumn, sortType ) => {
         setSortColumn(sortColumn);
         setSortType(sortType);
     };
 
     const filteredData = () => {
-        const filtered = categories.filter((item) => {
-            if (!item.label.toLowerCase().includes(searchKeyword.toLowerCase())) {
+        const filtered = authors.filter(( item ) => {
+            if (!item.author_name.toLowerCase().includes(searchKeyword.toLowerCase())) {
                 return false;
             }
 
             return true;
         });
 
-        if (sortColumn && sortType) {
-            return filtered.sort((a, b) => {
-                let x = a[sortColumn];
-                let y = b[sortColumn];
-
-                if (typeof x === 'string') {
-                    x = x.charCodeAt(0);
-                }
-                if (typeof y === 'string') {
-                    y = y.charCodeAt(0);
-                }
-
-                if (sortType === 'asc') {
-                    return x - y;
-                } else {
-                    return y - x;
-                }
-            });
-        }
         return filtered;
     };
+    console.log("table author re-render");
 
     return (
         <div>
             <Stack className="table-toolbar" style={{ marginTop: "10px" }} justifyContent="space-between">
-                <Stack spacing={6} >
+                <Stack spacing={6}>
                     <InputGroup inside>
                         <Input
                             style={{ width: "400px" }}
@@ -72,13 +54,13 @@ const TableCategories = () => {
                             onChange={setSearchKeyword}
                         />
                         <InputGroup.Addon>
-                            <SearchIcon />
+                            <SearchIcon/>
                         </InputGroup.Addon>
                     </InputGroup>
                 </Stack>
                 <Stack style={{ marginRight: "20px" }}>
-                    <Button size="lg" onClick={handleOpenAddCategory}>
-                        Add Category
+                    <Button size="lg" onClick={handleOpenAddAuthor}>
+                        Add Author
                     </Button>
                 </Stack>
             </Stack>
@@ -92,24 +74,24 @@ const TableCategories = () => {
             >
                 <Column width={150}>
                     <HeaderCell>Image</HeaderCell>
-                    <ImageCell dataKey="cate_img" />
+                    <ImageCell dataKey="author_img"/>
                 </Column>
 
                 <Column flexGrow={1} sortable>
                     <HeaderCell>Name</HeaderCell>
-                    <Cell dataKey="label" />
+                    <Cell dataKey="author_name"/>
                 </Column>
 
                 <Column align="center" width={150}>
                     <HeaderCell>
-                        <MoreIcon />
+                        <MoreIcon/>
                     </HeaderCell>
-                    <ActionCell dataKey="id" />
+                    <ActionCell dataKey="id"/>
                 </Column>
             </Table>
-            <ModalAddCategory open={openAddCategory} handleClose={handleCloseAddCategory} />
+            <ModalAddAuthor open={openAddAuthor} handleClose={handleCloseAddAuthor}/>
         </div>
     );
 };
 
-export default TableCategories;
+export default TableAuthors;

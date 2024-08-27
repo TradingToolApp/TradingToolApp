@@ -19,7 +19,7 @@ const PostDetails = ( { allPosts } ) => {
 
     const post = allPosts.filter(post => post.slug === router.query.slug);
 
-    if (!post[0]) {
+    if (post.length === 0) {
         router.push('/404');
         return null;
     }

@@ -1,5 +1,5 @@
 import { Modal } from 'rsuite';
-import FormPosts from "../../form/FormPosts.tsx";
+import FormPosts from "@/components/form/FormPosts.tsx";
 import { ACTION } from "@/lib/constant";
 
 const ModalAddPost = ({ open, handleClose }) => {
@@ -8,7 +8,7 @@ const ModalAddPost = ({ open, handleClose }) => {
             <Modal.Header>
                 <Modal.Title>Add Post</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
                 <FormPosts handleClose={handleClose} action={ACTION.CREATE} />
             </Modal.Body>
         </Modal>

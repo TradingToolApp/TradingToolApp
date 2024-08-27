@@ -10,7 +10,7 @@ import imageAPI from "../../../../services/image-api";
 import ModalAddImage from "../../../components/modal/images/ModalAddImage";
 import ModalFullScreenImage from "../../../components/modal/images/ModalFullScreenImage";
 
-const Images = ( { allPosts } ) => {
+const Images = () => {
     const toaster = useToaster();
     const [ loading, setLoading ] = useState(true);
     const [ images, setImages ] = useState([]);

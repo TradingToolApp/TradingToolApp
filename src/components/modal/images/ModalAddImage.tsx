@@ -46,7 +46,7 @@ const ModalAddImage = ({ open, handleClose, images, setImages }: ModalAddImagesP
             <Modal.Header>
                 <Modal.Title>Add Image</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
                 <Uploader name="files" autoUpload={false} action="#"
                           fileList={upload}
                           onChange={setUpload}

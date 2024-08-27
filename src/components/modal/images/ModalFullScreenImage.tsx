@@ -11,7 +11,7 @@ interface ModalFullScreenImageProps {
 const ModalFullScreenImage = ({open, handleClose, fullScreenURL}: ModalFullScreenImageProps) => {
     return (
         <Modal open={open} onClose={handleClose}>
-            <Modal.Body>
+            <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
                 <Image src={fullScreenURL}
                        width={500}
                        height={500}

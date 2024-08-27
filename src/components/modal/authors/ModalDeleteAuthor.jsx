@@ -1,21 +1,21 @@
 import React, { useContext } from 'react';
 import { Modal, Button, useToaster, Message } from 'rsuite';
-import { CategoryContext } from "@/providers/categoryProvider";
-import categoryAPI from "@/services/category-api";
+import { AuthorContext } from "@/providers/authorProvider";
+import authorAPI from "@/services/author-api";
 import RemindIcon from '@rsuite/icons/legacy/Remind';
 
-const ModalDeleteCategory = ( { modalData, open, handleClose, ...rests }) => {
+const ModalDeleteAuthor = ({ modalData, open, handleClose, ...rests }) => {
     const toaster = useToaster();
-    const { categories, setCategories } = useContext(CategoryContext);
+    const { authors, setAuthors } = useContext(AuthorContext);
 
     const handleConfirmDelete = async () => {
         try {
-            const response = await categoryAPI.deleteCategory(modalData);
+            const response = await authorAPI.deleteAuthor(modalData);
             if (!response.success) {
                 return toaster.push(<Message type={"error"}>{response.message}</Message>);
             }
-            const newCategories = categories.filter(category => category.cate_slug !== modalData.cate_slug);
-            setCategories(newCategories);
+            const newAuthors = authors.filter(author => author.author_slug !== modalData.author_slug);
+            setAuthors(newAuthors);
             handleClose();
         } catch (error) {
             console.log(error)
@@ -43,4 +43,4 @@ const ModalDeleteCategory = ( { modalData, open, handleClose, ...rests }) => {
     );
 };
 
-export default ModalDeleteCategory;
+export default ModalDeleteAuthor;

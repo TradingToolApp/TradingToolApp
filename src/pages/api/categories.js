@@ -26,10 +26,10 @@ const getCategories = async ( req, res ) => {
             }
         });
 
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: categories });
+        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: categories });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
     }
 }
 
@@ -44,7 +44,7 @@ const createCategory = async ( req, res ) => {
         });
 
         if(isCategoryExist) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Title already exist, Please change title English!", data: [] });
+            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Category already exist!", data: [] });
         }
 
         const newCategory = await prisma.category.create({
@@ -66,10 +66,10 @@ const createCategory = async ( req, res ) => {
             }
         });
 
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newCategory });
+        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newCategory });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 
@@ -77,39 +77,25 @@ const updateCategory = async ( req, res ) => {
     try {
         const { data } = req.body;
 
-        const isCategoryExist = await prisma.category.findFirst({
-            where: {
-                cate_slug: slugify(data.cateEN, { lower: true }),
-                id: {
-                    not: data.id
-                }
-            }
-        });
-
-        if(isCategoryExist) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Title already exist, Please change title English!", data: [] });
-        }
-
         const category = await prisma.category.findUnique({
             where: {
-                id: data.id
+                cate_slug: data.cate_slug
             }
         });
 
         if(!category) {
-            res.status(404).json({ success: false, code: ERROR_CODE, message: "Category not found", data: [] });
-            return;
+            return res.status(404).json({ success: false, code: ERROR_CODE, message: "Category not found", data: [] });
         }
 
         await prisma.categoryTranslation.update({
             where: {
                 categoryId_languageCode: {
-                    categoryId: data.id,
+                    categoryId: category.id,
                     languageCode: "en"
                 }
             },
             data: {
-                cate: data.titleEN,
+                cate: data.cateEN,
                 description: data.excerptEN,
             }
         })
@@ -117,19 +103,19 @@ const updateCategory = async ( req, res ) => {
         await prisma.categoryTranslation.update({
             where: {
                 categoryId_languageCode: {
-                    categoryId: data.id,
+                    categoryId: category.id,
                     languageCode: "vi"
                 }
             },
             data: {
-                cate: data.titleVI,
+                cate: data.cateVI,
                 description: data.excerptVI,
             }
         })
 
         const updatedCategory = await prisma.category.update({
             where: {
-                id: data.id
+                id: category.id
             },
             data: {
                 cate_slug: slugify(data.cateEN.toLowerCase()),
@@ -138,44 +124,44 @@ const updateCategory = async ( req, res ) => {
             }
         });
 
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedCategory });
+        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedCategory });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 
 const deleteCategory = async ( req, res ) => {
     try {
-        const { id } = req.body;
-
-        const category = await prisma.post.findUnique({
+        const { data } = req.body;
+        console.log(data)
+        const category = await prisma.category.findUnique({
             where: {
-                id: id
+                cate_slug: slugify(data.cateEN, { lower: true }), // when user delete right after update, the cate_slug is still the old one =>
+                // need to use cateEN to find the cate
             }
         });
 
         if(!category) {
-            res.status(404).json({ success: false, code: ERROR_CODE, message: "Category not found", data: [] });
-            return;
+            return res.status(404).json({ success: false, code: ERROR_CODE, message: "Category not found", data: [] });
         }
 
         await prisma.categoryTranslation.deleteMany({
             where: {
-                categoryId: id
+                categoryId: category.id
             }
         });
 
         const deletedCategory = await prisma.category.delete({
             where: {
-                id: id
+                id: category.id
             }
         });
 
-        res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedCategory });
+        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedCategory });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 

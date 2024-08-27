@@ -1,21 +1,21 @@
 import React, { useContext } from 'react';
 import { Modal, Button, useToaster, Message } from 'rsuite';
-import { CategoryContext } from "@/providers/categoryProvider";
-import categoryAPI from "@/services/category-api";
+import { TagContext } from "@/providers/tagProvider";
+import tagAPI from "@/services/tag-api";
 import RemindIcon from '@rsuite/icons/legacy/Remind';
 
-const ModalDeleteCategory = ( { modalData, open, handleClose, ...rests }) => {
+const ModalDeleteTag = ({ modalData, open, handleClose, ...rests }) => {
     const toaster = useToaster();
-    const { categories, setCategories } = useContext(CategoryContext);
+    const { tags, setTags } = useContext(TagContext);
 
     const handleConfirmDelete = async () => {
         try {
-            const response = await categoryAPI.deleteCategory(modalData);
+            const response = await tagAPI.deleteTag(modalData);
             if (!response.success) {
                 return toaster.push(<Message type={"error"}>{response.message}</Message>);
             }
-            const newCategories = categories.filter(category => category.cate_slug !== modalData.cate_slug);
-            setCategories(newCategories);
+            const newTags = tags.filter(tag => tag.tag_slug !== modalData.tag_slug);
+            setTags(newTags);
             handleClose();
         } catch (error) {
             console.log(error)
@@ -43,4 +43,4 @@ const ModalDeleteCategory = ( { modalData, open, handleClose, ...rests }) => {
     );
 };
 
-export default ModalDeleteCategory;
+export default ModalDeleteTag;
