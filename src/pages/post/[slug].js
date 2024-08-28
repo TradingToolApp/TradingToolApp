@@ -1,4 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
+import { useRouter } from 'next/router'
+import { AppContext } from "@/providers/app.provider";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import HeadMeta from "../../components/elements/HeadMeta";
 import FooterOne from "../../components/footer/FooterOne";
@@ -9,8 +11,6 @@ import PostFormatQuote from "../../components/post/post-format/PostFormatQuote";
 import PostFormatStandard from "../../components/post/post-format/PostFormatStandard";
 import PostFormatText from "../../components/post/post-format/PostFormatText";
 import PostFormatVideo from "../../components/post/post-format/PostFormatVideo";
-import { AppContext } from "@/providers/appProvider";
-import { useRouter } from 'next/router'
 
 const PostDetails = ( { allPosts } ) => {
     const router = useRouter()

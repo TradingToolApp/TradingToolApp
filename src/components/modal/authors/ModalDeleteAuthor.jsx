@@ -1,21 +1,23 @@
 import React, { useContext } from 'react';
 import { Modal, Button, useToaster, Message } from 'rsuite';
-import { AuthorContext } from "@/providers/authorProvider";
+import { AuthorContext } from "@/providers/author.provider";
+import { toast } from 'react-toastify';
+import { toastConfig } from "@/lib/constant";
 import authorAPI from "@/services/author-api";
 import RemindIcon from '@rsuite/icons/legacy/Remind';
 
 const ModalDeleteAuthor = ({ modalData, open, handleClose, ...rests }) => {
     const toaster = useToaster();
-    const { authors, setAuthors } = useContext(AuthorContext);
+    const { allDataAuthors, setAllDataAuthors } = useContext(AuthorContext);
 
     const handleConfirmDelete = async () => {
         try {
             const response = await authorAPI.deleteAuthor(modalData);
             if (!response.success) {
-                return toaster.push(<Message type={"error"}>{response.message}</Message>);
+                return toast.error(response.message, toastConfig.error);
             }
-            const newAuthors = authors.filter(author => author.author_slug !== modalData.author_slug);
-            setAuthors(newAuthors);
+            const newAuthors = allDataAuthors.filter(author => author.id !== modalData.id);
+            setAllDataAuthors(newAuthors);
             handleClose();
         } catch (error) {
             console.log(error)

@@ -4,13 +4,12 @@ import {
     InputGroup,
     Table,
     Stack,
-    SelectPicker,
     Button
 } from "rsuite";
 import SearchIcon from "@rsuite/icons/Search";
 import MoreIcon from "@rsuite/icons/legacy/More";
 import { ActionCell, ImageCell } from "./CellCategories";
-import { CategoryContext } from "@/providers/categoryProvider";
+import { CategoryContext } from "@/providers/category.provider";
 import ModalAddCategory from "../../modal/categories/ModalAddCategory";
 const { Column, HeaderCell, Cell } = Table;
 

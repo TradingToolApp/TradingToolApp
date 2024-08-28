@@ -4,24 +4,22 @@ import React, {useRef, useContext, useState} from "react";
 import {
     Form,
     Schema,
-    CheckPicker,
     SelectPicker,
     Input,
-    PanelGroup,
     Panel,
     ButtonToolbar,
     Button,
     Grid,
     Row,
     Col,
-    useToaster,
-    Message,
 } from "rsuite";
-import slugify from "slugify";
-import ModalImage from "@/components/modal/ModalImage";
-import { AppContext } from "@/providers/appProvider";
-import { CategoryContext } from "@/providers/categoryProvider";
 import Image from "next/image";
+import { toast } from 'react-toastify';
+import slugify from "slugify";
+import ModalSelectImage from "@/components/modal/images/ModalSelectImage";
+import { AppContext } from "@/providers/app.provider";
+import { CategoryContext } from "@/providers/category.provider";
+import { toastConfig } from "@/lib/constant";
 import categoryAPI from "@/services/category-api";
 
 const Textarea = React.forwardRef<HTMLInputElement, any>((props, ref) => <Input {...props} as="textarea" ref={ref}/>);
@@ -107,9 +105,8 @@ const colorList = colorClasses.map(color => ({
 
 //This component do 2 jobs, create new category and update category
 const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
-    const toaster = useToaster();
-    const {language} = useContext(AppContext);
-    const {categories, setCategories} = useContext(CategoryContext);
+    const { language } = useContext(AppContext);
+    const { allDataCategories, setAllDataCategories } = useContext(CategoryContext);
     const [, setFormError] = React.useState({});
     const [formValue, setFormValue] = useState<any>(formData || initialFormValue);
     const [openModalImage, setOpenModalImage] = useState(false);
@@ -137,25 +134,27 @@ const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
                 cate_img: img.length !== 0 ? img[0] : formValue.cate_img,
             };
 
-            console.log(newCategory)
-
             switch (action) {
                 case "CREATE":
                     const resCreate = await categoryAPI.createCategory(newCategory);
                     if (!resCreate.success) {
-                        return toaster.push(<Message type={"error"}>{resCreate.message}</Message>);
+                        return toast.error(resCreate.message, toastConfig.error as any);
                     }
-                    setCategories([...categories, newCategory]);
+                    setAllDataCategories([...allDataCategories, resCreate.data]);
                     break;
                 case "UPDATE":
                     const resUpdate = await categoryAPI.updateCategory(newCategory);
                     if (!resUpdate.success) {
-                        return toaster.push(<Message type={"error"}>{resUpdate.message}</Message>);
+                        return toast.error(resUpdate.message, toastConfig.error as any);
                     }
-                    const updatedCategories: any[] = categories.filter((category: any) => category.cate_slug !== formValue.cate_slug);
-                    const index = categories.findIndex((category: any) => category.cate_slug === formValue.cate_slug);
-                    updatedCategories.splice(index, 0, newCategory);
-                    setCategories(updatedCategories);
+
+                    const updatedCategories: any[] = allDataCategories.map((category: any) => {
+                        if (category.id === formValue.id) {
+                            return resUpdate.data;
+                        }
+                        return category;
+                    });
+                    setAllDataCategories(updatedCategories);
                     break;
                 default:
                     break;
@@ -233,7 +232,7 @@ const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
                         Cancel
                     </Button>
                 </ButtonToolbar>
-                <ModalImage open={openModalImage} handleClose={handleCloseModalImage} setReturnedImg={setImg}/>
+                <ModalSelectImage open={openModalImage} handleClose={handleCloseModalImage} setReturnedImg={setImg}/>
             </Form>
         </>
     );

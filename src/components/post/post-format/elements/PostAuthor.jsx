@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { slugify } from "../../../../utils";
-import { AuthorContext } from "@/providers/authorProvider";
-import { useContext } from "react";
 
 const PostAuthor = ( { authorData } ) => {
     return (

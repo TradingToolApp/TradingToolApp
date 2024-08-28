@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import Image from "next/image";
+import { AppContext } from "@/providers/app.provider";
 import { getFileContentBySlug, getAllPosts } from "../../lib/api";
 import markdownToHtml from "../../lib/markdownToHtml";
 import Breadcrumb from "../components/common/Breadcrumb";
@@ -8,12 +10,8 @@ import SectionTitleTwo from "../components/elements/SectionTitleTwo";
 import FooterOne from "../components/footer/FooterOne";
 import HeaderOne from "../components/header/HeaderOne";
 import TeamOne from "../components/team/TeamOne";
-import WidgetNewsletter from "../components/widget/WidgetNewsletter";
 import WidgetPost from "../components/widget/WidgetPost";
-import WidgetSocialShare from "../components/widget/WidgetSocialShare";
 import { removeDuplicates } from "../utils";
-import { AppContext } from "@/providers/appProvider";
-import { useContext } from "react";
 import WidgetYoutubeList from "@/components/widget/WidgetYoutubeList";
 
 const AboutUs = ({ aboutData, allPosts }) => {

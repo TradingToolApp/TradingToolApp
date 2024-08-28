@@ -6,7 +6,7 @@ import {
     Stack,
     Button
 } from "rsuite";
-import { TagContext } from "@/providers/tagProvider";
+import { TagContext } from "@/providers/tag.provider";
 import { ActionCell, ImageCell } from "./CellTags";
 import ModalAddTag from "../../modal/tags/ModalAddTag";
 import SearchIcon from "@rsuite/icons/Search";

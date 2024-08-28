@@ -5,7 +5,7 @@ import FooterOne from "../../src/components/footer/FooterOne";
 import HeaderThree from "../../src/components/header/HeaderThree";
 import PostSectionFive from "../../src/components/post/PostSectionFive";
 import SliderTwo from "../../src/components/slider/SliderTwo";
-import { AppContext } from "@/providers/appProvider";
+import { AppContext } from "@/providers/app.provider";
 
 const HomeThree = ({ allPosts }) => {
   const { posts } = useContext(AppContext);

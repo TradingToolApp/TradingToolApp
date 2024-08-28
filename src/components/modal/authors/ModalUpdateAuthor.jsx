@@ -8,7 +8,7 @@ const ModalUpdateAuthor = ( { modalData, open, handleClose }) => {
             <Modal.Header>
                 <Modal.Title>Update Author</Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
+            <Modal.Body style={{overflow: "hidden"}}>
                 <FormAuthors formData={modalData} handleClose={handleClose} action={ACTION.UPDATE} />
             </Modal.Body>
         </Modal>

@@ -2,9 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Slider from "react-slick";
-import { AppContext } from "@/providers/appProvider";
+import { AppContext } from "@/providers/app.provider";
 import { useTranslation } from 'react-i18next';
-import { FaChevronLeft } from "react-icons/fa6";
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 
 const SliderTwo = ({ slidePost }) => {
@@ -18,7 +17,6 @@ const SliderTwo = ({ slidePost }) => {
     return (
       <button className={className} onClick={onClick}>
         <FaChevronCircleRight size={"3em"} color="#F8F8FF" />
-        {/* <i className="feather icon-chevron-right"></i> */}
       </button>
     );
   }
@@ -28,8 +26,6 @@ const SliderTwo = ({ slidePost }) => {
     return (
       <button className={className} onClick={onClick}>
         <FaChevronCircleLeft size={"3em"} color="#F8F8FF" />
-
-        {/* <i className="feather icon-chevron-left"></i> */}
       </button>
     );
   }

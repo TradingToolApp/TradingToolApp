@@ -29,7 +29,7 @@ const getTags = async ( req, res ) => {
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: tags });
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 
@@ -59,13 +59,16 @@ const createTag = async ( req, res ) => {
                         language: { connect: { code: "vi" } },
                     } ],
                 }
-            }
+            },
+            include: {
+                translations: true,
+            },
         });
 
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newTag });
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 
@@ -75,12 +78,25 @@ const updateTag = async ( req, res ) => {
 
         const tag = await prisma.tag.findUnique({
             where: {
-                tag_slug: data.tag_slug,
+                id: data.id,
             }
         });
 
         if(!tag) {
             return res.status(404).json({ success: false, code: ERROR_CODE, message: "Tag not found", data: [] });
+        }
+
+        const isSlugExist = await prisma.tag.findFirst({
+            where: {
+                tag_slug: slugify(data.tagEN, { lower: true }),
+                id: {
+                    not: tag.id
+                }
+            }
+        });
+
+        if (isSlugExist) {
+            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Tag already exist!", data: [] });
         }
 
         await prisma.tagTranslation.update({
@@ -113,13 +129,16 @@ const updateTag = async ( req, res ) => {
             },
             data: {
                 tag_slug: slugify(data.tagEN, { lower: true }),
-            }
+            },
+            include: {
+                translations: true,
+            },
         });
 
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedTag });
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
 
@@ -129,7 +148,7 @@ const deleteTag = async ( req, res ) => {
 
         const tag = await prisma.tag.findUnique({
             where: {
-                tag_slug: slugify(data.tagEN, { lower: true }), // when user delete right after update, the tag_slug is still the old one => need to use tagEN to find the tag
+                id: data.id,
             }
         });
 

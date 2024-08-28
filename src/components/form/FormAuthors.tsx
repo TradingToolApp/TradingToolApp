@@ -4,31 +4,28 @@ import React, { useRef, useContext, useState } from "react";
 import {
     Form,
     Schema,
-    CheckPicker,
     SelectPicker,
     Input,
-    PanelGroup,
     Panel,
     ButtonToolbar,
     Button,
     Grid,
     Row,
     Col,
-    useToaster,
-    Message,
 } from "rsuite";
-import slugify from "slugify";
-import ModalImage from "@/components/modal/ModalImage";
-import { AppContext } from "@/providers/appProvider";
 import Image from "next/image";
+import { toast } from 'react-toastify';
+import slugify from "slugify";
+import ModalSelectImage from "@/components/modal/images/ModalSelectImage";
+import { AuthorContext } from "@/providers/author.provider";
+import { toastConfig } from "@/lib/constant";
 import authorAPI from "@/services/author-api";
-import { AuthorContext } from "@/providers/authorProvider";
 
 const Textarea = React.forwardRef<HTMLInputElement, any>((props, ref) => <Input {...props} as="textarea" ref={ref}/>);
 Textarea.displayName = "Textarea";
 
 const SelectPickerCustom = React.forwardRef<HTMLInputElement, any>((props, ref) => <SelectPicker searchable={false} menuMaxHeight={200}
-                                                                                                 style={{width: "100px"}} {...props} ref={ref}/>);
+                                                                                               style={{width: "100px"}} {...props} ref={ref}/>);
 SelectPickerCustom.displayName = "SelectPickerCustom";
 
 const {StringType} = Schema.Types;
@@ -57,9 +54,7 @@ const initialFormValue = {
 
 //This component do 2 jobs, create new author and update author
 const FormAuthors = ({formData, handleClose, action, ...rests}: any) => {
-    const toaster = useToaster();
-    const {language} = useContext(AppContext);
-    const {authors, setAuthors} = useContext(AuthorContext);
+    const { allDataAuthors, setAllDataAuthors } = useContext(AuthorContext);
     const [, setFormError] = React.useState({});
     const [formValue, setFormValue] = useState<any>(formData || initialFormValue);
     const [openModalImage, setOpenModalImage] = useState(false);
@@ -87,25 +82,27 @@ const FormAuthors = ({formData, handleClose, action, ...rests}: any) => {
                 author_img: img.length !== 0 ? img[0] : formValue.author_img,
             };
 
-            console.log(newAuthor)
-
             switch (action) {
                 case "CREATE":
                     const resCreate = await authorAPI.createAuthor(newAuthor);
-                    if (resCreate.success === false) {
-                        return toaster.push(<Message type={"error"}>{resCreate.message}</Message>);
+                    if (!resCreate.success) {
+                        return toast.error(resCreate.message, toastConfig.error as any);
                     }
-                    setAuthors([...authors, newAuthor]);
+                    setAllDataAuthors([...allDataAuthors, resCreate.data]);
                     break;
                 case "UPDATE":
                     const resUpdate = await authorAPI.updateAuthor(newAuthor);
-                    if (resUpdate.success === false) {
-                        return toaster.push(<Message type={"error"}>{resUpdate.message}</Message>);
+                    if (!resUpdate.success) {
+                        return toast.error(resUpdate.message, toastConfig.error as any);
                     }
-                    const updatedAuthors: any[] = authors.filter((author: any) => author.author_slug !== formValue.author_slug);
-                    const index = authors.findIndex((author: any) => author.author_slug === formValue.author_slug);
-                    updatedAuthors.splice(index, 0, newAuthor);
-                    setAuthors(updatedAuthors);
+
+                    const updatedAuthors: any[] = allDataAuthors.map((author: any) => {
+                        if (author.id === formValue.id) {
+                            return resUpdate.data;
+                        }
+                        return author;
+                    });
+                    setAllDataAuthors(updatedAuthors);
                     break;
                 default:
                     break;
@@ -181,7 +178,7 @@ const FormAuthors = ({formData, handleClose, action, ...rests}: any) => {
                         Cancel
                     </Button>
                 </ButtonToolbar>
-                <ModalImage open={openModalImage} handleClose={handleCloseModalImage} setReturnedImg={setImg}/>
+                <ModalSelectImage open={openModalImage} handleClose={handleCloseModalImage} setReturnedImg={setImg}/>
             </Form>
         </>
     );

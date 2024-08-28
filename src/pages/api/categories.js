@@ -63,7 +63,10 @@ const createCategory = async ( req, res ) => {
                         language: { connect: { code: "vi" } },
                     } ],
                 }
-            }
+            },
+            include: {
+                translations: true,
+            },
         });
 
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newCategory });
@@ -79,12 +82,25 @@ const updateCategory = async ( req, res ) => {
 
         const category = await prisma.category.findUnique({
             where: {
-                cate_slug: data.cate_slug
+                id: data.id
             }
         });
 
         if(!category) {
             return res.status(404).json({ success: false, code: ERROR_CODE, message: "Category not found", data: [] });
+        }
+
+        const isSlugExist = await prisma.category.findFirst({
+            where: {
+                cate_slug: slugify(data.cateEN, { lower: true }),
+                id: {
+                    not: category.id
+                }
+            }
+        });
+
+        if (isSlugExist) {
+            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Category already exist!", data: [] });
         }
 
         await prisma.categoryTranslation.update({
@@ -96,7 +112,7 @@ const updateCategory = async ( req, res ) => {
             },
             data: {
                 cate: data.cateEN,
-                description: data.excerptEN,
+                description: data.descriptionEN,
             }
         })
 
@@ -109,7 +125,7 @@ const updateCategory = async ( req, res ) => {
             },
             data: {
                 cate: data.cateVI,
-                description: data.excerptVI,
+                description: data.descriptionVI,
             }
         })
 
@@ -121,7 +137,10 @@ const updateCategory = async ( req, res ) => {
                 cate_slug: slugify(data.cateEN.toLowerCase()),
                 cate_bg: data.cate_bg,
                 cate_img: data.cate_img,
-            }
+            },
+            include: {
+                translations: true,
+            },
         });
 
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedCategory });
@@ -134,11 +153,10 @@ const updateCategory = async ( req, res ) => {
 const deleteCategory = async ( req, res ) => {
     try {
         const { data } = req.body;
-        console.log(data)
+
         const category = await prisma.category.findUnique({
             where: {
-                cate_slug: slugify(data.cateEN, { lower: true }), // when user delete right after update, the cate_slug is still the old one =>
-                // need to use cateEN to find the cate
+                id: data.id
             }
         });
 

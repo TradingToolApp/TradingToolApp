@@ -64,6 +64,9 @@ const createAuthor = async ( req, res ) => {
                         language: { connect: { code: "vi" } },
                     } ],
                 }
+            },
+            include: {
+                translations: true,
             }
         });
 
@@ -80,12 +83,25 @@ const updateAuthor = async ( req, res ) => {
 
         const author = await prisma.author.findUnique({
             where: {
-                author_slug: data.author_slug
+                id: data.id
             }
         });
 
         if(!author) {
             return res.status(404).json({ success: false, code: ERROR_CODE, message: "Author not found", data: [] });
+        }
+
+        const isSlugExist = await prisma.author.findFirst({
+            where: {
+                author_slug: slugify(data.author_name, { lower: true }),
+                id: {
+                    not: data.id
+                }
+            }
+        });
+
+        if (isSlugExist) {
+            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Author already exist!", data: [] });
         }
 
         await prisma.authorTranslation.update({
@@ -123,6 +139,9 @@ const updateAuthor = async ( req, res ) => {
                 author_name: data.author_name,
                 author_img: data.author_img,
                 author_social: data.author_social,
+            },
+            include: {
+                translations: true,
             }
         });
 
@@ -139,8 +158,7 @@ const deleteAuthor = async ( req, res ) => {
 
         const author = await prisma.author.findUnique({
             where: {
-                author_slug: slugify(data.author_name, { lower: true }) // when user delete right after update, the author_slug is still the old
-                // one => need to use author_name to find the author
+                id: data.id
             }
         });
 

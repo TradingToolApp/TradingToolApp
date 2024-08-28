@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react"
 import { Dropdown } from 'rsuite';
 import HeaderMenu from "../../data/menu/HeaderMenu.json";
 import OffcanvasMenu from "./OffcanvasMenu";
-import { AppContext } from '@/providers/appProvider';
+import { AppContext } from '@/providers/app.provider';
 import { useSession } from "next-auth/react";
 import { FaChevronDown } from "react-icons/fa6";
 

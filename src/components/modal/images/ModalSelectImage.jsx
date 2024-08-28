@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Modal, Uploader, Stack, Divider, Panel, ButtonGroup, Button, Message, useToaster } from 'rsuite';
-import CameraRetroIcon from '@rsuite/icons/legacy/CameraRetro';
-import imageAPI from '../../../services/image-api';
+import { Modal, Stack, Divider, Panel, ButtonGroup } from 'rsuite';
+import imageAPI from '@/services/image-api';
 import ModalFullScreenImage from "@/components/modal/images/ModalFullScreenImage";
 
-const ModalImage = ( { open, handleClose, multiple = false, setReturnedImg } ) => {
-    const toaster = useToaster();
+const ModalSelectImage = ( { open, handleClose, multiple = false, setReturnedImg } ) => {
     const [ loading, setLoading ] = useState(false);
     const [ images, setImages ] = useState([]);
     const [ selectedImg, setSelectedImg ] = useState([]);
@@ -77,6 +75,7 @@ const ModalImage = ( { open, handleClose, multiple = false, setReturnedImg } ) =
                                                 width={200}
                                                 height={200}
                                                 style={{
+                                                    width: "auto",
                                                     objectFit: 'contain', // cover, contain, none
                                                 }}
                                                 alt="Image"
@@ -100,4 +99,4 @@ const ModalImage = ( { open, handleClose, multiple = false, setReturnedImg } ) =
     );
 };
 
-export default ModalImage;
+export default ModalSelectImage;

@@ -4,32 +4,19 @@ import React, { useRef, useContext, useState } from "react";
 import {
     Form,
     Schema,
-    CheckPicker,
-    SelectPicker,
-    Input,
-    PanelGroup,
     Panel,
     ButtonToolbar,
     Button,
     Grid,
     Row,
     Col,
-    useToaster,
-    Message,
 } from "rsuite";
 import slugify from "slugify";
-import ModalImage from "@/components/modal/ModalImage";
-import { AppContext } from "@/providers/appProvider";
-import Image from "next/image";
+import { AppContext } from "@/providers/app.provider";
+import { TagContext } from "@/providers/tag.provider";
 import tagAPI from "@/services/tag-api";
-import { TagContext } from "@/providers/tagProvider";
-
-const Textarea = React.forwardRef<HTMLInputElement, any>((props, ref) => <Input {...props} as="textarea" ref={ref}/>);
-Textarea.displayName = "Textarea";
-
-const SelectPickerCustom = React.forwardRef<HTMLInputElement, any>((props, ref) => <SelectPicker searchable={false} menuMaxHeight={200}
-                                                                                                 style={{width: "100px"}} {...props} ref={ref}/>);
-SelectPickerCustom.displayName = "SelectPickerCustom";
+import {toast} from "react-toastify";
+import {toastConfig} from "@/lib/constant";
 
 const {StringType} = Schema.Types;
 
@@ -49,14 +36,12 @@ const initialFormValue = {
 
 //This component do 2 jobs, create new tag and update tag
 const FormTags = ({formData, handleClose, action, ...rests}: any) => {
-    const toaster = useToaster();
-    const {language} = useContext(AppContext);
-    const {tags, setTags} = useContext(TagContext);
-    const [formError, setFormError] = React.useState({});
+    const { language } = useContext(AppContext);
+    const { allDataTags, setAllDataTags } = useContext(TagContext);
+    const [, setFormError] = React.useState({});
     const [formValue, setFormValue] = useState<any>(formData || initialFormValue);
-    console.log(tags)
+
     const formRef: any = useRef(initialFormValue);
-    const hasFormValue = Boolean(formValue);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -74,25 +59,27 @@ const FormTags = ({formData, handleClose, action, ...rests}: any) => {
                 label: language === "en" ? formValue.tagEN : formValue.tagVI,
             };
 
-            console.log(newTag)
-
             switch (action) {
                 case "CREATE":
                     const resCreate = await tagAPI.createTag(newTag);
                     if (!resCreate.success) {
-                        return toaster.push(<Message type={"error"}>{resCreate.message}</Message>);
+                        return toast.error(resCreate.message, toastConfig.error as any);
                     }
-                    setTags([...tags, newTag]);
+                    setAllDataTags([...allDataTags, resCreate.data]);
                     break;
                 case "UPDATE":
                     const resUpdate = await tagAPI.updateTag(newTag);
                     if (!resUpdate.success) {
-                        return toaster.push(<Message type={"error"}>{resUpdate.message}</Message>);
+                        return toast.error(resUpdate.message, toastConfig.error as any);
                     }
-                    const updatedTags: any[] = tags.filter((tag: any) => tag.tag_slug !== formValue.tag_slug);
-                    const index = tags.findIndex((tag: any) => tag.tag_slug === formValue.tag_slug);
-                    updatedTags.splice(index, 0, newTag);
-                    setTags(updatedTags);
+
+                    const updatedTags: any[] = allDataTags.map((tag: any) => {
+                        if (tag.id === formValue.id) {
+                            return resUpdate.data;
+                        }
+                        return tag;
+                    });
+                    setAllDataTags(updatedTags);
                     break;
                 default:
                     break;

@@ -2,14 +2,15 @@ import React, { createContext, useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import postAPI from "@/services/posts-api";
-import { formatData, formatCategories } from "@/lib/formatData";
-import categoryAPI from "@/services/category-api";
+import { formatData } from "@/lib/formatData";
 
 interface contextDefaultValues {
     language: "en",
     setLanguage: ( language: string ) => void,
     posts: [],
     setPosts: ( posts: object ) => void,
+    allDataPosts: [],
+    setAllDataPosts: ( allDataPosts: object ) => void,
     fetching: true,
     setFetching: ( fetching: object ) => void,
     error: "",
@@ -63,6 +64,8 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ( { children }
         handleLanguageChange,
         posts,
         setPosts,
+        allDataPosts,
+        setAllDataPosts,
         fetching,
         setFetching,
         error

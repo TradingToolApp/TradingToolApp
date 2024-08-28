@@ -8,7 +8,7 @@ const ModalAddCategory = ( { open, handleClose }) => {
             <Modal.Header>
                 <Modal.Title>Add Category</Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
+            <Modal.Body style={{overflow: "hidden"}}>
                 <FormCategories handleClose={handleClose} action={ACTION.CREATE} />
             </Modal.Body>
         </Modal>

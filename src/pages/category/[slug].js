@@ -1,15 +1,13 @@
 import { useContext } from "react";
+import { useRouter } from 'next/router'
+import { useTranslation } from "react-i18next";
+import { AppContext } from "@/providers/app.provider";
 import FooterOne from "../../components/footer/FooterOne";
 import HeaderThree from "../../components/header/HeaderThree";
 import Breadcrumb from "../../components/common/Breadcrumb";
-import { slugify } from "../../utils";
 import HeadMeta from "../../components/elements/HeadMeta";
 import WidgetPost from "../../components/widget/WidgetPost";
 import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
-import WidgetCategory from "../../components/widget/WidgetCategory";
-import { AppContext } from "@/providers/appProvider";
-import { useRouter } from 'next/router'
-import { useTranslation } from "react-i18next";
 import WidgetYoutubeList from "@/components/widget/WidgetYoutubeList";
 
 const PostCategory = ( { allPosts, params } ) => {
@@ -57,8 +55,8 @@ const PostCategory = ( { allPosts, params } ) => {
                         </div>
                         <div className="col-lg-4">
                             <div className="post-sidebar">
-                                <WidgetPost dataPost={allData} />
-                                <WidgetYoutubeList dataPost={allData} />
+                                <WidgetPost dataPost={allPosts} />
+                                <WidgetYoutubeList dataPost={allPosts} />
                             </div>
                         </div>
                     </div>

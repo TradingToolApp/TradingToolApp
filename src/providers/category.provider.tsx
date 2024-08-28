@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useEffect, useState} from "react";
-import {AppContext} from "@/providers/appProvider";
+import {AppContext} from "@/providers/app.provider";
 import categoryAPI from "@/services/category-api";
 import {formatCategories} from "@/lib/formatData";
 
@@ -7,7 +7,8 @@ interface CategoryContextProps {
     loading: boolean,
     categories: any,
     setCategories: (value: any) => void,
-    setAllData: (value: any) => void,
+    allDataCategories: any,
+    setAllDataCategories: (value: any) => void,
 }
 
 export const CategoryContext = createContext<CategoryContextProps>({} as CategoryContextProps);
@@ -15,7 +16,7 @@ export const CategoryContext = createContext<CategoryContextProps>({} as Categor
 export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const {language} = useContext(AppContext);
     const [loading, setLoading] = useState(true);
-    const [allData, setAllData] = useState([]);
+    const [allDataCategories, setAllDataCategories] = useState([]);
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
@@ -23,19 +24,23 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({child
         console.log("calling api categories")
         const fetchData = async () => {
             const response = await categoryAPI.getCategories();
-            setAllData(response.data);
+            setAllDataCategories(response.data);
         }
         fetchData();
         setLoading(false);
     }, [])
 
     useEffect(() => {
-        console.log("formatting categories")
-        setCategories(formatCategories(allData, language));
-    }, [allData, language])
+        try {
+            console.log("formatting categories")
+            setCategories(formatCategories(allDataCategories, language));
+        } catch (error) {
+            console.log(error);
+        }
+    }, [allDataCategories, language])
 
     return (
-        <CategoryContext.Provider value={{loading, categories, setCategories, setAllData}}>
+        <CategoryContext.Provider value={{loading, categories, setCategories, allDataCategories, setAllDataCategories}}>
             {children}
         </CategoryContext.Provider>
     );

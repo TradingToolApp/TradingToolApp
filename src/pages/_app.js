@@ -1,12 +1,15 @@
 import 'rsuite/dist/rsuite-no-reset.min.css';
 import "bootstrap/dist/css/bootstrap.css";
 import "../styles/style.css";
+import 'react-toastify/dist/ReactToastify.css';
 import Script from 'next/script'
+import ToastProvider from "@/providers/toast.provider";
 import { SessionProvider } from "next-auth/react"
-import { AppProvider } from "@/providers/appProvider";
-import { AuthorProvider } from "@/providers/authorProvider";
-import { CategoryProvider } from "@/providers/categoryProvider";
-import { TagProvider } from "@/providers/tagProvider";
+import { AppProvider } from "@/providers/app.provider";
+import { AuthorProvider } from "@/providers/author.provider";
+import { CategoryProvider } from "@/providers/category.provider";
+import { TagProvider } from "@/providers/tag.provider";
+
 import "../i18n.ts";
 
 function MyApp( { Component, pageProps: { session, ...pageProps } } ) {
@@ -27,15 +30,17 @@ function MyApp( { Component, pageProps: { session, ...pageProps } } ) {
       `}
             </Script>
             <SessionProvider session={session}>
-                <AppProvider>
-                    <AuthorProvider>
-                        <CategoryProvider>
-                            <TagProvider>
-                                <Component {...pageProps} />
-                            </TagProvider>
-                        </CategoryProvider>
-                    </AuthorProvider>
-                </AppProvider>
+                <ToastProvider>
+                    <AppProvider>
+                        <AuthorProvider>
+                            <CategoryProvider>
+                                <TagProvider>
+                                    <Component {...pageProps} />
+                                </TagProvider>
+                            </CategoryProvider>
+                        </AuthorProvider>
+                    </AppProvider>
+                </ToastProvider>
             </SessionProvider>
         </>
     )

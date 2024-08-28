@@ -1,7 +1,6 @@
 import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "../../../lib/constant";
 import prisma from "../../../lib/prisma";
 import slugify from "slugify";
-import { revalidateTag } from 'next/cache'
 
 const postHandler = async ( req, res ) => {
     switch (req.method) {
@@ -53,14 +52,14 @@ const createPost = async ( req, res ) => {
     try {
         const { data } = req.body;
 
-        const isPostExist = await prisma.post.findFirst({
+        const isSlugExist = await prisma.post.findFirst({
             where: {
                 slug: slugify(data.titleEN, { lower: true })
             }
         });
 
-        if (isPostExist) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Title already exist, Please change title English!", data: [] });
+        if (isSlugExist) {
+            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Slug already exist, Please change title English!", data: [] });
         }
 
         const newPost = await prisma.post.create({
@@ -106,9 +105,26 @@ const createPost = async ( req, res ) => {
                     })
                 }
             },
+            include: {
+                translations: true,
+                tags: {
+                    include: {
+                        translations: true,
+                    }
+                },
+                author: {
+                    include: {
+                        translations: true,
+                    }
+                },
+                category: {
+                    include: {
+                        translations: true,
+                    }
+                },
+            }
         });
 
-        revalidateTag("post");
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newPost });
     } catch (error) {
         console.log(error)
@@ -120,9 +136,9 @@ const updatePost = async ( req, res ) => {
     try {
         const { data } = req.body;
 
-        const post = await prisma.post.findFirst({
+        const post = await prisma.post.findUnique({
             where: {
-                slug: data.slug
+                id: data.id
             }
         });
 
@@ -203,10 +219,27 @@ const updatePost = async ( req, res ) => {
                         }
                     })
                 },
+            },
+            include: {
+                translations: true,
+                tags: {
+                    include: {
+                        translations: true,
+                    }
+                },
+                author: {
+                    include: {
+                        translations: true,
+                    }
+                },
+                category: {
+                    include: {
+                        translations: true,
+                    }
+                },
             }
         });
 
-        revalidateTag("post");
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedPost });
     } catch
         (error) {
@@ -221,8 +254,7 @@ const deletePost = async ( req, res ) => {
 
         const post = await prisma.post.findUnique({
             where: {
-                slug: slugify(data.titleEN, { lower: true }), // when user delete right after update, the slug is still the old one => need to use
-                // titleEN to find the slug
+                id: data.id
             }
         });
 
@@ -242,7 +274,6 @@ const deletePost = async ( req, res ) => {
             }
         });
 
-        revalidateTag("post");
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedPost });
     } catch (error) {
         console.log(error)

@@ -4,10 +4,9 @@ import {
     InputGroup,
     Table,
     Stack,
-    SelectPicker,
     Button
 } from "rsuite";
-import { AuthorContext } from "@/providers/authorProvider";
+import { AuthorContext } from "@/providers/author.provider";
 import { ActionCell, ImageCell } from "./CellAuthors";
 import ModalAddAuthor from "../../modal/authors/ModalAddAuthor";
 import SearchIcon from "@rsuite/icons/Search";

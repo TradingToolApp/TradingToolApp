@@ -8,7 +8,7 @@ import WidgetPost from "../widget/WidgetPost";
 import WidgetSocialShare from "../widget/WidgetSocialShare";
 import WidgetYoutubeList from "../widget/WidgetYoutubeList";
 import PostLayoutTwo from "./layout/PostLayoutTwo";
-import { AppContext } from "@/providers/appProvider";
+import { AppContext } from "@/providers/app.provider";
 
 const PostSectionFive = ({postData, adBanner, pClass}) => {
     const { posts } = useContext(AppContext);
@@ -28,10 +28,6 @@ const PostSectionFive = ({postData, adBanner, pClass}) => {
                     </div>
                     <div className="col-lg-4">
                         <div className="post-sidebar">
-                            {/* <WidgetAd /> */}
-                            {/* <WidgetNewsletter /> */}
-                            {/* <WidgetCategory cateData={postData} /> */}
-                            {/* <WidgetSocialShare /> */}
                             <WidgetPost dataPost={postData} />
                             <WidgetYoutubeList dataPost={postData} />
                         </div>

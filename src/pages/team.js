@@ -8,7 +8,7 @@ import FooterOne from "../components/footer/FooterOne";
 import HeaderThree from "../components/header/HeaderThree";
 import TeamOne from "../components/team/TeamOne";
 import { removeDuplicates } from "../utils";
-import { AppContext } from "@/providers/appProvider";
+import { AppContext } from "@/providers/app.provider";
 import { useTranslation } from "react-i18next";
 
 const TeamPage = ({ allPosts }) => {

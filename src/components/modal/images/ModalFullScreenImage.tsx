@@ -10,15 +10,16 @@ interface ModalFullScreenImageProps {
 
 const ModalFullScreenImage = ({open, handleClose, fullScreenURL}: ModalFullScreenImageProps) => {
     return (
-        <Modal open={open} onClose={handleClose}>
-            <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
+        <Modal size={1000} open={open} onClose={handleClose}>
+            <Modal.Body style={{overflow: "hidden", textAlign: "center"}}>
                 <Image src={fullScreenURL}
                        width={500}
                        height={500}
-                       alt="Picture of the author"
-                       objectFit="contain"
-                       style={{width: '100%', height: 'auto'}}
-
+                       alt="Picture full screen"
+                       style={{
+                           width: "auto",
+                           objectFit: 'contain', // cover, contain, none
+                       }}
                 />
             </Modal.Body>
         </Modal>

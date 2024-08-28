@@ -2,7 +2,7 @@ import { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { slugify } from "../../utils";
-import { AppContext } from "@/providers/appProvider";
+import { AppContext } from "@/providers/app.provider";
 import { useTranslation } from "react-i18next";
 
 const CategoryOne = ({ cateData }) => {

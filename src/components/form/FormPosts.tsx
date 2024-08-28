@@ -15,28 +15,22 @@ import {
     Row,
     Col,
     Divider,
-    useToaster,
-    Message,
 } from "rsuite";
-import slugify from "slugify";
-import ModalImage from "@/components/modal/ModalImage";
-import {AppContext} from "@/providers/appProvider";
-import {AuthorContext} from "@/providers/authorProvider";
-import {CategoryContext} from "@/providers/categoryProvider";
-import {TagContext} from "@/providers/tagProvider";
-import {initialFormValue, tagList, postFormatList} from "@/lib/constant";
 import Image from "next/image";
+import { toast } from 'react-toastify';
+import slugify from "slugify";
+import ModalSelectImage from "@/components/modal/images/ModalSelectImage";
+import { AppContext } from "@/providers/app.provider";
+import { AuthorContext } from "@/providers/author.provider";
+import { CategoryContext } from "@/providers/category.provider";
+import { TagContext } from "@/providers/tag.provider";
+import { initialFormValue, toastConfig, postFormatList } from "@/lib/constant";
 import postAPI from "@/services/posts-api";
 
 const Textarea = React.forwardRef<HTMLInputElement, any>((props, ref) => <Input {...props} as="textarea" ref={ref}/>);
 Textarea.displayName = "Textarea";
 
 const {StringType} = Schema.Types;
-
-interface Category {
-    cate_slug: string;
-    label: string;
-}
 
 const model = Schema.Model({
     postFormat: StringType().isRequired("This field is required."),
@@ -52,8 +46,7 @@ const model = Schema.Model({
 
 //This component do 2 jobs, create new post and edit post
 const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
-    const toaster = useToaster();
-    const {language, posts, setPosts} = useContext(AppContext);
+    const {language, allDataPosts, setAllDataPosts} = useContext(AppContext);
     const {authors} = useContext(AuthorContext);
     const {categories} = useContext(CategoryContext);
     const {tags} = useContext(TagContext);
@@ -65,7 +58,6 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
     const [openModalImage, setOpenModalImage] = useState(false);
     const formRef: any = useRef(initialFormValue);
     const hasFormValue = Boolean(formValue);
-
     const handleOpenModalImage = () => setOpenModalImage(true);
     const handleCloseModalImage = () => setOpenModalImage(false);
 
@@ -94,9 +86,9 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                 postFormatLabel: postFormatList.filter((format: any) => format.value === formValue.postFormat)[0].label,
                 title: language === "en" ? formValue.titleEN : formValue.titleVI,
                 content: language === "en" ? formValue.contentEN : formValue.contentVI,
-                cate: categories.filter((cate: Category) => cate.cate_slug === formValue.cate_slug)[0].label,
-                cate_bg: categories.filter((cate: Category) => cate.cate_slug === formValue.cate_slug)[0].cate_bg,
-                cate_img: categories.filter((cate: Category) => cate.cate_slug === formValue.cate_slug)[0].cate_img,
+                cate: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].label,
+                cate_bg: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].cate_bg,
+                cate_img: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].cate_img,
                 author_name: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_name,
                 author_img: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_img,
                 author_social: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_social,
@@ -107,20 +99,24 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
             switch (action) {
                 case "CREATE":
                     const resCreate = await postAPI.createPost(newPost);
-                    if (resCreate.success === false) {
-                        return toaster.push(<Message type={"error"}>{resCreate.message}</Message>);
+                    if (!resCreate.success) {
+                        return toast.error(resCreate.message, toastConfig.error as any);
                     }
-                    setPosts([...posts, newPost]);
+                    setAllDataPosts([...allDataPosts, resCreate.data]);
                     break;
                 case "UPDATE":
                     const resUpdate = await postAPI.updatePost(newPost);
-                    if (resUpdate.success === false) {
-                        return toaster.push(<Message type={"error"}>{resUpdate.message}</Message>);
+                    if (!resUpdate.success) {
+                        return toast.error(resUpdate.message, toastConfig.error as any);
                     }
-                    const updatedPosts: any[] = posts.filter((post: any) => post.slug !== formValue.slug);
-                    const index = posts.findIndex((post: any) => post.slug === formValue.slug);
-                    updatedPosts.splice(index, 0, newPost);
-                    setPosts(updatedPosts);
+
+                    const updatedPosts: any[] = allDataPosts.map((post: any) => {
+                        if (post.id === formValue.id) {
+                            return resUpdate.data;
+                        }
+                        return post;
+                    });
+                    setAllDataPosts(updatedPosts);
                     break;
                 default:
                     break;
@@ -268,8 +264,8 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                     </Button>
                 </ButtonToolbar>
             </Form>
-            <ModalImage open={openModalImage} handleClose={handleCloseModalImage} multiple={selectMultipleImg}
-                        setReturnedImg={selectMultipleImg ? setURLImg : setFeatureImg}/>
+            <ModalSelectImage open={openModalImage} handleClose={handleCloseModalImage} multiple={selectMultipleImg}
+                              setReturnedImg={selectMultipleImg ? setURLImg : setFeatureImg}/>
         </>
     );
 };

@@ -1,21 +1,22 @@
 import { useContext } from 'react';
-import { Modal, Button, useToaster, Message} from 'rsuite';
-import RemindIcon from '@rsuite/icons/legacy/Remind';
+import { Modal, Button} from 'rsuite';
+import { AppContext } from "@/providers/app.provider";
+import { toast } from 'react-toastify';
+import { toastConfig } from "@/lib/constant";
 import postAPI from '@/services/posts-api';
-import { AppContext } from "@/providers/appProvider";
+import RemindIcon from '@rsuite/icons/legacy/Remind';
 
 const ModalDeletePost = ( { modalData, open, handleClose, ...rests }) => {
-    const toaster = useToaster();
-    const { posts, setPosts } = useContext(AppContext);
+    const { allDataPosts, setAllDataPosts } = useContext(AppContext);
 
     const handleConfirmDelete = async () => {
         try {
             const response = await postAPI.deletePost(modalData);
             if(!response.success) {
-                return toaster.push(<Message type={"error"}>{response.message}</Message>);
+                return toast.error(response.message, toastConfig.error);
             }
-            const newPosts = posts.filter(post => post.slug !== modalData.slug);
-            setPosts(newPosts);
+            const newPosts = allDataPosts.filter(post => post.id !== modalData.id);
+            setAllDataPosts(newPosts);
             handleClose();
         } catch (error) {
             console.log(error)

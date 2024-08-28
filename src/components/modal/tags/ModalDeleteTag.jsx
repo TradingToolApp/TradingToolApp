@@ -1,21 +1,22 @@
 import React, { useContext } from 'react';
-import { Modal, Button, useToaster, Message } from 'rsuite';
-import { TagContext } from "@/providers/tagProvider";
+import { Modal, Button } from 'rsuite';
+import { TagContext } from "@/providers/tag.provider";
+import { toast } from 'react-toastify';
+import { toastConfig } from "@/lib/constant";
 import tagAPI from "@/services/tag-api";
 import RemindIcon from '@rsuite/icons/legacy/Remind';
 
 const ModalDeleteTag = ({ modalData, open, handleClose, ...rests }) => {
-    const toaster = useToaster();
-    const { tags, setTags } = useContext(TagContext);
+    const { allDataTags, setAllDataTags } = useContext(TagContext);
 
     const handleConfirmDelete = async () => {
         try {
             const response = await tagAPI.deleteTag(modalData);
             if (!response.success) {
-                return toaster.push(<Message type={"error"}>{response.message}</Message>);
+                return toast.error(response.message, toastConfig.error);
             }
-            const newTags = tags.filter(tag => tag.tag_slug !== modalData.tag_slug);
-            setTags(newTags);
+            const newTags = allDataTags.filter(tag => tag.id !== modalData.id);
+            setAllDataTags(newTags);
             handleClose();
         } catch (error) {
             console.log(error)

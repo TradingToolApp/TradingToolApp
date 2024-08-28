@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
-import {Modal, Button, Message, useToaster} from 'rsuite';
+import React from 'react';
+import {Modal, Button} from 'rsuite';
 import RemindIcon from '@rsuite/icons/legacy/Remind';
-// import { AppContext } from "@/providers/appProvider";
+import { toast } from 'react-toastify';
+import { toastConfig } from "@/lib/constant";
 import imageAPI from "@/services/image-api";
 
 interface ModalDeleteImageProps {
@@ -14,22 +15,19 @@ interface ModalDeleteImageProps {
 }
 
 const ModalDeleteImage = ( { open, handleClose, images, setImages, selectedImg, setSelectedImg, ...rests }: ModalDeleteImageProps) => {
-    const toaster = useToaster();
-
     const handleConfirmDelete = async () => {
         try {
             const response: any = await imageAPI.deleteImages(selectedImg);
 
             if (!response.success) {
-                toaster.push(<Message type={"error"}>{response.message}</Message>);
-                return;
+                return toast.error(response.message, toastConfig.error as any);
             }
 
             setImages(images.filter((item: any) => !selectedImg.includes(item.url)));
             setSelectedImg([]);
             handleClose();
-        } catch (error) {
-            toaster.push(<Message type={"error"}>Error Deleting Images</Message>);
+        } catch (error: any) {
+            console.log(error)
         }
     }
 

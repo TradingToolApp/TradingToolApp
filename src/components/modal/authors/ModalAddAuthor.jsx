@@ -8,7 +8,7 @@ const ModalAddAuthor = ( { open, handleClose }) => {
             <Modal.Header>
                 <Modal.Title>Add Author</Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
+            <Modal.Body style={{overflow: "hidden"}}>
                 <FormAuthors handleClose={handleClose} action={ACTION.CREATE} />
             </Modal.Body>
         </Modal>

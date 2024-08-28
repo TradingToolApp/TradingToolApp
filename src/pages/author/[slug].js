@@ -1,16 +1,13 @@
 import { useContext } from "react";
 import { useRouter } from 'next/router'
 import Image from "next/image";
+import { AppContext } from "@/providers/app.provider";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import HeadMeta from "../../components/elements/HeadMeta";
 import FooterOne from "../../components/footer/FooterOne";
 import HeaderThree from "../../components/header/HeaderThree";
 import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
-import WidgetAd from "../../components/widget/WidgetAd";
-import WidgetCategory from "../../components/widget/WidgetCategory";
 import WidgetPost from "../../components/widget/WidgetPost";
-import WidgetSocialShare from "../../components/widget/WidgetSocialShare";
-import { AppContext } from "@/providers/appProvider";
 import WidgetYoutubeList from "@/components/widget/WidgetYoutubeList";
 
 const PostAuthor = ( { allPosts } ) => {
@@ -84,8 +81,8 @@ const PostAuthor = ( { allPosts } ) => {
                         </div>
                         <div className="col-lg-4">
                             <div className="post-sidebar">
-                                <WidgetPost dataPost={allData} />
-                                <WidgetYoutubeList dataPost={allData} />
+                                <WidgetPost dataPost={allPosts} />
+                                <WidgetYoutubeList dataPost={allPosts} />
                             </div>
                         </div>
                     </div>

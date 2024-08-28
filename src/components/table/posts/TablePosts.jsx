@@ -10,8 +10,8 @@ import {
 import SearchIcon from "@rsuite/icons/Search";
 import MoreIcon from "@rsuite/icons/legacy/More";
 import { ActionCell } from "./CellPosts";
-import { AppContext } from "@/providers/appProvider";
-import { CategoryContext } from "@/providers/categoryProvider";
+import { AppContext } from "@/providers/app.provider";
+import { CategoryContext } from "@/providers/category.provider";
 import ModalAddPost from "../../modal/posts/ModalAddPost";
 
 const { Column, HeaderCell, Cell } = Table;
