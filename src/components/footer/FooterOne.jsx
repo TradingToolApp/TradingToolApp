@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import SocialLink from "../../data/social/SocialLink.json";
+import { FaFacebookF, FaYoutube  } from "react-icons/fa";
 
 const FooterOne = () => {
   return (
@@ -12,7 +13,7 @@ const FooterOne = () => {
               <div className="footer-logo-container">
                 <Link href="/">
                     <span> 
-                        <Image 
+                        <Image
                          src="/images/logo-symbol.svg"
                          alt="footer logo"
                          className="footer-logo"
@@ -31,29 +32,14 @@ const FooterOne = () => {
                   <div className="axil-social-title">Find us here</div>
                   <ul className="social-share social-share__with-bg">
                   <li>
-                    <span href={SocialLink.fb.url}>
-                      <i className={SocialLink.fb.icon} />
-                    </span>
+                    <Link href={SocialLink.fb.url}>
+                      <FaFacebookF size={"2em"}/>
+                    </Link>
                   </li>
                   <li>
-                    <span href={SocialLink.twitter.url}>
-                      <i className={SocialLink.twitter.icon} />
-                    </span>
-                  </li>
-                  <li>
-                    <span href={SocialLink.yt.url}>
-                      <i className={SocialLink.yt.icon} />
-                    </span>
-                  </li>
-                  <li>
-                    <span href={SocialLink.linked.url}>
-                      <i className={SocialLink.linked.icon} />
-                    </span>
-                  </li>
-                  <li>
-                    <span href={SocialLink.pinterest.url}>
-                      <i className={SocialLink.pinterest.icon} />
-                    </span>
+                    <Link href={SocialLink.yt.url}>
+                      <FaYoutube size={"2em"} />
+                    </Link>
                   </li>
                   </ul>
                 </div>

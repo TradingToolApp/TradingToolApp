@@ -166,6 +166,17 @@ const deleteAuthor = async ( req, res ) => {
             return res.status(404).json({ success: false, code: ERROR_CODE, message: "Author not found", data: [] });
         }
 
+        const posts = await prisma.post.findMany({
+            where: {
+                author_slug: author.author_slug
+            }
+        });
+
+        if(posts.length > 0) {
+            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Author is being used in some posts. Delete these posts" +
+                    " first!", data: [] });
+        }
+
         await prisma.authorTranslation.deleteMany({
             where: {
                 authorId: author.id

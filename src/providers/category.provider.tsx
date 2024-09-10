@@ -20,14 +20,18 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({child
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        setLoading(true);
-        console.log("calling api categories")
-        const fetchData = async () => {
-            const response = await categoryAPI.getCategories();
-            setAllDataCategories(response.data);
+        try {
+            setLoading(true);
+            console.log("calling api categories")
+            const fetchData = async () => {
+                const response = await categoryAPI.getCategories();
+                setAllDataCategories(response.data);
+            }
+            fetchData();
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
         }
-        fetchData();
-        setLoading(false);
     }, [])
 
     useEffect(() => {
@@ -41,7 +45,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({child
 
     return (
         <CategoryContext.Provider value={{loading, categories, setCategories, allDataCategories, setAllDataCategories}}>
-            {children}
+            {!loading && children}
         </CategoryContext.Provider>
     );
 };

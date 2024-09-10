@@ -1,31 +1,32 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { useTranslation } from "react-i18next";
+import React, {createContext, useState, useEffect} from 'react';
+import {useTranslation} from "react-i18next";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import postAPI from "@/services/posts-api";
-import { formatData } from "@/lib/formatData";
+import {formatData} from "@/lib/formatData";
+import {Loader} from 'rsuite';
 
 interface contextDefaultValues {
     language: "en",
-    setLanguage: ( language: string ) => void,
+    setLanguage: (language: string) => void,
     posts: [],
-    setPosts: ( posts: object ) => void,
+    setPosts: (posts: object) => void,
     allDataPosts: [],
-    setAllDataPosts: ( allDataPosts: object ) => void,
-    fetching: true,
-    setFetching: ( fetching: object ) => void,
+    setAllDataPosts: (allDataPosts: object) => void,
+    loading: true,
+    setLoading: (bool: Boolean) => void,
     error: "",
     handleLanguageChange: (language: string) => void,
 }
 
 export const AppContext = createContext<contextDefaultValues>({} as contextDefaultValues)
 
-export const AppProvider: React.FC<{children: React.ReactNode}> = ( { children } ) => {
-    const { i18n, t } = useTranslation();
-    const [ allDataPosts, setAllDataPosts ] = useState<any>([])
-    const [ posts, setPosts ]: any = useState<any>([])
-    const [ fetching, setFetching ]: any = useState<any>(false);
-    const [ error, setError ]: any = useState<any>();
-    const [ language, setLanguage ]: any = useLocalStorage("language", "en");
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
+    const {i18n, t} = useTranslation();
+    const [allDataPosts, setAllDataPosts] = useState<any>([])
+    const [posts, setPosts]: any = useState<any>([])
+    const [loading, setLoading]: any = useState<boolean>(true);
+    const [error, setError]: any = useState<any>();
+    const [language, setLanguage]: any = useLocalStorage("language", "en");
 
     const handleLanguageChange = (language: string) => {
         setLanguage(language);
@@ -33,7 +34,6 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ( { children }
     }
 
     useEffect(() => {
-        setFetching(true);
         try {
             console.log("calling api app providers");
             const fetchData = async () => {
@@ -41,7 +41,6 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ( { children }
                 setAllDataPosts(posts.data);
             }
             fetchData();
-            setFetching(false);
         } catch (error) {
             setError(error);
         }
@@ -50,13 +49,15 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ( { children }
     useEffect(() => {
         i18n.changeLanguage(language);
         try {
+            setLoading(true);
             console.log("formatting app providers");
             const posts = formatData(allDataPosts, language);
             setPosts(posts);
+            setLoading(false);
         } catch (error) {
             console.log(error);
         }
-    }, [ language, i18n, allDataPosts ]);
+    }, [language, i18n, allDataPosts]);
 
     return (<AppContext.Provider value={{
         language,
@@ -66,10 +67,10 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ( { children }
         setPosts,
         allDataPosts,
         setAllDataPosts,
-        fetching,
-        setFetching,
+        loading,
+        setLoading,
         error
     }}>
-        {posts.length !== 0 && children}
+        {loading ? <Loader style={{marginTop: "25%"}} backdrop size="md" content="loading..."/> : children}
     </AppContext.Provider>)
 }

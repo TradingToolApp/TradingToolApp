@@ -27,7 +27,7 @@ async function deleteImages( data ) {
         const res = await axios.delete('/api/images', { data });
         return res.data;
     } catch (err) {
-        return err.response.message;
+        return err.response.data;
     }
 }
 

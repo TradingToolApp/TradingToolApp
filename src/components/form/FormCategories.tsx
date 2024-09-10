@@ -21,13 +21,7 @@ import { AppContext } from "@/providers/app.provider";
 import { CategoryContext } from "@/providers/category.provider";
 import { toastConfig } from "@/lib/constant";
 import categoryAPI from "@/services/category-api";
-
-const Textarea = React.forwardRef<HTMLInputElement, any>((props, ref) => <Input {...props} as="textarea" ref={ref}/>);
-Textarea.displayName = "Textarea";
-
-const SelectPickerCustom = React.forwardRef<HTMLInputElement, any>((props, ref) => <SelectPicker searchable={false} menuMaxHeight={200}
-                                                                                                 style={{width: "100px"}} {...props} ref={ref}/>);
-SelectPickerCustom.displayName = "SelectPickerCustom";
+import { SelectPickerCustom } from "./customElement";
 
 const {StringType} = Schema.Types;
 

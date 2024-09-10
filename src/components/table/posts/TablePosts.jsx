@@ -58,10 +58,20 @@ const TablePosts = () => {
                     y = y.charCodeAt(0);
                 }
 
+                const regex = /\d{4}-\d{2}-\d{2}/g;
+
+                if (regex.test(x)) {
+                    x = new Date(x);
+                    // console.log(x.valueOf())
+                }
+                if (regex.test(y)) {
+                    y = new Date(y);
+                }
+
                 if (sortType === 'asc') {
-                    return x - y;
+                    return x > y ? 1 : -1;
                 } else {
-                    return y - x;
+                    return y > x ? 1 : -1;
                 }
             });
         }

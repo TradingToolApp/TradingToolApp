@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useRouter } from 'next/router'
 import { AppContext } from "@/providers/app.provider";
 import Breadcrumb from "../../components/common/Breadcrumb";
@@ -11,18 +11,14 @@ import PostFormatQuote from "../../components/post/post-format/PostFormatQuote";
 import PostFormatStandard from "../../components/post/post-format/PostFormatStandard";
 import PostFormatText from "../../components/post/post-format/PostFormatText";
 import PostFormatVideo from "../../components/post/post-format/PostFormatVideo";
+import { Loader } from "rsuite";
 
-const PostDetails = ( { allPosts } ) => {
+const PostDetails = ( { allPosts, params } ) => {
     const router = useRouter()
     const { posts } = useContext(AppContext);
     allPosts = posts;
 
     const post = allPosts.filter(post => post.slug === router.query.slug);
-
-    if (post.length === 0) {
-        router.push('/404');
-        return null;
-    }
     const postContent = post[0];
 
     const PostFormatHandler = () => {
@@ -40,6 +36,13 @@ const PostDetails = ( { allPosts } ) => {
         } else {
             return <PostFormatStandard postData={postContent} allData={allPosts}/>
         }
+    }
+
+    if (allPosts.length === 0) return <Loader style={{marginTop: "25%"}} backdrop size="md" content="loading..."/>;
+
+    if (posts && post.length === 0) {
+        router.push('/404');
+        return null;
     }
 
     return (

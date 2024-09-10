@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { useRouter } from 'next/router'
 import { useTranslation } from "react-i18next";
 import { AppContext } from "@/providers/app.provider";
@@ -9,6 +9,7 @@ import HeadMeta from "../../components/elements/HeadMeta";
 import WidgetPost from "../../components/widget/WidgetPost";
 import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
 import WidgetYoutubeList from "@/components/widget/WidgetYoutubeList";
+import { Loader } from "rsuite";
 
 const PostCategory = ( { allPosts, params } ) => {
     const { t } = useTranslation();
@@ -18,13 +19,15 @@ const PostCategory = ( { allPosts, params } ) => {
     allPosts = posts;
     const postData = allPosts.filter(post => post.cate_slug === router.query.slug);
 
-    if(postData.length === 0) {
-        router.push('/404');
-        return null;
-    }
+
 
     const cateContent = postData[0];
 
+    if (allPosts.length === 0) return <Loader style={{marginTop: "25%"}} backdrop size="md" content="loading..."/>;
+    if (postData.length === 0) {
+        router.push('/404');
+        return null;
+    }
     return (
         <>
             <HeadMeta metaTitle={cateContent.cate}/>

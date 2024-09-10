@@ -5,6 +5,7 @@ import PostComment from "./elements/PostComment";
 import SocialShareBottom from "./elements/SocialShareBottom";
 import SocialShareSide from "./elements/SocialShareSide";
 import WidgetYoutubeList from "../../widget/WidgetYoutubeList";
+import React from "react";
 
 const PostFormatVideo = ({ postData, allData }) => {
   const basePathLink = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH ?? "" : "";
@@ -24,19 +25,11 @@ const PostFormatVideo = ({ postData, allData }) => {
                 <article className="post-details">
                   <div className="single-blog-wrapper">
                     <SocialShareSide />
-                    {/* <figure className="post-media">
-                      <video className="plyr-post" id="video-player-1" playsInline controls >
-                        <source
-                          src="https://www.youtube.com/embed/k9UZV6xPJS8?si=-_b86hW5-lHbQaFc"
-                          // src={basePathLink + postData.videoLink}
-                          type="video/mp4"
-                        />
-                      </video>
-                    </figure> */}
-                    {postData.videoLink !== "" &&
-                      <div className="product-des " dangerouslySetInnerHTML={{ __html: postData.videoLink }}>
-                      </div>
-                    }
+                    <figure className="post-media" style={{ marginBottom: "2rem" }}>
+                      <iframe width="730" height="400"
+                              src={postData.videoLink}>
+                      </iframe>
+                    </figure>
                     <div className="content-post"
                       dangerouslySetInnerHTML={{ __html: postContent }}
                     ></div>
@@ -45,7 +38,7 @@ const PostFormatVideo = ({ postData, allData }) => {
                 <SocialShareBottom />
                 <hr className="m-t-xs-50 m-b-xs-60" />
                 <PostAuthor authorData={postData} />
-                <PostComment />
+                <PostComment commentData={postData}/>
               </main>
             </div>
             <div className="col-lg-4">

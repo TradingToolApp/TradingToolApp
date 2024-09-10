@@ -43,7 +43,7 @@ const createTag = async ( req, res ) => {
             }
         });
 
-        if(isTagExist) {
+        if (isTagExist) {
             return res.status(400).json({ success: false, code: ERROR_CODE, message: "Tag already exist!", data: [] });
         }
 
@@ -78,12 +78,26 @@ const updateTag = async ( req, res ) => {
 
         const tag = await prisma.tag.findUnique({
             where: {
-                id: data.id,
+                tag_slug: data.tag_slug,
             }
         });
 
-        if(!tag) {
+        if (!tag) {
             return res.status(404).json({ success: false, code: ERROR_CODE, message: "Tag not found", data: [] });
+        }
+
+        const posts = await prisma.post.findMany({
+            where: {
+                tags: {
+                    some: {
+                        id: tag.id
+                    }
+                }
+            }
+        });
+
+        if (posts.length > 0) {
+            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Tag is being used in some posts!", data: [] });
         }
 
         const isSlugExist = await prisma.tag.findFirst({
@@ -152,7 +166,7 @@ const deleteTag = async ( req, res ) => {
             }
         });
 
-        if(!tag) {
+        if (!tag) {
             return res.status(404).json({ success: false, code: ERROR_CODE, message: "Tag not found", data: [] });
         }
 

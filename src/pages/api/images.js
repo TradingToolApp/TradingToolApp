@@ -91,7 +91,7 @@ const createImages = async ( req, res ) => {
         }
 
         // Upload to S3
-        for(let i = 0; i < files.length; i++) {
+        for (let i = 0; i < files.length; i++) {
             const key = "images/" + files[i].originalname;
             const command = new PutObjectCommand({
                 Bucket: "tradingtoolapp",
@@ -141,6 +141,57 @@ const deleteImages = async ( req, res ) => {
                 Key: true
             }
         })
+
+        const posts = await prisma.post.findMany({
+            where: {
+                    featureImg: {
+                        in: urls
+                    }
+            }
+        });
+
+        if (posts.length > 0) {
+            return res.status(400).json({
+                success: false,
+                code: ERROR_CODE,
+                message: "Image is being used in some posts. Delete these posts first!",
+                data: []
+            });
+        }
+
+        const categories = await prisma.category.findMany({
+            where: {
+                cate_img: {
+                    in: urls
+                }
+            }
+        });
+
+        if (categories.length > 0) {
+            return res.status(400).json({
+                success: false,
+                code: ERROR_CODE,
+                message: "Image is being used in some categories. Delete these categories first!",
+                data: []
+            });
+        }
+
+        const authors = await prisma.author.findMany({
+            where: {
+                author_img: {
+                    in: urls
+                }
+            }
+        });
+
+        if (authors.length > 0) {
+            return res.status(400).json({
+                success: false,
+                code: ERROR_CODE,
+                message: "Image is being used in some authors. Delete these authors first!",
+                data: []
+            });
+        }
 
         // Delete the image from S3
         const command = new DeleteObjectsCommand({

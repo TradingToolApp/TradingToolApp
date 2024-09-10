@@ -87,13 +87,6 @@ Link format:
 When it comes to creating posts in video and audio formats, please provide an embed URL(not the public URL).  
 How to get the embed URL:  
 
-For video(example on youtube): 
--   Open youtube video .
--   Find share button right below the video and click on it.
--   On small windows open, choose embed icon.
--   CLick copy URL (which begin with <iframe>) and paste it into videoURL.
--   You can also change the size of the video by changing the width and height in the URL. (Ex: width="100%" height="400")
-
 For audio(example with soundcloud):
 -   Open soundcloud audio .
 -   Find share button right below the video and click on it.

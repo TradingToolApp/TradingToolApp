@@ -164,6 +164,17 @@ const deleteCategory = async ( req, res ) => {
             return res.status(404).json({ success: false, code: ERROR_CODE, message: "Category not found", data: [] });
         }
 
+        const posts = await prisma.post.findMany({
+            where: {
+                cate_slug: category.cate_slug
+            }
+        });
+
+        if(posts.length > 0) {
+            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Category is being used in some posts. Delete these posts" +
+                    " first!", data: [] });
+        }
+
         await prisma.categoryTranslation.deleteMany({
             where: {
                 categoryId: category.id

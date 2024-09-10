@@ -31,7 +31,7 @@ const PostFormatStandard = ({ postData, allData }) => {
                 <SocialShareBottom />
                 <hr className="m-t-xs-50 m-b-xs-60" />
                 <PostAuthor authorData={postData} />
-                <PostComment />
+                <PostComment commentData={postData}/>
               </main>
             </div>
             <div className="col-lg-4">

@@ -10638,3 +10638,47 @@ li {
 .content-post ul, li {
     white-space: initial;
 }
+
+.post-comment-area h2 {
+    font-size: 2.4rem;
+    line-height: 3rem;
+    margin-bottom: 2rem;
+}
+
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none
+}
+
+.comment-meta {
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-user {
+
+}
+
+.comment-author {
+    margin-left: 50px;
+}
+
+.author-meta {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.comment-list h4 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.comment-body {
+    font-size: var(--p-light);
+    font-weight: var(--p-regular);
+}
+
+

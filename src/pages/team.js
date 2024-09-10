@@ -38,26 +38,26 @@ const TeamPage = ({ allPosts }) => {
                     </div>
                 </div>
             </div>
-            <div className="join-us section-gap-bottom">
-                <div className="container">
-                    <SectionTitleTwo title="We Are Hiring" paragraph="We are always looking for the right people to join our passionate team of dedicated people. To
-                    support papr growth,<br /> we welcome highly motivated people." tSpace="m-b-xs-30" />
-                    <div className="row">
-                        <div className="col-lg-10 offset-lg-1">
-                            <div className="axil-avaiable-positions p-t-xs-10"> 
-                                <div className="axil-position-block">
-                                    <h3 className="axil-position-title">Senior Reporter</h3>
-                                    <span href="#" className="btn btn-primary btn-nofill btn-small">APPLY HERE</span>
-                                </div>
-                                <div className="axil-position-block">
-                                    <h3 className="axil-position-title">Senior Enterprise Editor</h3>
-                                    <span href="#" className="btn btn-primary btn-nofill btn-small">APPLY HERE</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {/*<div className="join-us section-gap-bottom">*/}
+            {/*    <div className="container">*/}
+            {/*        <SectionTitleTwo title="We Are Hiring" paragraph="We are always looking for the right people to join our passionate team of dedicated people. To*/}
+            {/*        support papr growth,<br /> we welcome highly motivated people." tSpace="m-b-xs-30" />*/}
+            {/*        <div className="row">*/}
+            {/*            <div className="col-lg-10 offset-lg-1">*/}
+            {/*                <div className="axil-avaiable-positions p-t-xs-10"> */}
+            {/*                    <div className="axil-position-block">*/}
+            {/*                        <h3 className="axil-position-title">Senior Reporter</h3>*/}
+            {/*                        <span href="#" className="btn btn-primary btn-nofill btn-small">APPLY HERE</span>*/}
+            {/*                    </div>*/}
+            {/*                    <div className="axil-position-block">*/}
+            {/*                        <h3 className="axil-position-title">Senior Enterprise Editor</h3>*/}
+            {/*                        <span href="#" className="btn btn-primary btn-nofill btn-small">APPLY HERE</span>*/}
+            {/*                    </div>*/}
+            {/*                </div>*/}
+            {/*            </div>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
             <FooterOne />
         </>
     );

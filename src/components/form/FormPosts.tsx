@@ -27,7 +27,7 @@ import { TagContext } from "@/providers/tag.provider";
 import { initialFormValue, toastConfig, postFormatList } from "@/lib/constant";
 import postAPI from "@/services/posts-api";
 
-const Textarea = React.forwardRef<HTMLInputElement, any>((props, ref) => <Input {...props} as="textarea" ref={ref}/>);
+const Textarea = React.forwardRef<HTMLInputElement, any>((props: any, ref: any) => <Input {...props} as="textarea" ref={ref}/>);
 Textarea.displayName = "Textarea";
 
 const {StringType} = Schema.Types;
@@ -82,18 +82,19 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
             //on create => generate new slug(fileName), else use the old one
             const newPost = {
                 ...formValue,
-                slug: action === "CREATE" ? slugify(formValue.titleEN, {lower: true}) : formValue.slug,
-                postFormatLabel: postFormatList.filter((format: any) => format.value === formValue.postFormat)[0].label,
-                title: language === "en" ? formValue.titleEN : formValue.titleVI,
-                content: language === "en" ? formValue.contentEN : formValue.contentVI,
-                cate: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].label,
-                cate_bg: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].cate_bg,
-                cate_img: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].cate_img,
-                author_name: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_name,
-                author_img: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_img,
-                author_social: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_social,
-                featureImg: featureImg.length !== 0 ? featureImg[0] : formValue.featureImg,
-                updatedAt: action === "CREATE" ? formValue.date : formValue.updatedAt,
+                videoLink: formValue.videoLink !== "" && "http://www.youtube.com/embed/" + formValue.videoLink.split("?v=")[1],
+                // slug: action === "CREATE" ? slugify(formValue.titleEN, {lower: true}) : formValue.slug,
+                // postFormatLabel: postFormatList.filter((format: any) => format.value === formValue.postFormat)[0].label,
+                // title: language === "en" ? formValue.titleEN : formValue.titleVI,
+                // content: language === "en" ? formValue.contentEN : formValue.contentVI,
+                // cate: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].label,
+                // cate_bg: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].cate_bg,
+                // cate_img: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].cate_img,
+                // author_name: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_name,
+                // author_img: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_img,
+                // author_social: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_social,
+                // featureImg: featureImg.length !== 0 ? featureImg[0] : formValue.featureImg,
+                // updatedAt: action === "CREATE" ? formValue.date : formValue.updatedAt,
             };
 
             switch (action) {

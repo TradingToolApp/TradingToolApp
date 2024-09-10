@@ -87,7 +87,7 @@ async function main() {
                 post_share: dataEN[i].post_share,
                 videoLink: dataEN[i].videoLink ? dataEN[i].videoLink : "",
                 audioLink: dataEN[i].audioLink ? dataEN[i].audioLink : "",
-                gallery: dataEN[i].gallery ? dataEN[i].gallery : [],
+                gallery: [],
                 story: dataEN[i].story ? dataEN[i].story : false,
                 trending: dataEN[i].trending ? dataEN[i].trending : false,
                 published: dataEN[i].published ? dataEN[i].published : false,

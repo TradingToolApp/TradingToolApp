@@ -14,16 +14,23 @@ export const AuthorContext = createContext<AuthorContextProps>({} as AuthorConte
 
 export const AuthorProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const {language} = useContext(AppContext);
+    const [loading, setLoading] = useState(true);
     const [allDataAuthors, setAllDataAuthors] = useState([]);
     const [authors, setAuthors] = useState([]);
 
     useEffect(() => {
-        console.log("calling api authors")
-        const fetchData = async () => {
-            const response = await authorAPI.getAuthors();
-            setAllDataAuthors(response.data);
+        try {
+            setLoading(true);
+            console.log("calling api authors")
+            const fetchData = async () => {
+                const response = await authorAPI.getAuthors();
+                setAllDataAuthors(response.data);
+            }
+            fetchData();
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
         }
-        fetchData();
     }, [])
 
     useEffect(() => {
@@ -37,7 +44,7 @@ export const AuthorProvider: React.FC<{ children: React.ReactNode }> = ({childre
 
     return (
         <AuthorContext.Provider value={{authors, setAuthors, allDataAuthors, setAllDataAuthors}}>
-            {children}
+            {!loading && children}
         </AuthorContext.Provider>
     );
 };

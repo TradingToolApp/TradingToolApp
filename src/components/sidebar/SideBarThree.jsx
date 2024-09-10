@@ -23,19 +23,20 @@ const SideBarOne = () => (
                     <Nav.Menu eventKey="1" title="Dashboard" icon={<DashboardIcon />}>
                         <Nav.Item panel style={panelStyles}>Post</Nav.Item>
                         <Nav.Item eventKey="1-1" as={Link} href="/admin/dashboard/posts">Posts</Nav.Item>
+                        <Nav.Item eventKey="1-1" as={Link} href="/admin/dashboard/comments">Comments</Nav.Item>
                         <Nav.Item eventKey="1-2" as={Link} href="/admin/dashboard/categories">Categories</Nav.Item>
                         <Nav.Item eventKey="1-3" as={Link} href="/admin/dashboard/authors">Authors</Nav.Item>
                         <Nav.Item eventKey="1-4" as={Link} href="/admin/dashboard/tags">Tags</Nav.Item>
                         <Nav.Item divider />
                         <Nav.Item panel style={panelStyles}>Assets</Nav.Item>
                         <Nav.Item eventKey="1-5-1" as={Link} href="/admin/assets/images">Images</Nav.Item>
+                        <Nav.Item divider />
+                        <Nav.Item panel style={panelStyles}>Widgets</Nav.Item>
+                        <Nav.Item eventKey="1-5-1" as={Link} href="/admin/widgets/youtube-widgets">Youtube</Nav.Item>
                     </Nav.Menu>
                     <Nav.Menu eventKey="2" title="Users" icon={<PeoplesIcon />}>
                         <Nav.Item as={Link} href="/admin/users/subscribed">Subscribed</Nav.Item>
                         <Nav.Item as={Link} href="/admin/users/pending">Waiting</Nav.Item>
-                    </Nav.Menu>
-                    <Nav.Menu eventKey="3" title="Comment" icon={<MessageIcon />}>
-                        <Nav.Item eventKey="3-1">Pending</Nav.Item>
                     </Nav.Menu>
                 </Nav>
             </Sidenav.Body>

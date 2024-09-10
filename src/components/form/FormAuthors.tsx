@@ -20,13 +20,7 @@ import ModalSelectImage from "@/components/modal/images/ModalSelectImage";
 import { AuthorContext } from "@/providers/author.provider";
 import { toastConfig } from "@/lib/constant";
 import authorAPI from "@/services/author-api";
-
-const Textarea = React.forwardRef<HTMLInputElement, any>((props, ref) => <Input {...props} as="textarea" ref={ref}/>);
-Textarea.displayName = "Textarea";
-
-const SelectPickerCustom = React.forwardRef<HTMLInputElement, any>((props, ref) => <SelectPicker searchable={false} menuMaxHeight={200}
-                                                                                               style={{width: "100px"}} {...props} ref={ref}/>);
-SelectPickerCustom.displayName = "SelectPickerCustom";
+import { Textarea } from "./customElement";
 
 const {StringType} = Schema.Types;
 

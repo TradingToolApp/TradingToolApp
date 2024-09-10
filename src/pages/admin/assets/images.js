@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Grid, Row, Col, Stack, InputGroup, Input, Modal, ButtonToolbar, Uploader, Button, Panel, useToaster, Message } from 'rsuite';
+import { Grid, Row, Col, Stack, InputGroup, Input, ButtonToolbar, Button, Panel } from 'rsuite';
 import Image from "next/image";
 import HeadMeta from "../../../components/elements/HeadMeta";
 import HeaderThree from "../../../components/header/HeaderThree";
@@ -11,7 +11,6 @@ import ModalAddImage from "../../../components/modal/images/ModalAddImage";
 import ModalFullScreenImage from "../../../components/modal/images/ModalFullScreenImage";
 
 const Images = () => {
-    const toaster = useToaster();
     const [ loading, setLoading ] = useState(true);
     const [ images, setImages ] = useState([]);
     const [ selectedImg, setSelectedImg ] = useState([]);
@@ -44,17 +43,21 @@ const Images = () => {
     }
 
     useEffect(() => {
+        try {
         setLoading(true);
-        const fetchData = async () => {
-            try {
-                const response = await imageAPI.getImages();
-                setImages(response.data);
-            } catch (error) {
-                console.log(error);
+            const fetchData = async () => {
+                try {
+                    const response = await imageAPI.getImages();
+                    setImages(response.data);
+                } catch (error) {
+                    console.log(error);
+                }
             }
+            fetchData();
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
         }
-        fetchData();
-        setLoading(false);
     }, [])
 
     const filteredData = useMemo(() => {

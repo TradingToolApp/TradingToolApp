@@ -20,14 +20,18 @@ export const TagProvider: React.FC<{ children: React.ReactNode }> = ({children})
     const [tags, setTags] = useState([]);
 
     useEffect(() => {
-        setLoading(true);
-        console.log("calling api tags")
-        const fetchData = async () => {
-            const response = await tagAPI.getTags();
-            setAllDataTags(response.data);
+        try {
+            setLoading(true);
+            console.log("calling api tags")
+            const fetchData = async () => {
+                const response = await tagAPI.getTags();
+                setAllDataTags(response.data);
+            }
+            fetchData();
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
         }
-        fetchData();
-        setLoading(false);
     }, [])
 
     useEffect(() => {
@@ -41,7 +45,7 @@ export const TagProvider: React.FC<{ children: React.ReactNode }> = ({children})
 
     return (
         <TagContext.Provider value={{loading, tags, setTags, allDataTags, setAllDataTags}}>
-            {children}
+            {!loading && children}
         </TagContext.Provider>
     );
 };

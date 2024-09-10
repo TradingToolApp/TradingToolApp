@@ -48,6 +48,7 @@ model Post {
   tags         Tag[]
   author       Author            @relation(fields: [author_slug], references: [author_slug])
   category     Category          @relation(fields: [cate_slug], references: [cate_slug])
+  comments     Comment[]
 }
 
 // Table for post translations
@@ -65,6 +66,23 @@ model PostTranslation {
   language Language @relation(fields: [languageCode], references: [code])
 
   @@unique([postId, languageCode]) // Ensure each post has a unique translation per language
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  post_slug    String
+  author_slug  String?
+  name      String
+  email     String
+  comment   String
+  reply     String?  @default("")
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  post Post @relation(fields: [post_slug], references: [slug])
+  author Author? @relation(fields: [author_slug], references: [author_slug])
 }
 
 // Table for categories
@@ -136,6 +154,7 @@ model Author {
   // Relations
   translations AuthorTranslation[]
   posts        Post[]
+  comments     Comment[]
 }
 
 model AuthorTranslation {
@@ -162,6 +181,17 @@ model Image {
   url          String?  @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model Youtube {
+  id        Int      @id @default(autoincrement())
+  videoId   String   @unique
+  title     String
+  videoUrl  String   @unique
+  embedUrl  String   @unique
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // model Account {

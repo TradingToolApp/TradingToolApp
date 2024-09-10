@@ -9,7 +9,8 @@ import { AppProvider } from "@/providers/app.provider";
 import { AuthorProvider } from "@/providers/author.provider";
 import { CategoryProvider } from "@/providers/category.provider";
 import { TagProvider } from "@/providers/tag.provider";
-
+import { YoutubeProvider } from "@/providers/widgets/youtube.provider";
+import { CommentProvider } from "@/providers/comment.provider";
 import "../i18n.ts";
 
 function MyApp( { Component, pageProps: { session, ...pageProps } } ) {
@@ -32,13 +33,17 @@ function MyApp( { Component, pageProps: { session, ...pageProps } } ) {
             <SessionProvider session={session}>
                 <ToastProvider>
                     <AppProvider>
-                        <AuthorProvider>
-                            <CategoryProvider>
-                                <TagProvider>
-                                    <Component {...pageProps} />
-                                </TagProvider>
-                            </CategoryProvider>
-                        </AuthorProvider>
+                        <YoutubeProvider>
+                            <CommentProvider>
+                                <AuthorProvider>
+                                    <CategoryProvider>
+                                        <TagProvider>
+                                            <Component {...pageProps} />
+                                        </TagProvider>
+                                    </CategoryProvider>
+                                </AuthorProvider>
+                            </CommentProvider>
+                        </YoutubeProvider>
                     </AppProvider>
                 </ToastProvider>
             </SessionProvider>

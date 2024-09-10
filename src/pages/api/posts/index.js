@@ -1,5 +1,5 @@
-import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "../../../lib/constant";
-import prisma from "../../../lib/prisma";
+import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "@/lib/constant";
+import prisma from "@/lib/prisma";
 import slugify from "slugify";
 
 const postHandler = async ( req, res ) => {
@@ -35,10 +35,16 @@ const getPosts = async ( req, res ) => {
                         translations: true,
                     }
                 },
+                comments: true
             },
-            orderBy: {
-                id: 'asc'
-            }
+            orderBy: [
+                {
+                    updatedAt: 'desc',
+                },
+                {
+                    id: 'asc',
+                }
+            ],
         });
 
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: posts });

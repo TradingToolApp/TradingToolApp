@@ -9,6 +9,15 @@ async function getPosts() {
     }
 }
 
+async function getPostBySlug( slug ) {
+    try {
+        const res = await axios.get('/api/posts/by-slug', { data: { slug } });
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
+
 async function createPost( data ) {
     try {
         const res = await axios.post('/api/posts', { data });
@@ -38,6 +47,7 @@ async function deletePost( data ) {
 
 const postAPI = {
     getPosts,
+    getPostBySlug,
     createPost,
     updatePost,
     deletePost
