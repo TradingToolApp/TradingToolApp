@@ -6,7 +6,7 @@ import { YoutubeContext } from "@/providers/widgets/youtube.provider";
 
 const WidgetYoutubeList = ( { dataPost } ) => {
     const { t } = useTranslation();
-    const { allDataYoutube, setAllDataYoutube } = useContext(YoutubeContext);
+    const { allDataYoutube } = useContext(YoutubeContext);
 
     return (
         <div className="post-widget sidebar-post-widget m-b-xs-40">
@@ -26,11 +26,11 @@ const WidgetYoutubeList = ( { dataPost } ) => {
                 <Tab.Content>
                     {allDataYoutube.map((item) =>
                         item.published &&
-                        <figure key={item.title} className="post-media" style={{ marginBottom: "2rem" }}>
+                        <div key={item.title} className="post-media" style={{ marginBottom: "2rem" }}>
                             <iframe width="320" height="160"
                                     src={item.embedUrl}>
                             </iframe>
-                        </figure>
+                        </div>
                     )}
                 </Tab.Content>
             </Tab.Container>

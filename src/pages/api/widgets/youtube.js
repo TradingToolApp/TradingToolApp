@@ -58,7 +58,7 @@ const createYoutubeURL = async ( req, res ) => {
                 videoId: data.videoUrl.split("?v=")[1],
                 title: data.title,
                 videoUrl: data.videoUrl,
-                embedUrl: "http://www.youtube.com/embed/" + data.videoUrl.split("?v=")[1],
+                embedUrl: "https://www.youtube.com/embed/" + data.videoUrl.split("?v=")[1],
                 published: data.published,
             }
         });
@@ -95,7 +95,7 @@ const updateYoutubeURL = async ( req, res ) => {
                 videoId: data.videoUrl.split("?v=")[1],
                 title: data.title,
                 videoUrl: data.videoUrl,
-                embedUrl: "http://www.youtube.com/embed/" + data.videoUrl.split("?v=")[1],
+                embedUrl: "https://www.youtube.com/embed/" + data.videoUrl.split("?v=")[1],
                 published: data.published,
             }
         });

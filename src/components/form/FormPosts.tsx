@@ -82,7 +82,7 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
             //on create => generate new slug(fileName), else use the old one
             const newPost = {
                 ...formValue,
-                videoLink: formValue.videoLink !== "" && "http://www.youtube.com/embed/" + formValue.videoLink.split("?v=")[1],
+                videoLink: formValue.videoLink !== "" && "https://www.youtube.com/embed/" + formValue.videoLink.split("?v=")[1],
                 // slug: action === "CREATE" ? slugify(formValue.titleEN, {lower: true}) : formValue.slug,
                 // postFormatLabel: postFormatList.filter((format: any) => format.value === formValue.postFormat)[0].label,
                 // title: language === "en" ? formValue.titleEN : formValue.titleVI,

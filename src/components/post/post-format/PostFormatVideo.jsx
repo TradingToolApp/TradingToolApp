@@ -25,11 +25,11 @@ const PostFormatVideo = ({ postData, allData }) => {
                 <article className="post-details">
                   <div className="single-blog-wrapper">
                     <SocialShareSide />
-                    <figure className="post-media" style={{ marginBottom: "2rem" }}>
+                    <div className="post-media" style={{ marginBottom: "2rem" }}>
                       <iframe width="730" height="400"
                               src={postData.videoLink}>
                       </iframe>
-                    </figure>
+                    </div>
                     <div className="content-post"
                       dangerouslySetInnerHTML={{ __html: postContent }}
                     ></div>
