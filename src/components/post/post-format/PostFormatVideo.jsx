@@ -35,7 +35,7 @@ const PostFormatVideo = ({ postData, allData }) => {
                     ></div>
                   </div>
                 </article>
-                <SocialShareBottom />
+                <SocialShareBottom shareData={postData}/>
                 <hr className="m-t-xs-50 m-b-xs-60" />
                 <PostAuthor authorData={postData} />
                 <PostComment commentData={postData}/>

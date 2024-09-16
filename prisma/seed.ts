@@ -90,7 +90,7 @@ async function main() {
                 gallery: [],
                 story: dataEN[i].story ? dataEN[i].story : false,
                 trending: dataEN[i].trending ? dataEN[i].trending : false,
-                published: dataEN[i].published ? dataEN[i].published : false,
+                status: "public",
                 translations: {
                     create: [{
                         title: dataEN[i].title,

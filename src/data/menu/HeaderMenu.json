@@ -17,20 +17,6 @@
         {
             "label": "Discussion",
             "path": "/category/discussion"
-        },
-        {
-            "label": "About Us",
-            "path": "#",
-            "submenu": [
-                {
-                    "sublabel": "Team",
-                    "subpath": "/team"
-                },
-                {
-                    "sublabel": "Contact Us",
-                    "subpath": "/contact"
-                }
-            ]
         }]
     },
     {
@@ -51,20 +37,6 @@
         {
             "label": "Thảo luận",
             "path": "/category/discussion"
-        },
-        {
-            "label": "Về chúng tôi",
-            "path": "#",
-            "submenu": [
-                {
-                    "sublabel": "Đội ngũ",
-                    "subpath": "/team"
-                },
-                {
-                    "sublabel": "Liên hệ",
-                    "subpath": "/contact"
-                }
-            ]
         }]
     }
    

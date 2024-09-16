@@ -2,7 +2,7 @@ import React, {createContext, useState, useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import postAPI from "@/services/posts-api";
-import {formatData} from "@/lib/formatData";
+import {formatPosts} from "@/lib/formatData";
 import {Loader} from 'rsuite';
 
 interface contextDefaultValues {
@@ -51,7 +51,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({children})
         try {
             setLoading(true);
             console.log("formatting app providers");
-            const posts = formatData(allDataPosts, language);
+            const posts = formatPosts(allDataPosts, language);
             setPosts(posts);
             setLoading(false);
         } catch (error) {

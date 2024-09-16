@@ -36,7 +36,7 @@ model Post {
   gallery     String[]  @default([])
   story       Boolean   @default(false)
   trending    Boolean   @default(false)
-  published   Boolean   @default(false)
+  status      String    @default("public")
   post_views  String    @default("0")
   post_share  String    @default("0")
   createdAt   DateTime  @default(now())
@@ -69,19 +69,19 @@ model PostTranslation {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  post_slug    String
-  author_slug  String?
-  name      String
-  email     String
-  comment   String
-  reply     String?  @default("")
-  published Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  post_slug   String
+  author_slug String?
+  name        String
+  email       String
+  comment     String
+  reply       String?  @default("")
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  post Post @relation(fields: [post_slug], references: [slug])
+  post   Post    @relation(fields: [post_slug], references: [slug])
   author Author? @relation(fields: [author_slug], references: [author_slug])
 }
 

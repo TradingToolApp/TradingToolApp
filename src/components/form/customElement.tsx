@@ -1,6 +1,11 @@
 import React from "react";
-import {Input, SelectPicker} from "rsuite";
+import {InputGroup, Input, SelectPicker, Whisper, Tooltip} from "rsuite";
+import SearchIcon from '@rsuite/icons/Search';
+import {FaCopy} from "react-icons/fa";
 
+const styles = {
+    marginBottom: 10
+};
 
 export const Textarea = React.forwardRef<HTMLInputElement, any>((props: any, ref: any) => <Input {...props} as="textarea" ref={ref}/>);
 Textarea.displayName = "Textarea";
@@ -10,3 +15,15 @@ export const SelectPickerCustom = React.forwardRef<HTMLInputElement, any>((props
                   style={{width: "100px"}}
                   defaultValue={"false"} {...props} ref={ref}/>);
 SelectPickerCustom.displayName = "SelectPickerCustom";
+
+export const InputWithCopyButton = ({placeholder = "", ...props}: any) => (
+    <Whisper trigger="click" speaker={<Tooltip>Copied</Tooltip>}>
+        <InputGroup {...props} inside style={styles}>
+            <Input placeholder={placeholder} readOnly/>
+            <InputGroup.Button>
+                <FaCopy/>
+            </InputGroup.Button>
+        </InputGroup>
+    </Whisper>
+);
+

@@ -6,9 +6,8 @@ import { AppContext } from "@/providers/app.provider";
 import { useTranslation } from "react-i18next";
 
 const CategoryOne = ({ cateData }) => {
-  const { t } = useTranslation();
-  const { posts } = useContext(AppContext);
-  cateData = posts;
+  // const { posts } = useContext(AppContext);
+  // cateData = posts;
   const categories = cateData.map(data => {
     const obj = {
       name: data.cate,
@@ -34,7 +33,6 @@ const CategoryOne = ({ cateData }) => {
       cateImg: imgGet[0].thumb
     };
   });
-
 
   return (
     <div className="axil-banner-cat-counter">

@@ -33,7 +33,7 @@ const dataEN = [
                 url: "https://linkedin.com",
             },
         ],
-        published: true,
+        status: "public",
         author_bio:
             "At 29 years old, my favorite compliment is being told that I look like my mom. Seeing myself in her image, like this daughter up top, makes me so proud of how far I’ve come, and so thankful for where I come from.",
         post_views: "300",
@@ -960,7 +960,7 @@ const dataVN = [
                 url: "https://linkedin.com",
             },
         ],
-        published: true,
+        status: "public",
         author_bio:
             "At 29 years old, my favorite compliment is being told that I look like my mom. Seeing myself in her image, like this daughter up top, makes me so proud of how far I’ve come, and so thankful for where I come from.",
         post_views: "2000",

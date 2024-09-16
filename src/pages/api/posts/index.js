@@ -81,7 +81,7 @@ const createPost = async ( req, res ) => {
                 gallery: data.gallery ? data.gallery : [],
                 story: data.story ? data.story : false,
                 trending: data.trending ? data.trending : false,
-                published: data.published ? data.published : false,
+                status: data.status ? data.status : false,
                 translations: {
                     create: [ {
                         title: data.titleEN,
@@ -211,7 +211,7 @@ const updatePost = async ( req, res ) => {
                 gallery: data.gallery ? data.gallery : [],
                 story: data.story ? data.story : false,
                 trending: data.trending ? data.trending : false,
-                published: data.published ? data.published : false,
+                published: data.status ? data.status : false,
                 author: {
                     connect: { author_slug: data.author_slug },
                 },

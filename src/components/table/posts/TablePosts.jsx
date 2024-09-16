@@ -9,7 +9,7 @@ import {
 } from "rsuite";
 import SearchIcon from "@rsuite/icons/Search";
 import MoreIcon from "@rsuite/icons/legacy/More";
-import { ActionCell } from "./CellPosts";
+import { ActionCell, UpperCaseCell } from "./CellPosts";
 import { AppContext } from "@/providers/app.provider";
 import { CategoryContext } from "@/providers/category.provider";
 import ModalAddPost from "../../modal/posts/ModalAddPost";
@@ -123,7 +123,7 @@ const TablePosts = () => {
 
                 <Column width={100} sortable>
                     <HeaderCell>Post Format</HeaderCell>
-                    <Cell dataKey="postFormatLabel"/>
+                    <UpperCaseCell dataKey="postFormat"/>
                 </Column>
 
                 <Column width={100} sortable>
@@ -144,6 +144,11 @@ const TablePosts = () => {
                 <Column align="center" width={100} sortable>
                     <HeaderCell>Comments</HeaderCell>
                     <Cell dataKey="post_share"/>
+                </Column>
+
+                <Column align="center" width={100} sortable>
+                    <HeaderCell>Status</HeaderCell>
+                    <UpperCaseCell dataKey="status"/>
                 </Column>
 
                 <Column align="center" width={100}>

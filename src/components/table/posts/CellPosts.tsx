@@ -34,8 +34,14 @@ export const NameCell = ({rowData, dataKey, ...props}: any) => {
     );
 };
 
+export const UpperCaseCell = ({rowData, dataKey, ...props}: any) => (
+    <Cell {...props} style={{padding: "13px 10px"}}>
+        {dataKey ? rowData[dataKey].charAt(0).toUpperCase() + rowData[dataKey].slice(1) : null}
+    </Cell>
+);
+
 export const ImageCell = ({rowData, dataKey, ...props}: any) => (
-    <Cell {...props} style={{padding: 0}}>
+    <Cell {...props} style={{padding: "6px"}}>
         <div
             style={{
                 width: 40,
@@ -48,23 +54,6 @@ export const ImageCell = ({rowData, dataKey, ...props}: any) => (
             }}
         >
             <Image src={rowData[dataKey!] ?? ""} width="40" alt="Image cell"/>
-        </div>
-    </Cell>
-);
-
-export const CheckCell = ({
-                              rowData,
-                              onChange,
-                              checkedKeys,
-                              dataKey,
-                              ...props
-                          }: any & {
-    checkedKeys: number[];
-    onChange: (value: any, checked: boolean) => void;
-}) => (
-    <Cell {...props} style={{padding: "4px"}}>
-        <div style={{lineHeight: "46px"}}>
-            <Checkbox value={rowData[dataKey!]} inline onChange={onChange} checked={checkedKeys.some((item: any) => item === rowData[dataKey!])}/>
         </div>
     </Cell>
 );

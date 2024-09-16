@@ -17,18 +17,20 @@ import {
     Divider,
 } from "rsuite";
 import Image from "next/image";
-import { toast } from 'react-toastify';
-import slugify from "slugify";
+import {toast} from 'react-toastify';
 import ModalSelectImage from "@/components/modal/images/ModalSelectImage";
-import { AppContext } from "@/providers/app.provider";
-import { AuthorContext } from "@/providers/author.provider";
-import { CategoryContext } from "@/providers/category.provider";
-import { TagContext } from "@/providers/tag.provider";
-import { initialFormValue, toastConfig, postFormatList } from "@/lib/constant";
+import {AppContext} from "@/providers/app.provider";
+import {AuthorContext} from "@/providers/author.provider";
+import {CategoryContext} from "@/providers/category.provider";
+import {TagContext} from "@/providers/tag.provider";
+import {initialFormValue, toastConfig, postFormatList} from "@/lib/constant";
 import postAPI from "@/services/posts-api";
+import {Textarea, SelectPickerCustom, InputWithCopyButton} from "./customElement";
 
-const Textarea = React.forwardRef<HTMLInputElement, any>((props: any, ref: any) => <Input {...props} as="textarea" ref={ref}/>);
-Textarea.displayName = "Textarea";
+const PostStatusList = [
+    {label: "Public", value: "public"},
+    {label: "Private", value: "private"},
+];
 
 const {StringType} = Schema.Types;
 
@@ -68,6 +70,11 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
     const handleSetContentImg = () => {
         setSelectMultipleImg(true);
         handleOpenModalImage();
+    }
+
+    const handleCopyURL = () => {
+        const url = process.env.NEXT_PUBLIC_BASEPATH + "/posts/" + formValue.slug;
+        navigator.clipboard.writeText(url);
     }
 
     const handleSubmit = async (e: any) => {
@@ -159,13 +166,7 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                     <PanelGroup accordion bordered>
                         <Panel header="General" defaultExpanded>
                             <Grid fluid>
-                                <Row>
-                                    <Col xs={2} md={4}>
-                                        <Form.Group controlId="featureImg">
-                                            <Form.ControlLabel>Feature Image</Form.ControlLabel>
-                                            <Button onClick={handleSetFeatureImg}>Select</Button>
-                                        </Form.Group>
-                                    </Col>
+                                <Row style={{marginBottom: "20px"}}>
                                     <Col xs={2} md={4}
                                          style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                                         <Form.Group controlId="postFormat">
@@ -191,6 +192,32 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                                             <Form.Control name="tags" accepter={CheckPicker} data={tags}/>
                                         </Form.Group>
                                     </Col>
+                                </Row>
+                                <Row>
+                                    <Col xs={2} md={4}>
+                                        <Form.Group controlId="featureImg">
+                                            <Form.ControlLabel>Feature Image</Form.ControlLabel>
+                                            <Button onClick={handleSetFeatureImg}>Select</Button>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col xs={2} md={4} style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                                        <Form.Group controlId="status">
+                                            <Form.ControlLabel>Status</Form.ControlLabel>
+                                            <Form.Control name="status" accepter={SelectPickerCustom} data={PostStatusList}
+                                                          defaultValue={"public"}/>
+                                        </Form.Group>
+                                    </Col>
+
+                                    {action === "UPDATE" &&
+                                        <Col xs={2} md={8}>
+                                            <Form.Group controlId="url">
+                                                <Form.ControlLabel>URL Post</Form.ControlLabel>
+                                                <Form.Control name="url" accepter={InputWithCopyButton} size="md"
+                                                              onClick={handleCopyURL}
+                                                              placeholder={process.env.NEXT_PUBLIC_BASEPATH + "/posts/" + formValue.slug}/>
+                                            </Form.Group>
+                                        </Col>
+                                    }
                                 </Row>
                             </Grid>
                             {action === "UPDATE" && featureImg.length === 0 &&
@@ -268,7 +295,8 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
             <ModalSelectImage open={openModalImage} handleClose={handleCloseModalImage} multiple={selectMultipleImg}
                               setReturnedImg={selectMultipleImg ? setURLImg : setFeatureImg}/>
         </>
-    );
+    )
+        ;
 };
 
 export default FormPosts;

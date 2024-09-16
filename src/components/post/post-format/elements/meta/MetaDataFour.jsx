@@ -30,10 +30,10 @@ const MetaDataFour = ({ metaData }) => {
             <li>
               <i className="dot">.</i>{metaData.date}
             </li>
-            <li>
-              <i className="feather icon-activity" />
-              {metaData.post_views} Views
-            </li>
+            {/*<li>*/}
+            {/*  <i className="feather icon-activity" />*/}
+            {/*  {metaData.post_views} Views*/}
+            {/*</li>*/}
             {/* <li>
               <i className="feather icon-share-2" />
               {metaData.post_share}

@@ -9,6 +9,7 @@ import PostAuthor from "./elements/PostAuthor";
 import PostComment from "./elements/PostComment";
 import SocialShareBottom from "./elements/SocialShareBottom";
 import SocialShareSide from "./elements/SocialShareSide";
+import React from "react";
 
 const PostFormatAudio = ({ postData, allData }) => {
   const basePathLink = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH ?? "" : "";
@@ -45,7 +46,7 @@ const PostFormatAudio = ({ postData, allData }) => {
                     ></div>
                   </div>
                 </article>
-                <SocialShareBottom />
+                <SocialShareBottom shareData={postData}/>
                 <hr className="m-t-xs-50 m-b-xs-60" />
                 <PostAuthor authorData={postData} />
                 <PostComment commentData={postData}/>

@@ -9,37 +9,37 @@ const MetaDataTwo = ({ metaData }) => {
   return (
     <div className="banner banner__single-post banner__single-type-two" style={{ backgroundImage: `url(${basePathLink + metaData.featureImg})` }}>
       <div className="grad-overlay" />
-      <div className="post-navigation-wrapper post-navigation__banner">
-        <div className="post-navigation">
-          <div className="post-nav-content">
-            <Link href="#">
-              <span className="prev-post">
-                <i className="feather icon-chevron-left" />
-                Prev Post
-              </span>
-            </Link>
-          </div>
-        </div>
-        <div className="post-navigation">
-          <div className="post-nav-content">
-            <Link href="#">
-              <span className="next-post">
-                Next Post
-                <i className="feather icon-chevron-right" />
-              </span>
-            </Link>
-          </div>
-        </div>
-      </div>
+      {/*<div className="post-navigation-wrapper post-navigation__banner">*/}
+      {/*  <div className="post-navigation">*/}
+      {/*    <div className="post-nav-content">*/}
+      {/*      <Link href="#">*/}
+      {/*        <span className="prev-post">*/}
+      {/*          <i className="feather icon-chevron-left" />*/}
+      {/*          Prev Post*/}
+      {/*        </span>*/}
+      {/*      </Link>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*  <div className="post-navigation">*/}
+      {/*    <div className="post-nav-content">*/}
+      {/*      <Link href="#">*/}
+      {/*        <span className="next-post">*/}
+      {/*          Next Post*/}
+      {/*          <i className="feather icon-chevron-right" />*/}
+      {/*        </span>*/}
+      {/*      </Link>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
       {/* End of .post-navigation-wrapper */}
       <div className="container">
         <div className="row">
-          <div className="col-lg-2">
-            <div className="post-date perfect-square bg-primary-color">
-              {postDate[0]}
-              <span>{postDate[1]}</span>
-            </div>
-          </div>
+          {/*<div className="col-lg-2">*/}
+          {/*  <div className="post-date perfect-square bg-primary-color">*/}
+          {/*    {postDate[0]}*/}
+          {/*    <span>{postDate[1]}</span>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
           <div className="col-lg-8">
             <div className="post-title-wrapper">
               <div className="btn-group">
@@ -65,10 +65,10 @@ const MetaDataTwo = ({ metaData }) => {
                       </span>
                     </Link>
                   </li>
-                  <li>
-                    <i className="feather icon-activity" />
-                    {metaData.post_views} Views
-                  </li>
+                  {/*<li>*/}
+                  {/*  <i className="feather icon-activity" />*/}
+                  {/*  {metaData.post_views} Views*/}
+                  {/*</li>*/}
                   {/* <li>
                     <i className="feather icon-share-2" />
                     {metaData.post_share}

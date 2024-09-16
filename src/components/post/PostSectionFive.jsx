@@ -7,16 +7,16 @@ import { AppContext } from "@/providers/app.provider";
 import { Pagination } from 'rsuite';
 
 const PostSectionFive = ( { postData, adBanner, pClass } ) => {
-    const { posts } = useContext(AppContext);
+    // const { posts } = useContext(AppContext);
+    // postData = posts;
     const [ activePage, setActivePage ] = useState(1);
     const length = postData.length;
-    postData = posts;
     const renderPost = postData.slice(activePage * 4 - 4, activePage * 4);
     return (
         <div className={`random-posts ${pClass ?? "section-gap"}`}>
             <div className="container">
                 <div className="row" >
-                    <div className="col-lg-8" style={{height:"1270px"}}>
+                    <div className="col-lg-8" >
                         {adBanner === true ? <AdBanner/> : ""}
                         <div className="axil-content">
                             {renderPost.map(( data ) => (

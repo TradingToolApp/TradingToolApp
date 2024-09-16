@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import SocialLink from "../../data/social/SocialLink.json";
-import { FaFacebookF, FaYoutube  } from "react-icons/fa";
+import { FaFacebookF, FaTelegram, FaYoutube } from "react-icons/fa";
 
 const FooterOne = () => {
   return (
@@ -39,6 +39,11 @@ const FooterOne = () => {
                   <li>
                     <Link href={SocialLink.yt.url}>
                       <FaYoutube size={"2em"} />
+                    </Link>
+                  </li>
+                    <li>
+                    <Link href={SocialLink.telegram.url}>
+                      <FaTelegram size={"2em"} />
                     </Link>
                   </li>
                   </ul>

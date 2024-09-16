@@ -4,6 +4,11 @@
         "icon": "fab fa-facebook-f",
         "follower": "2000+"
     },
+    "telegram": {
+        "url": "https://telegram.com/",
+        "icon": "fab fa-facebook-f",
+        "follower": "2000+"
+    },
     "twitter": {
         "url": "https://twitter.com/",
         "icon": "fa-brands fa-x-twitter",
