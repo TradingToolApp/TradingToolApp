@@ -103,6 +103,7 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                 // featureImg: featureImg.length !== 0 ? featureImg[0] : formValue.featureImg,
                 // updatedAt: action === "CREATE" ? formValue.date : formValue.updatedAt,
             };
+            console.log(newPost)
 
             switch (action) {
                 case "CREATE":

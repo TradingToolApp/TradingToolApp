@@ -81,7 +81,7 @@ const createPost = async ( req, res ) => {
                 gallery: data.gallery ? data.gallery : [],
                 story: data.story ? data.story : false,
                 trending: data.trending ? data.trending : false,
-                status: data.status ? data.status : false,
+                status: data.status,
                 translations: {
                     create: [ {
                         title: data.titleEN,
@@ -141,7 +141,7 @@ const createPost = async ( req, res ) => {
 const updatePost = async ( req, res ) => {
     try {
         const { data } = req.body;
-
+    console.log(data)
         const post = await prisma.post.findUnique({
             where: {
                 id: data.id
@@ -211,7 +211,7 @@ const updatePost = async ( req, res ) => {
                 gallery: data.gallery ? data.gallery : [],
                 story: data.story ? data.story : false,
                 trending: data.trending ? data.trending : false,
-                published: data.status ? data.status : false,
+                status: data.status,
                 author: {
                     connect: { author_slug: data.author_slug },
                 },

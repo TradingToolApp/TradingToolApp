@@ -12,8 +12,8 @@ import WidgetYoutubeList from "@/components/widget/WidgetYoutubeList";
 
 const PostAuthor = ( { allPosts } ) => {
     const router = useRouter()
-    const { posts } = useContext(AppContext);
-    allPosts = posts;
+    const { publicPosts } = useContext(AppContext);
+    allPosts = publicPosts;
     const postData = allPosts.filter(post => post.author_slug === router.query.slug);
 
     if(postData.length === 0) {
@@ -94,51 +94,3 @@ const PostAuthor = ( { allPosts } ) => {
 }
 
 export default PostAuthor;
-
-// export async function getStaticProps({ params }) {
-
-//     const postParams = params.slug;
-
-//     // const allPosts = getAllPosts([
-//     //     'slug',
-//     //     'cate',
-//     //     'cate_img',
-//     //     'title',
-//     //     'excerpt',
-//     //     'featureImg',
-//     //     'date',
-//     //     'author_name',
-//     //     'author_img',
-//     //     'author_social',
-//     //     'author_bio'
-//     // ]);
-//     const allPosts = await prisma.postEnglish.findMany();
-//     const getAuthorData = allPosts.filter(post => slugify(post.author_name) === postParams);
-//     const postData = getAuthorData;
-
-//     return {
-//         props: {
-//             postData,
-//             allPosts
-//         }
-//     }
-// }
-
-// export async function getStaticPaths() {
-//     // const categories = getAllPosts(['author_name']);
-//     const categories = await prisma.postEnglish.findMany({
-//         select: {
-//             author_name: true
-//         }
-//     });
-//     const paths = categories.map(post => ({
-//         params: {
-//             slug: slugify(post.author_name)
-//         }
-//     }))
-
-//     return {
-//         paths,
-//         fallback: false,
-//     }
-// }

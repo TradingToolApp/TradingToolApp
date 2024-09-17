@@ -12,6 +12,12 @@ import { TagProvider } from "@/providers/tag.provider";
 import { YoutubeProvider } from "@/providers/widgets/youtube.provider";
 import { CommentProvider } from "@/providers/comment.provider";
 import "../i18n.ts";
+import {
+    QueryClient,
+    QueryClientProvider,
+} from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 function MyApp( { Component, pageProps: { session, ...pageProps } } ) {
     return (
@@ -31,21 +37,23 @@ function MyApp( { Component, pageProps: { session, ...pageProps } } ) {
       `}
             </Script>
             <SessionProvider session={session}>
-                <ToastProvider>
-                    <AppProvider>
-                        <YoutubeProvider>
-                            <CommentProvider>
-                                <AuthorProvider>
-                                    <CategoryProvider>
-                                        <TagProvider>
-                                            <Component {...pageProps} />
-                                        </TagProvider>
-                                    </CategoryProvider>
-                                </AuthorProvider>
-                            </CommentProvider>
-                        </YoutubeProvider>
-                    </AppProvider>
-                </ToastProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ToastProvider>
+                        <AppProvider>
+                            <YoutubeProvider>
+                                <CommentProvider>
+                                    <AuthorProvider>
+                                        <CategoryProvider>
+                                            <TagProvider>
+                                                <Component {...pageProps} />
+                                            </TagProvider>
+                                        </CategoryProvider>
+                                    </AuthorProvider>
+                                </CommentProvider>
+                            </YoutubeProvider>
+                        </AppProvider>
+                    </ToastProvider>
+                </QueryClientProvider>
             </SessionProvider>
         </>
     )

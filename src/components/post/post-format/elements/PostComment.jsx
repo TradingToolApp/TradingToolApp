@@ -45,7 +45,6 @@ const PostComment = ( { commentData } ) => {
             setLoading(true);
             const fetchData = async () => {
                 const res = await commentAPI.getCommentByPostSlug(commentData.slug);
-                console.log(res)
                 setData(res.data);
             }
             fetchData();

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-async function getPosts() {
+async function getPosts () {
     try {
         const res = await axios.get('/api/posts');
         return res.data;
@@ -14,7 +14,8 @@ async function getPublicPosts() {
         const res = await axios.get('/api/posts/getPublicPosts');
         return res.data;
     } catch (err) {
-        return err.response.data;
+        console.log(err)
+        // return err.response.data;
     }
 }
 

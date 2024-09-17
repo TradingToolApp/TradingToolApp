@@ -12,7 +12,7 @@ const getPublicPosts = async ( req, res ) => {
     try {
         const posts = await prisma.post.findMany({
             where: {
-                status: PostStatus.PUBLIC,
+                status: "public",
             },
             include: {
                 translations: true,

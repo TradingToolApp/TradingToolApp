@@ -20,6 +20,7 @@
     "@emailjs/browser": "^3.7.0",
     "@prisma/client": "^5.18.0",
     "@rsuite/icons": "^1.0.3",
+    "@tanstack/react-query": "^5.56.2",
     "@vercel/postgres": "^0.9.0",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",

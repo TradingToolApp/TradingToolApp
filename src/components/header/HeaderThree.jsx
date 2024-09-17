@@ -105,10 +105,10 @@ const HeaderThree = () => {
 							<div className="brand-logo-container">
 								<Link href="/">
 									<Image
-										src="/images/logo-black.svg"
+										src="/images/logo.png"
 										alt="brand-logo"
-										width={102}
-										height={34}
+										width={48}
+										height={48}
 									/>
 								</Link>
 							</div>

@@ -10,6 +10,7 @@ const SocialShareBottom = ( { shareData } ) => {
     const handleCopyURL = () => {
         navigator.clipboard.writeText(process.env.NEXT_PUBLIC_BASEPATH + "/post/" + shareData.slug);
     }
+
     return (
         <>
             <div className="post-shares m-t-xs-60">

@@ -9,9 +9,6 @@ import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 const SliderTwo = ({ slidePost }) => {
   const { t } = useTranslation()
 
-  // const { posts } = useContext(AppContext);
-  // slidePost = posts
-
   function SlickNextArrow(props) {
     const { className, onClick } = props;
     return (

@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { useRouter } from 'next/router'
-import { useTranslation } from "react-i18next";
 import { AppContext } from "@/providers/app.provider";
 import FooterOne from "../../components/footer/FooterOne";
 import HeaderThree from "../../components/header/HeaderThree";
@@ -11,23 +10,21 @@ import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
 import WidgetYoutubeList from "@/components/widget/WidgetYoutubeList";
 import { Loader } from "rsuite";
 
-const PostCategory = ( { allPosts, params } ) => {
-    const { t } = useTranslation();
+const PostCategory = ( { allPosts } ) => {
     const router = useRouter();
-    const { posts } = useContext(AppContext);
+    const { publicPosts } = useContext(AppContext);
+    allPosts = publicPosts;
 
-    allPosts = posts;
     const postData = allPosts.filter(post => post.cate_slug === router.query.slug);
-
-
-
     const cateContent = postData[0];
 
     if (allPosts.length === 0) return <Loader style={{marginTop: "25%"}} backdrop size="md" content="loading..."/>;
+
     if (postData.length === 0) {
         router.push('/404');
         return null;
     }
+
     return (
         <>
             <HeadMeta metaTitle={cateContent.cate}/>
@@ -71,33 +68,3 @@ const PostCategory = ( { allPosts, params } ) => {
 }
 
 export default PostCategory;
-
-// export async function getStaticProps({ params }) {
-
-//     const postParams = params.slug;
-
-//     // const allPosts = getAllPosts([
-//     //     'slug',
-//     //     'cate',
-//     //     'cate_img',
-//     //     'title',
-//     //     'excerpt',
-//     //     'featureImg',
-//     //     'date',
-//     //     'post_views',
-//     //     'read_time',
-//     //     'author_name',
-//     //     'author_social'
-//     // ]);
-//     const allPosts = await prisma.postEnglish.findMany();
-//     const getCategoryData = allPosts.filter(post => slugify(post.cate) === postParams);
-//     const postData = getCategoryData;
-
-//     return {
-//         props: {
-//             postData,
-//             allPosts
-//         }
-//     }
-// }
-

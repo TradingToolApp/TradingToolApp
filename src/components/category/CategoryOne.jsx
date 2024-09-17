@@ -6,14 +6,11 @@ import { AppContext } from "@/providers/app.provider";
 import { useTranslation } from "react-i18next";
 
 const CategoryOne = ({ cateData }) => {
-  // const { posts } = useContext(AppContext);
-  // cateData = posts;
   const categories = cateData.map(data => {
     const obj = {
       name: data.cate,
       thumb: data.cate_img
     }
-    // console.log(obj)
     return obj;
   });
 
@@ -21,7 +18,6 @@ const CategoryOne = ({ cateData }) => {
     prev[curr.name] = (prev[curr.name] || 0) + 1
     return prev;
   }, {})
-  // console.log(categories)
 
   var cateList = Object.keys(category).map(cateTitle => {
     const imgGet = categories.filter(post => post.name === cateTitle);

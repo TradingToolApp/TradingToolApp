@@ -1,14 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import AdBanner from "../common/AdBanner";
 import WidgetPost from "../widget/WidgetPost";
 import WidgetYoutubeList from "../widget/WidgetYoutubeList";
 import PostLayoutTwo from "./layout/PostLayoutTwo";
-import { AppContext } from "@/providers/app.provider";
 import { Pagination } from 'rsuite';
 
 const PostSectionFive = ( { postData, adBanner, pClass } ) => {
-    // const { posts } = useContext(AppContext);
-    // postData = posts;
     const [ activePage, setActivePage ] = useState(1);
     const length = postData.length;
     const renderPost = postData.slice(activePage * 4 - 4, activePage * 4);
