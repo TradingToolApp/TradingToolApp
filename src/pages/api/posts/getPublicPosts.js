@@ -31,8 +31,12 @@ const getPublicPosts = async ( req, res ) => {
                         translations: true,
                     }
                 },
+                comments: true
             },
             orderBy: [
+                {
+                    trending: 'desc',
+                },
                 {
                     updatedAt: 'desc',
                 },

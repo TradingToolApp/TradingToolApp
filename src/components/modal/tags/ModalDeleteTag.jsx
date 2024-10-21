@@ -1,29 +1,24 @@
 import React, { useContext } from 'react';
 import { Modal, Button } from 'rsuite';
-import { TagContext } from "@/providers/tag.provider";
-import { toast } from 'react-toastify';
-import { toastConfig } from "@/lib/constant";
-import tagAPI from "@/services/tag-api";
 import RemindIcon from '@rsuite/icons/legacy/Remind';
+import { useDeleteTag } from "@/hooks/data/useTags";
 
 const ModalDeleteTag = ({ modalData, open, handleClose, ...rests }) => {
-    const { allDataTags, setAllDataTags } = useContext(TagContext);
-
+    const deleteTag = useDeleteTag();
+    const [loading, setLoading] = React.useState(false);
     const handleConfirmDelete = async () => {
         try {
-            const response = await tagAPI.deleteTag(modalData);
-            if (!response.success) {
-                return toast.error(response.message, toastConfig.error);
+            setLoading(true);
+            const response = await deleteTag.mutateAsync(modalData);
+            if (response.success) {
+                handleClose();
             }
-            const newTags = allDataTags.filter(tag => tag.id !== modalData.id);
-            setAllDataTags(newTags);
-            handleClose();
+            setLoading(false);
         } catch (error) {
             console.log(error)
         }
     }
     return (
-        <>
             <Modal style={{ marginTop: "150px" }} backdrop="static" role="alertdialog" open={open} onClose={handleClose} size="xs">
                 <Modal.Body>
                     <RemindIcon style={{ color: '#ffb300', fontSize: 24, marginRight: "15px" }} />
@@ -31,16 +26,15 @@ const ModalDeleteTag = ({ modalData, open, handleClose, ...rests }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
-                        onClick={handleConfirmDelete} appearance="primary"
+                        onClick={handleConfirmDelete} appearance="primary" disabled={loading}
                     >
                         Yes
                     </Button>
-                    <Button onClick={handleClose} appearance="subtle">
+                    <Button onClick={handleClose} appearance="subtle" disabled={loading}>
                         No
                     </Button>
                 </Modal.Footer>
             </Modal>
-        </>
     );
 };
 

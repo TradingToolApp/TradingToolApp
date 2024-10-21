@@ -1,23 +1,20 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Modal, Button } from 'rsuite';
-import { CategoryContext } from "@/providers/category.provider";
-import { toast } from 'react-toastify';
-import { toastConfig } from "@/lib/constant";
-import categoryAPI from "@/services/category-api";
 import RemindIcon from '@rsuite/icons/legacy/Remind';
+import { useDeleteCategory } from "@/hooks/data/useCategories";
 
 const ModalDeleteCategory = ( { modalData, open, handleClose, ...rests }) => {
-    const { allDataCategories, setAllDataCategories } = useContext(CategoryContext);
+    const deleteCategory = useDeleteCategory();
+    const [loading, setLoading] = React.useState(false);
 
     const handleConfirmDelete = async () => {
         try {
-            const response = await categoryAPI.deleteCategory(modalData);
-            if (!response.success) {
-                return toast.error(response.message, toastConfig.error);
+            setLoading(true);
+            const response = await deleteCategory.mutateAsync(modalData);
+            if (response.success) {
+                handleClose();
             }
-            const newCategories = allDataCategories.filter(category => category.id !== modalData.id);
-            setAllDataCategories(newCategories);
-            handleClose();
+            setLoading(false);
         } catch (error) {
             console.log(error)
         }
@@ -30,14 +27,8 @@ const ModalDeleteCategory = ( { modalData, open, handleClose, ...rests }) => {
                     Are you sure
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button
-                        onClick={handleConfirmDelete} appearance="primary"
-                    >
-                        Yes
-                    </Button>
-                    <Button onClick={handleClose} appearance="subtle">
-                        No
-                    </Button>
+                    <Button onClick={handleConfirmDelete} appearance="primary" disabled={loading}>Yes</Button>
+                    <Button onClick={handleClose} appearance="subtle" disabled={loading}>No</Button>
                 </Modal.Footer>
             </Modal>
         </>

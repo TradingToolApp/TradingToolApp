@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
     Input,
     InputGroup,
@@ -6,15 +6,18 @@ import {
     Stack,
     Button
 } from "rsuite";
-import { AuthorContext } from "@/providers/author.provider";
 import { ActionCell, ImageCell } from "./CellAuthors";
 import ModalAddAuthor from "../../modal/authors/ModalAddAuthor";
 import SearchIcon from "@rsuite/icons/Search";
 import MoreIcon from "@rsuite/icons/legacy/More";
+import useWindowSize from "@/hooks/useWindowSize";
+import { useGetAuthors } from "@/hooks/data/useAuthors";
+
 const { Column, HeaderCell, Cell } = Table;
 
-const TableAuthors = () => {
-    const { authors } = useContext(AuthorContext);
+const TableAuthors = ( { tableData } ) => {
+    const { screenHeight } = useWindowSize();
+    const { authors } = useGetAuthors(tableData);
     const [ sortColumn, setSortColumn ] = useState("id");
     const [ sortType, setSortType ] = useState();
     const [ searchKeyword, setSearchKeyword ] = useState("");
@@ -39,7 +42,6 @@ const TableAuthors = () => {
 
         return filtered;
     };
-    console.log("table author re-render");
 
     return (
         <div>
@@ -65,7 +67,7 @@ const TableAuthors = () => {
             </Stack>
 
             <Table
-                height={window.innerHeight - 200}
+                height={screenHeight - 200}
                 data={filteredData()}
                 sortColumn={sortColumn}
                 sortType={sortType}

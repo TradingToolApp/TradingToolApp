@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Loader, Pagination } from "rsuite";
 import { toast } from "react-toastify";
 import { toastConfig } from "@/lib/constant";
-import commentAPI from "@/services/comment-api";
+import commentAPI from "@/services/restful/comment-api";
 
 const PostComment = ( { commentData } ) => {
     const [ data, setData ] = useState([]);

@@ -1,35 +1,35 @@
-import React, { useContext } from "react";
-import { useRouter } from 'next/router'
+import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "@/providers/app.provider";
 import FooterOne from "../../components/footer/FooterOne";
 import HeaderThree from "../../components/header/HeaderThree";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import HeadMeta from "../../components/elements/HeadMeta";
-import WidgetPost from "../../components/widget/WidgetPost";
 import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
-import WidgetYoutubeList from "@/components/widget/WidgetYoutubeList";
-import { Loader } from "rsuite";
+import WidgetPost from "../../components/widget/WidgetPost";
+import WidgetYoutubeList from "@/components/widget/WidgetYoutubeVideo";
+import { getPublicPosts } from "@/services/prisma/post.api";
+import { getCategories } from "@/services/prisma/category.api";
+import { translatePosts } from "@/lib/formatData";
+import { useGetPublicPosts } from "@/hooks/data/usePosts";
 
-const PostCategory = ( { allPosts } ) => {
-    const router = useRouter();
-    const { publicPosts } = useContext(AppContext);
-    allPosts = publicPosts;
+const PostCategory = ({ cateData, allPostsData }) => {
+    const { language } = useContext(AppContext);
+    const { publicPosts } = useGetPublicPosts(allPostsData);
+    const [postData, setPostData] = useState(translatePosts(cateData, language));
+    const [cateContent, setCateContent] = useState(translatePosts(cateData, language)[0]);
+    const allPosts = publicPosts;
 
-    const postData = allPosts.filter(post => post.cate_slug === router.query.slug);
-    const cateContent = postData[0];
+    useEffect(() => {
+        setPostData(translatePosts(cateData, language));
+        setCateContent(translatePosts(cateData, language)[0]);
+    }, [language, cateData]);
 
-    if (allPosts.length === 0) return <Loader style={{marginTop: "25%"}} backdrop size="md" content="loading..."/>;
-
-    if (postData.length === 0) {
-        router.push('/404');
-        return null;
-    }
 
     return (
         <>
             <HeadMeta metaTitle={cateContent.cate}/>
             <HeaderThree/>
-            <Breadcrumb aPage={cateContent.cate}/>
+            <Breadcrumb bCat={cateContent.cate_slug} cateTitle={cateContent.cate}  aPage={cateContent.cate}/>
             {/* Banner Start here  */}
             <div className="banner banner__default bg-grey-light-three">
                 <div className="container">
@@ -68,3 +68,45 @@ const PostCategory = ( { allPosts } ) => {
 }
 
 export default PostCategory;
+
+export async function getStaticProps(context) {
+    const postParams = context.params.slug;
+
+    const allPostsData = await getPublicPosts([
+        'slug',
+        'featureImg',
+        'createdAt',
+        'translations',
+        'category',
+        'author'
+    ]);
+    const cateData = allPostsData.filter(post => post.category.cate_slug === postParams);
+
+    if (cateData.length === 0) {
+        return {
+            redirect: {
+                destination: "/404",
+            },
+        }
+    }
+
+    return {
+        props: {
+            cateData,
+            allPostsData
+        },
+        revalidate: 1,
+    }
+}
+
+export async function getStaticPaths() {
+    const categories = await getCategories();
+    const paths = categories.map(category => ({
+        params: { slug: category.cate_slug }
+    }));
+
+    return {
+        paths,
+        fallback: 'blocking',
+    }
+}

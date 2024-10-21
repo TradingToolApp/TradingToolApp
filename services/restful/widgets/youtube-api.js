@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-async function getYoutubeURLs() {
+async function getYoutubeVideos() {
     try {
         const res = await axios.get('/api/widgets/youtube');
         return res.data;
@@ -9,7 +9,7 @@ async function getYoutubeURLs() {
     }
 }
 
-async function createYoutubeURL( data ) {
+async function createYoutubeVideo( data ) {
     try {
         const res = await axios.post('/api/widgets/youtube', { data });
         return res.data;
@@ -18,7 +18,7 @@ async function createYoutubeURL( data ) {
     }
 }
 
-async function updateYoutubeURL( data ) {
+async function updateYoutubeVideo( data ) {
     try {
         const res = await axios.put('/api/widgets/youtube', { data });
         return res.data;
@@ -27,7 +27,7 @@ async function updateYoutubeURL( data ) {
     }
 }
 
-async function deleteYoutubeURL( data ) {
+async function deleteYoutubeVideo( data ) {
     try {
         const res = await axios.delete('/api/widgets/youtube', { data: { data } });
         return res.data;
@@ -37,10 +37,10 @@ async function deleteYoutubeURL( data ) {
 }
 
 const youtubeAPI = {
-    getYoutubeURLs,
-    createYoutubeURL,
-    updateYoutubeURL,
-    deleteYoutubeURL
+    getYoutubeVideos,
+    createYoutubeVideo,
+    updateYoutubeVideo,
+    deleteYoutubeVideo
 }
 
 export default youtubeAPI;

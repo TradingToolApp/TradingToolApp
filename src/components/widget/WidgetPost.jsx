@@ -1,32 +1,26 @@
 import { Tab, Nav } from "react-bootstrap";
 import PostVideoTwo from "../post/layout/PostVideoTwo";
-import Link from "next/link";
-import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
+import useTranslate from "@/hooks/useTranslate";
 
 const WidgetPost = ( { dataPost } ) => {
-    const { t } = useTranslation();
+    const t = useTranslate();
     const [ data, setData ] = useState([]);
 
     const handleData = ( key ) => {
-        // let data = [];
         switch (key) {
             case 'recent':
-                console.log("recent")
                 setData(dataPost.sort(( a, b ) => (new Date(b.date) - new Date(a.date) || a.slug.localeCompare(b.slug))).slice(0,4));
                 break;
             case 'popular':
-                console.log("popular")
                 setData(dataPost.sort(( a, b ) => (b.post_views - a.post_views || a.slug.localeCompare(b.slug))).slice(0,4));
                 break;
             case 'comments':
-                console.log("comments")
                 setData(dataPost.sort(( a, b ) => (b.comments - a.comments || a.slug.localeCompare(b.slug))).slice(0,4));
                 break;
             default:
                 break;
         }
-        console.log(data)
     }
 
     useEffect(() => {
@@ -38,13 +32,13 @@ const WidgetPost = ( { dataPost } ) => {
             <Tab.Container id="widget-post" onSelect={( selectedKey ) => handleData(selectedKey)} defaultActiveKey="recent">
                 <Nav variant="pills" className="row no-gutters">
                     <Nav.Item className="col">
-                        <Nav.Link eventKey="recent">{t("widget.recent")}</Nav.Link>
+                        <Nav.Link eventKey="recent">{t.widget.recent}</Nav.Link>
                     </Nav.Item>
                     <Nav.Item className="col">
-                        <Nav.Link eventKey="popular">{t("widget.popular")}</Nav.Link>
+                        <Nav.Link eventKey="popular">{t.widget.popular}</Nav.Link>
                     </Nav.Item>
                     <Nav.Item className="col">
-                        <Nav.Link eventKey="comments">{t("widget.comment")}</Nav.Link>
+                        <Nav.Link eventKey="comments">{t.widget.comment}</Nav.Link>
                     </Nav.Item>
                 </Nav>
 

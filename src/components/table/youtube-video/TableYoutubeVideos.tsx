@@ -1,19 +1,19 @@
-import React, {useState, useContext, useEffect} from "react";
+import React, {useState} from "react";
 import {
-    Input,
-    InputGroup,
     Table,
     Stack,
     Button
 } from "rsuite";
-import { YoutubeContext } from "@/providers/widgets/youtube.provider";
-import { ActionCell, BooleanCell } from "./CellWidgets";
+import { ActionCell, BooleanCell } from "./CellYoutubeVideos";
 import MoreIcon from "@rsuite/icons/legacy/More";
 import ModalAddYoutube from "@/components/modal/widgets/youtube/ModalAddYoutube";
+import useWindowSize from "@/hooks/useWindowSize";
+import {useGetYoutubeVideos} from "@/hooks/data/useYoutubeVideos";
 const { Column, HeaderCell, Cell } = Table;
 
-const TableTags = () => {
-    const { allDataYoutube } = useContext(YoutubeContext);
+const TableYoutubeVideos = ({ tableData }: any) => {
+    const { youtubeVideos } = useGetYoutubeVideos(tableData);
+    const { screenHeight } = useWindowSize();
     const [ openAdd, setOpenAdd ] = useState(false);
 
     const handleOpenAdd = () => setOpenAdd(true);
@@ -32,8 +32,8 @@ const TableTags = () => {
             </Stack>
 
             <Table
-                height={window.innerHeight - 200}
-                data={allDataYoutube}
+                height={screenHeight - 200}
+                data={youtubeVideos}
             >
                 <Column width={150} flexGrow={1}>
                     <HeaderCell>Title</HeaderCell>
@@ -60,4 +60,4 @@ const TableTags = () => {
     );
 };
 
-export default TableTags;
+export default TableYoutubeVideos;

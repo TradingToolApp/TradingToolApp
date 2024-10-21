@@ -1,23 +1,19 @@
-import { useContext } from 'react';
+import { useState } from 'react';
 import { Modal, Button} from 'rsuite';
-import { AppContext } from "@/providers/app.provider";
-import { toast } from 'react-toastify';
-import { toastConfig } from "@/lib/constant";
-import postAPI from '@/services/posts-api';
 import RemindIcon from '@rsuite/icons/legacy/Remind';
+import { useDeletePost } from "@/hooks/data/usePosts";
 
 const ModalDeletePost = ( { modalData, open, handleClose, ...rests }) => {
-    const { allDataPosts, setAllDataPosts } = useContext(AppContext);
-
+    const deletePost = useDeletePost();
+    const [loading, setLoading] = useState(false);
     const handleConfirmDelete = async () => {
         try {
-            const response = await postAPI.deletePost(modalData);
-            if(!response.success) {
-                return toast.error(response.message, toastConfig.error);
+            setLoading(true);
+            const response = await deletePost.mutateAsync(modalData);
+            if(response.success) {
+                handleClose();
             }
-            const newPosts = allDataPosts.filter(post => post.id !== modalData.id);
-            setAllDataPosts(newPosts);
-            handleClose();
+            setLoading(false);
         } catch (error) {
             console.log(error)
         }
@@ -31,11 +27,11 @@ const ModalDeletePost = ( { modalData, open, handleClose, ...rests }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
-                        onClick={handleConfirmDelete} appearance="primary"
+                        onClick={handleConfirmDelete} appearance="primary" disabled={loading}
                     >
                         Yes
                     </Button>
-                    <Button onClick={handleClose} appearance="subtle">
+                    <Button onClick={handleClose} appearance="subtle" disabled={loading}>
                         No
                     </Button>
                 </Modal.Footer>

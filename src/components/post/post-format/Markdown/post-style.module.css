@@ -1,0 +1,54 @@
+.content table {
+    border-spacing: 0 !important;
+    border-collapse: collapse !important;
+    border-color: inherit !important;
+    /*display: block !important;*/
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: auto !important;
+}
+
+.content tbody,
+.content td,
+.content tfoot,
+.content th,
+.content thead,
+.content tr {
+    border-color: inherit !important;
+    border-style: solid !important;
+    border-width: 2px !important;
+    padding: 0.5rem;
+}
+
+.iframe-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+}
+
+/* Then style the iframe to fit in the container div with full height and width */
+.iframe-responsive {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.player-wrapper {
+    width: auto;
+    height: auto;
+}
+
+.react-player {
+    padding-top: 56.25%;
+    position: relative;
+}
+
+.react-player > div {
+    position: absolute;
+}

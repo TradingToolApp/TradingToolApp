@@ -1,10 +1,8 @@
 import Link from "next/link";
-import { slugify } from "../../utils";
-import { useTranslation } from "react-i18next";
+import useTranslate from "@/hooks/useTranslate";
 
-const Breadcrumb = ({bCat, aPage}) => {
-  const { t } = useTranslation();
-
+const Breadcrumb = ({bCat, aPage, cateTitle}) => {
+  const t = useTranslate();
   return (
     <div className="breadcrumb-wrapper">
       <div className="container">
@@ -12,13 +10,13 @@ const Breadcrumb = ({bCat, aPage}) => {
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
                 <Link href="/">
-                    <span>{t("page.home")}</span>
+                    <span>{t.home}</span>
                 </Link>
             </li>
             {bCat ? 
             <li className="breadcrumb-item">
-                <Link href={`/category/${slugify(bCat)}`} >
-                  <span>{bCat.toLowerCase()}</span>
+                <Link href={`/category/${bCat}`} >
+                  <span>{cateTitle.toLowerCase()}</span>
                 </Link>
             </li>: ""
             }

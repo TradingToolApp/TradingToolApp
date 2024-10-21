@@ -36,7 +36,6 @@ const getComments = async ( req, res ) => {
 
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: comments });
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
@@ -44,7 +43,6 @@ const getComments = async ( req, res ) => {
 const createComment = async ( req, res ) => {
     try {
         const { data } = req.body;
-        console.log(data)
         const newComment = await prisma.comment.create({
             data: {
                 name: data.name,
@@ -60,7 +58,6 @@ const createComment = async ( req, res ) => {
 
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newComment });
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
@@ -98,7 +95,6 @@ const updateComment = async ( req, res ) => {
 
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedComment });
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }
@@ -115,7 +111,6 @@ const deleteComment = async ( req, res ) => {
 
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: [] });
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 }

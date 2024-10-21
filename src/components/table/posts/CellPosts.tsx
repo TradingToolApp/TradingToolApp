@@ -1,38 +1,11 @@
-import React, {useEffect, useState} from "react";
-import Image from "next/image";
-import {Popover, Whisper, Checkbox, Dropdown, IconButton, Table, CellProps} from "rsuite";
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import { Popover, Whisper, Dropdown, IconButton, Table } from "rsuite";
 import MoreIcon from "@rsuite/icons/legacy/More";
 import ModalDeletePost from "../../modal/posts/ModalDeletePost";
 import ModalEditPost from "../../modal/posts/ModalEditPost";
 
 const {Cell} = Table;
-
-export const NameCell = ({rowData, dataKey, ...props}: any) => {
-    const speaker = (
-        <Popover title="Description">
-            <p>
-                <b>Name:</b> {rowData.name}
-            </p>
-            <p>
-                <b>Gender:</b> {rowData.gender}
-            </p>
-            <p>
-                <b>City:</b> {rowData.city}
-            </p>
-            <p>
-                <b>Street:</b> {rowData.street}
-            </p>
-        </Popover>
-    );
-
-    return (
-        <Cell {...props} style={{padding: "4px"}}>
-            <Whisper placement="top" speaker={speaker}>
-                <a>{dataKey ? rowData[dataKey] : null}</a>
-            </Whisper>
-        </Cell>
-    );
-};
 
 export const UpperCaseCell = ({rowData, dataKey, ...props}: any) => (
     <Cell {...props} style={{padding: "13px 10px"}}>
@@ -40,25 +13,14 @@ export const UpperCaseCell = ({rowData, dataKey, ...props}: any) => (
     </Cell>
 );
 
-export const ImageCell = ({rowData, dataKey, ...props}: any) => (
-    <Cell {...props} style={{padding: "6px"}}>
-        <div
-            style={{
-                width: 40,
-                height: 40,
-                background: "#f5f5f5",
-                borderRadius: 6,
-                marginTop: 2,
-                overflow: "hidden",
-                display: "inline-block",
-            }}
-        >
-            <Image src={rowData[dataKey!] ?? ""} width="40" alt="Image cell"/>
-        </div>
+export const BooleanCell = ({rowData, dataKey, ...props}: any) => (
+    <Cell {...props} style={{padding: "13px"}}>
+        {rowData[dataKey] === true ? "Yes" : "No"}
     </Cell>
 );
 
 export const ActionCell = ({rowData, ...rests}: any) => {
+    const router = useRouter();
     const [openUpdatePost, setOpenUpdatePost] = useState(false);
     const [openDeletePost, setOpenDeletePost] = useState(false);
 
@@ -67,14 +29,18 @@ export const ActionCell = ({rowData, ...rests}: any) => {
     const handleOpenDeletePost = () => setOpenDeletePost(true);
     const handleCloseDeletePost = () => setOpenDeletePost(false);
 
-    const renderMenu = ({onClose, left, top, className}: any, ref: any) => {
+    const renderMenu = ({onClose, left, top, right, className}: any, ref: any) => {
         const handleSelect = (eventKey: any) => {
             switch (eventKey) {
                 case 1:
+                    // Open
+                    router.push(`/post/${rowData.slug}`);
+                    break;
+                case 2:
                     // Edit
                     handleOpenUpdatePost();
                     break;
-                case 2:
+                case 3:
                     // Delete
                     handleOpenDeletePost();
                     break;
@@ -85,10 +51,11 @@ export const ActionCell = ({rowData, ...rests}: any) => {
         };
         return (
             <>
-                <Popover ref={ref} className={className} style={{left, top}} full>
+                <Popover ref={ref} className={className} style={{right, top}} full>
                     <Dropdown.Menu onSelect={handleSelect}>
-                        <Dropdown.Item eventKey={1}>Edit</Dropdown.Item>
-                        <Dropdown.Item eventKey={2}>Delete</Dropdown.Item>
+                        <Dropdown.Item eventKey={1}>Open</Dropdown.Item>
+                        <Dropdown.Item eventKey={2}>Edit</Dropdown.Item>
+                        <Dropdown.Item eventKey={3}>Delete</Dropdown.Item>
                     </Dropdown.Menu>
                 </Popover>
             </>
@@ -98,7 +65,7 @@ export const ActionCell = ({rowData, ...rests}: any) => {
     return (
         <>
             <Cell {...rests} className="link-group" style={{padding: "4px"}}>
-                <Whisper placement="autoVerticalStart" trigger="click" speaker={renderMenu}>
+                <Whisper placement="bottomEnd" trigger="click" speaker={renderMenu}>
                     <IconButton appearance="subtle" icon={<MoreIcon/>}/>
                 </Whisper>
             </Cell>

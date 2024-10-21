@@ -35,6 +35,9 @@
       "@/lib/*": [
         "./lib/*"
       ],
+      "@/middlewares/*": [
+        "./src/middlewares/*"
+      ],
     }
   },
   "include": [

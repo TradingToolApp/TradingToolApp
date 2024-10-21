@@ -8,7 +8,7 @@ const ModalEditPost = ( { modalData, open, handleClose }) => {
             <Modal.Header>
                 <Modal.Title>Edit Post</Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
+            <Modal.Body>
                 <FormPosts formData={modalData} handleClose={handleClose} action={ACTION.UPDATE} />
             </Modal.Body>
         </Modal>

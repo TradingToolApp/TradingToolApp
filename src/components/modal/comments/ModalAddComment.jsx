@@ -8,7 +8,7 @@ const ModalAdd = ( { open, handleClose }) => {
             <Modal.Header>
                 <Modal.Title>Add Comment</Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{overflow: "hidden"}}>
+            <Modal.Body>
                 <FormComments handleClose={handleClose} action={ACTION.CREATE} />
             </Modal.Body>
         </Modal>

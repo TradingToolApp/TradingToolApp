@@ -1,36 +1,38 @@
 "use client";
 
-import React, {useRef, useContext, useState} from "react";
+import React, {useRef, useState} from "react";
 import {
     Form,
     Schema,
     CheckPicker,
-    SelectPicker,
-    Input,
-    PanelGroup,
-    Panel,
+    FlexboxGrid,
+    Tabs,
     ButtonToolbar,
     Button,
     Grid,
     Row,
     Col,
     Divider,
+    VStack,
 } from "rsuite";
 import Image from "next/image";
-import {toast} from 'react-toastify';
 import ModalSelectImage from "@/components/modal/images/ModalSelectImage";
-import {AppContext} from "@/providers/app.provider";
-import {AuthorContext} from "@/providers/author.provider";
-import {CategoryContext} from "@/providers/category.provider";
-import {TagContext} from "@/providers/tag.provider";
-import {initialFormValue, toastConfig, postFormatList} from "@/lib/constant";
-import postAPI from "@/services/posts-api";
+import {initialFormValue, postFormatList} from "@/lib/constant";
 import {Textarea, SelectPickerCustom, InputWithCopyButton} from "./customElement";
+import {useAddPost, useUpdatePost} from "@/hooks/data/usePosts";
+import {useGetCategories} from "@/hooks/data/useCategories";
+import {useGetAuthors} from "@/hooks/data/useAuthors";
+import {useGetTags} from "@/hooks/data/useTags";
 
 const PostStatusList = [
     {label: "Public", value: "public"},
     {label: "Private", value: "private"},
 ];
+
+const TrendingList = [
+    {label: "Yes", value: true},
+    {label: "No", value: false},
+]
 
 const {StringType} = Schema.Types;
 
@@ -48,18 +50,21 @@ const model = Schema.Model({
 
 //This component do 2 jobs, create new post and edit post
 const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
-    const {language, allDataPosts, setAllDataPosts} = useContext(AppContext);
-    const {authors} = useContext(AuthorContext);
-    const {categories} = useContext(CategoryContext);
-    const {tags} = useContext(TagContext);
-    const [, setFormError] = React.useState({});
+    const {categories} = useGetCategories();
+    const {authors} = useGetAuthors();
+    const {tags} = useGetTags();
+    const addPost = useAddPost();
+    const updatePost = useUpdatePost();
+    const [loading, setLoading] = useState(false);
     const [formValue, setFormValue] = useState<any>(formData || initialFormValue);
+    const [, setFormError] = React.useState({});
     const [selectMultipleImg, setSelectMultipleImg] = useState(false);
     const [featureImg, setFeatureImg] = useState([]);
     const [urlImg, setURLImg] = useState("");
     const [openModalImage, setOpenModalImage] = useState(false);
     const formRef: any = useRef(initialFormValue);
     const hasFormValue = Boolean(formValue);
+
     const handleOpenModalImage = () => setOpenModalImage(true);
     const handleCloseModalImage = () => setOpenModalImage(false);
 
@@ -90,103 +95,64 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
             const newPost = {
                 ...formValue,
                 videoLink: formValue.videoLink !== "" && "https://www.youtube.com/embed/" + formValue.videoLink.split("?v=")[1],
-                // slug: action === "CREATE" ? slugify(formValue.titleEN, {lower: true}) : formValue.slug,
-                // postFormatLabel: postFormatList.filter((format: any) => format.value === formValue.postFormat)[0].label,
-                // title: language === "en" ? formValue.titleEN : formValue.titleVI,
-                // content: language === "en" ? formValue.contentEN : formValue.contentVI,
-                // cate: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].label,
-                // cate_bg: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].cate_bg,
-                // cate_img: categories.filter((cate: any) => cate.cate_slug === formValue.cate_slug)[0].cate_img,
-                // author_name: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_name,
-                // author_img: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_img,
-                // author_social: authors.filter((author: any) => author.author_slug === formValue.author_slug)[0].author_social,
-                // featureImg: featureImg.length !== 0 ? featureImg[0] : formValue.featureImg,
-                // updatedAt: action === "CREATE" ? formValue.date : formValue.updatedAt,
             };
-            console.log(newPost)
-
             switch (action) {
                 case "CREATE":
-                    const resCreate = await postAPI.createPost(newPost);
-                    if (!resCreate.success) {
-                        return toast.error(resCreate.message, toastConfig.error as any);
+                    setLoading(true);
+                    const resCreate = await addPost.mutateAsync(newPost);
+                    if (resCreate.success) {
+                        setFormValue(initialFormValue);
+                        handleClose();
                     }
-                    setAllDataPosts([...allDataPosts, resCreate.data]);
+                    setLoading(false);
                     break;
                 case "UPDATE":
-                    const resUpdate = await postAPI.updatePost(newPost);
-                    if (!resUpdate.success) {
-                        return toast.error(resUpdate.message, toastConfig.error as any);
+                    setLoading(true);
+                    const resUpdate = await updatePost.mutateAsync(newPost);
+                    if (resUpdate.success) {
+                        setFormValue(initialFormValue);
+                        handleClose();
                     }
-
-                    const updatedPosts: any[] = allDataPosts.map((post: any) => {
-                        if (post.id === formValue.id) {
-                            return resUpdate.data;
-                        }
-                        return post;
-                    });
-                    setAllDataPosts(updatedPosts);
+                    setLoading(false);
                     break;
                 default:
                     break;
             }
-            setFormValue(initialFormValue);
-            handleClose();
         } catch (error: any) {
             console.error(error);
         }
-    };
-
-    const renderPostFormat = () => {
-        if (hasFormValue)
-            switch (formValue.postFormat) {
-                case "video":
-                    return (
-                        <Form.Group controlId="videoLink">
-                            <Form.ControlLabel>Video Link</Form.ControlLabel>
-                            <Form.Control name="videoLink"/>
-                        </Form.Group>
-                    );
-                case "audio":
-                    return (
-                        <Form.Group controlId="audioLink">
-                            <Form.ControlLabel>Audio Link</Form.ControlLabel>
-                            <Form.Control name="audioLink"/>
-                        </Form.Group>
-                    );
-                default:
-                    return null;
-            }
     };
 
     return (
         <>
             <Form style={{all: "unset"}} fluid ref={formRef} model={model} onCheck={setFormError}
                   onChange={setFormValue} formValue={formValue} {...rests}>
-                <Row>
-                    <PanelGroup accordion bordered>
-                        <Panel header="General" defaultExpanded>
+                <VStack>
+                    <FlexboxGrid style={{width: "100%"}}>
+                        <FlexboxGrid.Item colspan={12}>
                             <Grid fluid>
-                                <Row style={{marginBottom: "20px"}}>
+                                <Row gutter={150} style={{marginBottom: "15px"}}>
                                     <Col xs={2} md={4}
                                          style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                                         <Form.Group controlId="postFormat">
                                             <Form.ControlLabel>Post Type</Form.ControlLabel>
-                                            <Form.Control name="postFormat" accepter={SelectPicker} data={postFormatList}/>
+                                            <Form.Control name="postFormat" accepter={SelectPickerCustom} data={postFormatList}/>
                                         </Form.Group>
                                     </Col>
                                     <Col xs={2} md={4} style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                                         <Form.Group controlId="cate_slug">
                                             <Form.ControlLabel>Category</Form.ControlLabel>
-                                            <Form.Control name="cate_slug" accepter={SelectPicker} data={categories}/>
+                                            <Form.Control name="cate_slug" accepter={SelectPickerCustom} data={categories}/>
                                         </Form.Group>
                                     </Col>
                                     <Col xs={2} md={4} style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                                         <Form.Group controlId="author_slug">
                                             <Form.ControlLabel>Author</Form.ControlLabel>
-                                            <Form.Control name="author_slug" accepter={SelectPicker} data={authors}/>
+                                            <Form.Control name="author_slug" accepter={SelectPickerCustom} data={authors}/>
                                         </Form.Group>
                                     </Col>
+                                </Row>
+                                <Row gutter={150} style={{marginBottom: "15px"}}>
                                     <Col xs={2} md={4} style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                                         <Form.Group controlId="tags">
                                             <Form.ControlLabel>Tags</Form.ControlLabel>
@@ -194,21 +160,27 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                                         </Form.Group>
                                     </Col>
                                 </Row>
-                                <Row>
+                                <Row gutter={150} style={{marginBottom: "15px"}}>
+                                    <Col xs={2} md={4} style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                                        <Form.Group controlId="status">
+                                            <Form.ControlLabel>Status</Form.ControlLabel>
+                                            <Form.Control name="status" accepter={SelectPickerCustom} data={PostStatusList}/>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col xs={2} md={4} style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                                        <Form.Group controlId="trending">
+                                            <Form.ControlLabel>Trending</Form.ControlLabel>
+                                            <Form.Control name="trending" accepter={SelectPickerCustom} data={TrendingList}/>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row style={{marginBottom: "15px"}}>
                                     <Col xs={2} md={4}>
                                         <Form.Group controlId="featureImg">
                                             <Form.ControlLabel>Feature Image</Form.ControlLabel>
                                             <Button onClick={handleSetFeatureImg}>Select</Button>
                                         </Form.Group>
                                     </Col>
-                                    <Col xs={2} md={4} style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-                                        <Form.Group controlId="status">
-                                            <Form.ControlLabel>Status</Form.ControlLabel>
-                                            <Form.Control name="status" accepter={SelectPickerCustom} data={PostStatusList}
-                                                          defaultValue={"public"}/>
-                                        </Form.Group>
-                                    </Col>
-
                                     {action === "UPDATE" &&
                                         <Col xs={2} md={8}>
                                             <Form.Group controlId="url">
@@ -230,68 +202,73 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                                 <Form.ControlLabel>Content Image</Form.ControlLabel>
                                 <Button onClick={handleSetContentImg}>Select</Button>
                             </Form.Group>
-                            {formValue && renderPostFormat()}
                             {urlImg && (
                                 <div className="lh-1">
                                     <span className="badge bg-primary text-wrap">Insert these links to anyplace in the content</span>
                                     <p className="whitespace-pre fs-4">{urlImg}</p>
                                 </div>
                             )}
-                        </Panel>
-                        <Panel header="English Content">
-                            <Col xs={12}>
-                                <Form.Group controlId="titleEN">
-                                    <Form.ControlLabel>Title</Form.ControlLabel>
-                                    <Form.Control name="titleEN"/>
-                                </Form.Group>
-                                <Form.Group controlId="excerptEN">
-                                    <Form.ControlLabel>Excerpt</Form.ControlLabel>
-                                    <Form.Control name="excerptEN" accepter={Textarea} rows={3}/>
-                                </Form.Group>
-                                {formValue.postFormat === "quote" && <Form.Group controlId="quoteTextEN">
-                                    <Form.ControlLabel>Quote</Form.ControlLabel>
-                                    <Form.Control name="quoteTextEN"/>
-                                </Form.Group>}
-                            </Col>
-                            <Col xs={12}>
-                                <Form.Group controlId="contentEN">
-                                    <Form.ControlLabel>Content</Form.ControlLabel>
-                                    <Form.Control name="contentEN" accepter={Textarea} rows={10}/>
-                                </Form.Group>
-                            </Col>
-                        </Panel>
-                        <Panel header="Vietnamese Content">
-                            <Col xs={12}>
-                                <Form.Group controlId="titleVI">
-                                    <Form.ControlLabel>Title</Form.ControlLabel>
-                                    <Form.Control name="titleVI"/>
-                                </Form.Group>
-                                <Form.Group controlId="excerptVI">
-                                    <Form.ControlLabel>Excerpt</Form.ControlLabel>
-                                    <Form.Control name="excerptVI" accepter={Textarea} rows={3}/>
-                                </Form.Group>
-                                {formValue.postFormat === "quote" && <Form.Group controlId="quoteTextVI">
-                                    <Form.ControlLabel>Quote</Form.ControlLabel>
-                                    <Form.Control name="quoteTextVI"/>
-                                </Form.Group>}
-                            </Col>
-                            <Col xs={12}>
-                                <Form.Group controlId="contentVI">
-                                    <Form.ControlLabel>Content</Form.ControlLabel>
-                                    <Form.Control name="contentVI" accepter={Textarea} rows={10}/>
-                                </Form.Group>
-                            </Col>
-                        </Panel>
-                    </PanelGroup>
-                </Row>
-                <ButtonToolbar style={{marginTop: "20px", marginRight: "10px", float: "right"}}>
-                    <Button appearance="primary" onClick={handleSubmit}>
-                        Submit
-                    </Button>
-                    <Button appearance="default" onClick={handleClose}>
-                        Cancel
-                    </Button>
-                </ButtonToolbar>
+                        </FlexboxGrid.Item>
+                        <FlexboxGrid.Item colspan={12}>
+                            <div className="rsuite-custom-tab">
+                                <Tabs defaultActiveKey={"1"}>
+                                    <Tabs.Tab eventKey="1" title="English">
+                                        {/*<Col xs={12}>*/}
+                                        <Form.Group controlId="titleEN">
+                                            <Form.ControlLabel>Title</Form.ControlLabel>
+                                            <Form.Control name="titleEN"/>
+                                        </Form.Group>
+                                        <Form.Group controlId="excerptEN">
+                                            <Form.ControlLabel>Excerpt</Form.ControlLabel>
+                                            <Form.Control name="excerptEN" accepter={Textarea} rows={2}/>
+                                        </Form.Group>
+                                        {formValue.postFormat === "quote" && <Form.Group controlId="quoteTextEN">
+                                            <Form.ControlLabel>Quote</Form.ControlLabel>
+                                            <Form.Control name="quoteTextEN"/>
+                                        </Form.Group>}
+                                        {/*</Col>*/}
+                                        {/*<Col xs={12}>*/}
+                                        <Form.Group controlId="contentEN">
+                                            <Form.ControlLabel>Content</Form.ControlLabel>
+                                            <Form.Control name="contentEN" accepter={Textarea} rows={15}/>
+                                        </Form.Group>
+                                        {/*</Col>*/}
+                                    </Tabs.Tab>
+                                    <Tabs.Tab eventKey="2" title="Vietnamese">
+                                        {/*<Col xs={12}>*/}
+                                        <Form.Group controlId="titleVI">
+                                            <Form.ControlLabel>Title</Form.ControlLabel>
+                                            <Form.Control name="titleVI"/>
+                                        </Form.Group>
+                                        <Form.Group controlId="excerptVI">
+                                            <Form.ControlLabel>Excerpt</Form.ControlLabel>
+                                            <Form.Control name="excerptVI" accepter={Textarea} rows={2}/>
+                                        </Form.Group>
+                                        {formValue.postFormat === "quote" && <Form.Group controlId="quoteTextVI">
+                                            <Form.ControlLabel>Quote</Form.ControlLabel>
+                                            <Form.Control name="quoteTextVI"/>
+                                        </Form.Group>}
+                                        {/*</Col>*/}
+                                        {/*<Col xs={12}>*/}
+                                        <Form.Group controlId="contentVI">
+                                            <Form.ControlLabel>Content</Form.ControlLabel>
+                                            <Form.Control name="contentVI" accepter={Textarea} rows={15}/>
+                                        </Form.Group>
+                                        {/*</Col>*/}
+                                    </Tabs.Tab>
+                                </Tabs>
+                            </div>
+                        </FlexboxGrid.Item>
+                    </FlexboxGrid>
+                    <ButtonToolbar style={{marginTop: "20px", marginRight: "20px", marginLeft: "auto"}}>
+                        <Button appearance="primary" onClick={handleSubmit} disabled={loading}>
+                            Submit
+                        </Button>
+                        <Button appearance="default" onClick={handleClose} disabled={loading}>
+                            Cancel
+                        </Button>
+                    </ButtonToolbar>
+                </VStack>
             </Form>
             <ModalSelectImage open={openModalImage} handleClose={handleCloseModalImage} multiple={selectMultipleImg}
                               setReturnedImg={selectMultipleImg ? setURLImg : setFeatureImg}/>

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
     Input,
     InputGroup,
@@ -6,15 +6,17 @@ import {
     Stack,
     Button
 } from "rsuite";
-import { TagContext } from "@/providers/tag.provider";
-import { ActionCell, ImageCell } from "./CellTags";
+import { ActionCell } from "./CellTags";
 import ModalAddTag from "../../modal/tags/ModalAddTag";
 import SearchIcon from "@rsuite/icons/Search";
 import MoreIcon from "@rsuite/icons/legacy/More";
+import useWindowSize from "@/hooks/useWindowSize";
+import { useGetTags } from "@/hooks/data/useTags";
 const { Column, HeaderCell, Cell } = Table;
 
-const TableTags = () => {
-    const { tags } = useContext(TagContext);
+const TableTags = ({ tableData }) => {
+    const { screenHeight } = useWindowSize();
+    const { tags } = useGetTags(tableData);
     const [ sortColumn, setSortColumn ] = useState("id");
     const [ sortType, setSortType ] = useState();
     const [ searchKeyword, setSearchKeyword ] = useState("");
@@ -39,7 +41,6 @@ const TableTags = () => {
 
         return filtered;
     };
-    console.log("table tag re-render");
 
     return (
         <div>
@@ -65,7 +66,7 @@ const TableTags = () => {
             </Stack>
 
             <Table
-                height={window.innerHeight - 200}
+                height={screenHeight - 200}
                 data={filteredData()}
                 sortColumn={sortColumn}
                 sortType={sortType}

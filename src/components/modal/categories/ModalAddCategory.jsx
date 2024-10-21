@@ -4,11 +4,11 @@ import FormCategories from "@/components/form/FormCategories";
 
 const ModalAddCategory = ( { open, handleClose }) => {
     return (
-        <Modal size={"50%"} open={open} onClose={handleClose}>
+        <Modal open={open} onClose={handleClose}>
             <Modal.Header>
                 <Modal.Title>Add Category</Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{overflow: "hidden"}}>
+            <Modal.Body>
                 <FormCategories handleClose={handleClose} action={ACTION.CREATE} />
             </Modal.Body>
         </Modal>

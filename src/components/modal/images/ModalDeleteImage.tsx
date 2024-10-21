@@ -1,31 +1,28 @@
 import React from 'react';
 import {Modal, Button} from 'rsuite';
 import RemindIcon from '@rsuite/icons/legacy/Remind';
-import { toast } from 'react-toastify';
-import { toastConfig } from "@/lib/constant";
-import imageAPI from "@/services/image-api";
+import {useDeleteImages} from "@/hooks/data/useImages";
 
 interface ModalDeleteImageProps {
     open: boolean;
     handleClose: () => void;
-    images: any;
-    setImages: any;
     selectedImg: any;
-    setSelectedImg: any;
+    setSelectedImg: ([]) => void;
 }
 
-const ModalDeleteImage = ( { open, handleClose, images, setImages, selectedImg, setSelectedImg, ...rests }: ModalDeleteImageProps) => {
+const ModalDeleteImage = ( { open, handleClose, selectedImg, setSelectedImg, ...rests }: ModalDeleteImageProps) => {
+    const deleteImages = useDeleteImages();
+    const [loading, setLoading] = React.useState(false);
     const handleConfirmDelete = async () => {
         try {
-            const response: any = await imageAPI.deleteImages(selectedImg);
+            setLoading(true);
+            const response: any = await deleteImages.mutateAsync(selectedImg);
 
-            if (!response.success) {
-                return toast.error(response.message, toastConfig.error as any);
+            if (response.success) {
+                setSelectedImg([]);
+                handleClose();
             }
-
-            setImages(images.filter((item: any) => !selectedImg.includes(item.url)));
-            setSelectedImg([]);
-            handleClose();
+            setLoading(false);
         } catch (error: any) {
             console.log(error)
         }
@@ -40,11 +37,11 @@ const ModalDeleteImage = ( { open, handleClose, images, setImages, selectedImg, 
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
-                        onClick={handleConfirmDelete} appearance="primary"
+                        onClick={handleConfirmDelete} appearance="primary" disabled={loading}
                     >
                         Yes
                     </Button>
-                    <Button onClick={handleClose} appearance="subtle">
+                    <Button onClick={handleClose} appearance="subtle" disabled={loading}>
                         No
                     </Button>
                 </Modal.Footer>

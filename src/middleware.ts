@@ -1,23 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
+import {NextRequest, NextResponse} from 'next/server';
 
-// import { withAuth } from "next-auth/middleware";
+export async function middleware(request: NextRequest) {
+    const session = request.cookies.get('next-auth.session-token');
 
-// export default withAuth(
-//   function middleware(req: any) {
-//     console.log(req.nextauth);
-//     if (req.nextUrl.pathname === "/admin/dashboard" && req.nextauth.user.role !== "admin") {
-//       return new NextResponse("Redirecting...", { status: 302, headers: { Location: "/login" } });
-//     }
-//   },
-//   {
-//     callbacks: {
-//       authorized: async (params: any) => {
-//         let { token } = params;
-//         return Boolean(token);
-//       },
-//     },
-//   }
-// );
+    const {pathname} = request.nextUrl;
 
-export { default } from "next-auth/middleware";
-export const config = { matcher: ["/admin/"] };
+    if (pathname.startsWith('/login') || pathname.startsWith('/register')) {
+        if (session) {
+            return NextResponse.redirect(new URL('/admin/dashboard/posts', request.url));
+        }
+    }
+
+    if (pathname.startsWith('/admin') || pathname.startsWith('/api')) {
+        if (!session) {
+            return NextResponse.redirect(new URL('/login', request.url));
+        }
+    }
+}
+
+export const config = {
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images).*)'],
+};

@@ -1,23 +1,19 @@
-import React, { useContext } from 'react';
+import { useState } from 'react';
 import { Modal, Button } from 'rsuite';
-import { YoutubeContext } from "@/providers/widgets/youtube.provider";
-import { toast } from 'react-toastify';
-import { toastConfig } from "@/lib/constant";
-import youtubeAPI from "@/services/widgets/youtube-api";
 import RemindIcon from '@rsuite/icons/legacy/Remind';
+import { useDeleteYoutubeVideo } from "@/hooks/data/useYoutubeVideos";
 
 const ModalDelete = ({ modalData, open, handleClose, ...rests }) => {
-    const { allDataYoutube, setAllDataYoutube } = useContext(YoutubeContext);
-
+    const deleteYoutubeVideo = useDeleteYoutubeVideo();
+    const [loading, setLoading] = useState(false);
     const handleConfirmDelete = async () => {
         try {
-            const response = await youtubeAPI.deleteYoutubeURL(modalData);
+            setLoading(true);
+            const response = await deleteYoutubeVideo.mutateAsync(modalData);
             if (!response.success) {
-                return toast.error(response.message, toastConfig.error);
+                handleClose();
             }
-            const newTags = allDataYoutube.filter(tag => tag.id !== modalData.id);
-            setAllDataYoutube(newTags);
-            handleClose();
+            setLoading(false);
         } catch (error) {
             console.log(error)
         }
@@ -31,11 +27,11 @@ const ModalDelete = ({ modalData, open, handleClose, ...rests }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
-                        onClick={handleConfirmDelete} appearance="primary"
+                        onClick={handleConfirmDelete} appearance="primary" disabled={loading}
                     >
                         Yes
                     </Button>
-                    <Button onClick={handleClose} appearance="subtle">
+                    <Button onClick={handleClose} appearance="subtle" disabled={loading}>
                         No
                     </Button>
                 </Modal.Footer>

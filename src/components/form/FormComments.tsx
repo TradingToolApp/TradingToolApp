@@ -13,15 +13,10 @@ import {
     SelectPicker,
     Input,
 } from "rsuite";
-import {YoutubeContext} from "@/providers/widgets/youtube.provider";
-import youtubeAPI from "@/services/widgets/youtube-api";
-import { toast } from "react-toastify";
-import { toastConfig } from "@/lib/constant";
 import { AppContext } from "@/providers/app.provider";
-import { AuthorContext } from "@/providers/author.provider";
-import { CommentContext } from "@/providers/comment.provider";
 import { getValueByLanguage } from "@/lib/formatData";
-import commentAPI from "@/services/comment-api";
+import {useGetComments, useUpdateComment} from "@/hooks/data/useComments";
+import { useGetAuthors } from "@/hooks/data/useAuthors";
 
 const Textarea = React.forwardRef<HTMLInputElement, any>((props: any, ref: any) => <Input {...props} as="textarea" ref={ref}/>);
 Textarea.displayName = "Textarea";
@@ -40,6 +35,7 @@ const {StringType} = Schema.Types;
 
 const model = Schema.Model({
     reply: StringType().isRequired("This field is required."),
+    author_slug: StringType().isRequired("This field is required."),
 });
 
 const initialFormValue = {
@@ -56,10 +52,10 @@ const initialFormValue = {
 
 //This component do 2 jobs, create new tag and update tag
 const FormYoutube = ({formData, handleClose, action, ...rests}: any) => {
-    const {language} = useContext(AppContext);
-    const {allDataComment, setAllDataComment} = useContext(CommentContext);
-    const {authors} = useContext(AuthorContext);
-
+    const { language } = useContext(AppContext);
+    const { comments } = useGetComments();
+    const { authors } = useGetAuthors();
+    const updateComment = useUpdateComment();
     const [, setFormError] = React.useState({});
     const [formValue, setFormValue] = useState<any>(
         {title: getValueByLanguage(formData.post.translations, language).title, ...formData}
@@ -78,26 +74,14 @@ const FormYoutube = ({formData, handleClose, action, ...rests}: any) => {
         }
 
         try {
-            //on create => generate new slug(fileName), else use the old one
             const newComment = {
                 ...formValue,
             };
-            console.log(newComment)
-            const resUpdate = await commentAPI.updateComment(newComment);
-            if (!resUpdate.success) {
-                return toast.error(resUpdate.message, toastConfig.error as any);
+            const resUpdate = await updateComment.mutateAsync(newComment);
+            if (resUpdate.success) {
+                setFormValue(initialFormValue);
+                handleClose();
             }
-
-            const updatedComments: any[] = allDataComment.map((tag: any) => {
-                if (tag.id === formValue.id) {
-                    return resUpdate.data;
-                }
-                return tag;
-            });
-            setAllDataComment(updatedComments);
-
-            setFormValue(initialFormValue);
-            handleClose();
         } catch (error) {
             console.log(error);
         }

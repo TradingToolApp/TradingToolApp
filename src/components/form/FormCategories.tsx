@@ -1,11 +1,9 @@
 "use client";
 
-import React, {useRef, useContext, useState} from "react";
+import React, {useRef, useState} from "react";
 import {
     Form,
     Schema,
-    SelectPicker,
-    Input,
     Panel,
     ButtonToolbar,
     Button,
@@ -14,14 +12,9 @@ import {
     Col,
 } from "rsuite";
 import Image from "next/image";
-import { toast } from 'react-toastify';
-import slugify from "slugify";
 import ModalSelectImage from "@/components/modal/images/ModalSelectImage";
-import { AppContext } from "@/providers/app.provider";
-import { CategoryContext } from "@/providers/category.provider";
-import { toastConfig } from "@/lib/constant";
-import categoryAPI from "@/services/category-api";
 import { SelectPickerCustom } from "./customElement";
+import { useAddCategory, useUpdateCategory } from "@/hooks/data/useCategories";
 
 const {StringType} = Schema.Types;
 
@@ -99,8 +92,9 @@ const colorList = colorClasses.map(color => ({
 
 //This component do 2 jobs, create new category and update category
 const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
-    const { language } = useContext(AppContext);
-    const { allDataCategories, setAllDataCategories } = useContext(CategoryContext);
+    const [loading, setLoading] = useState(false);
+    const addCategory = useAddCategory();
+    const updateCategory = useUpdateCategory();
     const [, setFormError] = React.useState({});
     const [formValue, setFormValue] = useState<any>(formData || initialFormValue);
     const [openModalImage, setOpenModalImage] = useState(false);
@@ -123,43 +117,38 @@ const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
             //on create => generate new slug(fileName), else use the old one
             const newCategory = {
                 ...formValue,
-                cate_slug: action === "CREATE" ? slugify(formValue.cateEN, {lower: true}) : formValue.cate_slug,
-                label: language === "en" ? formValue.cateEN : formValue.cateVI,
+                // cate_slug: action === "CREATE" ? slugify(formValue.cateEN, {lower: true}) : formValue.cate_slug,
+                // label: language === "en" ? formValue.cateEN : formValue.cateVI,
                 cate_img: img.length !== 0 ? img[0] : formValue.cate_img,
             };
 
             switch (action) {
                 case "CREATE":
-                    const resCreate = await categoryAPI.createCategory(newCategory);
-                    if (!resCreate.success) {
-                        return toast.error(resCreate.message, toastConfig.error as any);
+                    setLoading(true);
+                    const resCreate = await addCategory.mutateAsync(newCategory);
+                    if (resCreate.success) {
+                        setFormValue(initialFormValue);
+                        handleClose();
                     }
-                    setAllDataCategories([...allDataCategories, resCreate.data]);
+                    setLoading(false);
                     break;
                 case "UPDATE":
-                    const resUpdate = await categoryAPI.updateCategory(newCategory);
-                    if (!resUpdate.success) {
-                        return toast.error(resUpdate.message, toastConfig.error as any);
+                    setLoading(true);
+                    const resUpdate = await updateCategory.mutateAsync(newCategory);
+                    if (resUpdate.success) {
+                        setFormValue(initialFormValue);
+                        handleClose();
                     }
-
-                    const updatedCategories: any[] = allDataCategories.map((category: any) => {
-                        if (category.id === formValue.id) {
-                            return resUpdate.data;
-                        }
-                        return category;
-                    });
-                    setAllDataCategories(updatedCategories);
+                    setLoading(false);
                     break;
                 default:
                     break;
             }
-
-            setFormValue(initialFormValue);
-            handleClose();
         } catch (error) {
             console.log(error);
         }
     };
+
 
     return (
         <>
@@ -218,11 +207,11 @@ const FormCategories = ({formData, handleClose, action, ...rests}: any) => {
                             <Image src={img[0]} alt="Category image" width={100} height={100}/>}
                     </Panel>
                 </Row>
-                <ButtonToolbar style={{marginTop: "20px", marginRight: "10px", float: "right"}}>
-                    <Button appearance="primary" onClick={handleSubmit}>
+                <ButtonToolbar style={{marginTop: "20px", marginRight: "10px", float: "right"}} >
+                    <Button appearance="primary" onClick={handleSubmit} disabled={loading}>
                         Submit
                     </Button>
-                    <Button appearance="default" onClick={handleClose}>
+                    <Button appearance="default" onClick={handleClose} disabled={loading}>
                         Cancel
                     </Button>
                 </ButtonToolbar>

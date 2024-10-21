@@ -8,7 +8,7 @@ const ModalAddPost = ({ open, handleClose }) => {
             <Modal.Header>
                 <Modal.Title>Add Post</Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
+            <Modal.Body>
                 <FormPosts handleClose={handleClose} action={ACTION.CREATE} />
             </Modal.Body>
         </Modal>

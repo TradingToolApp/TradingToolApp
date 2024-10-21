@@ -1,10 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { slugify } from "../../../utils";
 import { useTranslation } from "react-i18next";
 
 const PostVideoTwo = ({ data, pClass, videoIcon }) => {
-  const { t } = useTranslation();
 
   return (
     <div className={`media post-block post-block__small ${pClass ?? "post-block__on-dark-bg m-b-xs-30"}`}>
@@ -22,7 +20,7 @@ const PostVideoTwo = ({ data, pClass, videoIcon }) => {
 
       <div className="media-body">
         <div className="post-cat-group">
-          <Link href={`/category/${slugify(data.cate)}`}>
+          <Link href={`/category/${data.cate_slug}`}>
             <span className={`post-cat ${data.cate_bg ?? "bg-color-blue-one"}`}>{data.cate}</span>
           </Link>
         </div>
@@ -35,7 +33,7 @@ const PostVideoTwo = ({ data, pClass, videoIcon }) => {
           <ul className="list-inline">
             <li>
               <span>By</span>
-              <Link href={`/author/${slugify(data.author_name)}`}>
+              <Link href={`/author/${data.author_slug}`}>
                 <span className="post-author">{data.author_name}</span>
               </Link>
             </li>

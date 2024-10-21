@@ -1,27 +1,30 @@
-import { useContext } from "react";
-import { useRouter } from 'next/router'
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import { AppContext } from "@/providers/app.provider";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import HeadMeta from "../../components/elements/HeadMeta";
 import FooterOne from "../../components/footer/FooterOne";
 import HeaderThree from "../../components/header/HeaderThree";
 import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
 import WidgetPost from "../../components/widget/WidgetPost";
-import WidgetYoutubeList from "@/components/widget/WidgetYoutubeList";
+import WidgetYoutubeList from "@/components/widget/WidgetYoutubeVideo";
+import { getPublicPosts } from "@/services/prisma/post.api";
+import { translatePosts } from "@/lib/formatData";
+import { AppContext } from "@/providers/app.provider";
+import { useGetPublicPosts } from "@/hooks/data/usePosts";
+import { useRouter } from 'next/router'
+import { Loader } from "rsuite";
 
-const PostAuthor = ( { allPosts } ) => {
-    const router = useRouter()
-    const { publicPosts } = useContext(AppContext);
-    allPosts = publicPosts;
-    const postData = allPosts.filter(post => post.author_slug === router.query.slug);
+const PostAuthor = ({ authorData, allPostsData }) => {
+    const { language } = useContext(AppContext);
+    const { publicPosts } = useGetPublicPosts(allPostsData);
+    const [postData, setPostData] = useState(translatePosts(authorData, language));
+    const [authorContent, setAuthorContent] = useState(translatePosts(authorData, language)[0]);
+    const allPosts = publicPosts;
 
-    if(postData.length === 0) {
-        router.push('/404');
-        return null;
-    }
-
-    const authorContent = postData[0];
+    useEffect(() => {
+        setPostData(translatePosts(authorData, language));
+        setAuthorContent(translatePosts(authorData, language)[0]);
+    }, [language, authorData])
 
     return (
         <>
@@ -94,3 +97,51 @@ const PostAuthor = ( { allPosts } ) => {
 }
 
 export default PostAuthor;
+
+export async function getStaticProps({ params }) {
+    const postParams = params.slug;
+
+    const allPostsData = await getPublicPosts([
+        'slug',
+        'featureImg',
+        'createdAt',
+        'translations',
+        'category',
+        'author',
+    ]);
+
+    const authorData = allPostsData.filter(post => post.author.author_slug === postParams);
+
+    if (authorData.length === 0) {
+        return {
+            redirect: {
+                destination: "/404",
+                permanent: false,
+            },
+        }
+    }
+
+    return {
+        props: {
+            authorData,
+            allPostsData
+        },
+        // notFound,
+        revalidate: 1,
+    }
+}
+
+export async function getStaticPaths() {
+    const posts = await getPublicPosts(['author'])
+
+    const paths = posts.map(post => ({
+        params: {
+            slug: post.author.author_slug
+        }
+    }))
+
+    return {
+        paths,
+        fallback: 'blocking',
+    }
+}

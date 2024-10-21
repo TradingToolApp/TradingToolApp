@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
-import {Popover, Whisper, Checkbox, Dropdown, IconButton, Table, CellProps} from "rsuite";
+import {Popover, Whisper, Dropdown, IconButton, Table} from "rsuite";
 import MoreIcon from "@rsuite/icons/legacy/More";
 import ModalUpdateTag from "@/components/modal/tags/ModalUpdateTag";
 import ModalDeleteTag from "@/components/modal/tags/ModalDeleteTag";

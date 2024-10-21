@@ -39,6 +39,9 @@ const getPosts = async ( req, res ) => {
             },
             orderBy: [
                 {
+                    trending: 'desc',
+                },
+                {
                     updatedAt: 'desc',
                 },
                 {
@@ -141,7 +144,6 @@ const createPost = async ( req, res ) => {
 const updatePost = async ( req, res ) => {
     try {
         const { data } = req.body;
-    console.log(data)
         const post = await prisma.post.findUnique({
             where: {
                 id: data.id

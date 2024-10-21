@@ -2,7 +2,7 @@ const data = [
     {
         author_slug: 'hoan-nguyen',
         author_name: 'Hoan Nguyen',
-        author_img: 'hoan_nguyen.jpg',
+        author_img: 'https://tradingtoolapp.s3.ap-southeast-1.amazonaws.com/images/baobl-rnmz-1483319913953-15657784359141651766723.jpg',
         author_social: [
             {
                 icon: "fab fa-facebook-f",

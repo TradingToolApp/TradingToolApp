@@ -14,8 +14,7 @@ async function getPublicPosts() {
         const res = await axios.get('/api/posts/getPublicPosts');
         return res.data;
     } catch (err) {
-        console.log(err)
-        // return err.response.data;
+        return err.response.data;
     }
 }
 

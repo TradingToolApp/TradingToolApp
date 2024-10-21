@@ -1,27 +1,36 @@
-import React, { useContext, Suspense } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import CategoryOne from "../../src/components/category/CategoryOne";
 import HeadMeta from "../../src/components/elements/HeadMeta";
 import FooterOne from "../../src/components/footer/FooterOne";
 import HeaderThree from "../../src/components/header/HeaderThree";
 import PostSectionFive from "../../src/components/post/PostSectionFive";
 import SliderTwo from "../../src/components/slider/SliderTwo";
-import { AppContext } from "@/providers/app.provider";
-import { Loader } from "rsuite";
+import { getPublicPosts } from "@/services/prisma/post.api";
+import { useGetPublicPosts } from "@/hooks/data/usePosts";
 
-const HomeThree = () => {
-    const { publicPosts } = useContext(AppContext);
-    const allPosts = publicPosts
-
+const Home = ({ allPosts }) => {
+    const { publicPosts } = useGetPublicPosts(allPosts);
     return (
-        <Suspense fallback={<Loader style={{marginTop: "25%"}} backdrop size="md" content="loading..."/>}>
-            <HeadMeta metaTitle="Home"/>
-            <HeaderThree/>
-            <SliderTwo slidePost={allPosts}/>
-            <CategoryOne cateData={allPosts}/>
-            <PostSectionFive postData={allPosts} pClass="section-gap bg-grey-light-three"/>
-            <FooterOne/>
-        </Suspense>
+        <>
+            <HeadMeta metaTitle="Home" />
+            <HeaderThree />
+            <SliderTwo slidePost={publicPosts} />
+            <CategoryOne cateData={publicPosts} />
+            <PostSectionFive postData={publicPosts} pClass="section-gap bg-grey-light-three" />
+            <FooterOne />
+        </>
     );
 }
 
-export default HomeThree;
+export default Home;
+
+export async function getStaticProps() {
+    const allPosts = await getPublicPosts();
+
+    return {
+        props: {
+            allPosts
+        },
+        revalidate: 1800,
+    };
+}

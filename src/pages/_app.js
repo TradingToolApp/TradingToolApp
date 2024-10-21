@@ -1,17 +1,12 @@
 import 'rsuite/dist/rsuite-no-reset.min.css';
 import "bootstrap/dist/css/bootstrap.css";
-import "../styles/style.css";
 import 'react-toastify/dist/ReactToastify.css';
+import "../styles/style.css";
 import Script from 'next/script'
 import ToastProvider from "@/providers/toast.provider";
 import { SessionProvider } from "next-auth/react"
 import { AppProvider } from "@/providers/app.provider";
-import { AuthorProvider } from "@/providers/author.provider";
-import { CategoryProvider } from "@/providers/category.provider";
-import { TagProvider } from "@/providers/tag.provider";
-import { YoutubeProvider } from "@/providers/widgets/youtube.provider";
-import { CommentProvider } from "@/providers/comment.provider";
-import "../i18n.ts";
+import { CustomProvider } from "rsuite"
 import {
     QueryClient,
     QueryClientProvider,
@@ -36,25 +31,17 @@ function MyApp( { Component, pageProps: { session, ...pageProps } } ) {
         gtag('config', 'G-E448GXQHG8');
       `}
             </Script>
-            <SessionProvider session={session}>
-                <QueryClientProvider client={queryClient}>
-                    <ToastProvider>
-                        <AppProvider>
-                            <YoutubeProvider>
-                                <CommentProvider>
-                                    <AuthorProvider>
-                                        <CategoryProvider>
-                                            <TagProvider>
-                                                <Component {...pageProps} />
-                                            </TagProvider>
-                                        </CategoryProvider>
-                                    </AuthorProvider>
-                                </CommentProvider>
-                            </YoutubeProvider>
-                        </AppProvider>
-                    </ToastProvider>
-                </QueryClientProvider>
-            </SessionProvider>
+            <CustomProvider theme="light">
+                <SessionProvider session={session}>
+                    <QueryClientProvider client={queryClient}>
+                        <ToastProvider>
+                            <AppProvider>
+                                <Component {...pageProps} />
+                            </AppProvider>
+                        </ToastProvider>
+                    </QueryClientProvider>
+                </SessionProvider>
+            </CustomProvider>
         </>
     )
 }

@@ -8,7 +8,7 @@ const ModalAdd = ( { open, handleClose }) => {
             <Modal.Header>
                 <Modal.Title>Add Youtube URL</Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{overflow: "hidden"}}>
+            <Modal.Body>
                 <FormYoutube handleClose={handleClose} action={ACTION.CREATE} />
             </Modal.Body>
         </Modal>

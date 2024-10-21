@@ -1,35 +1,32 @@
-import React, {useState, useContext, useEffect} from "react";
+import React, { useState } from "react";
 import {
     Input,
     InputGroup,
     Table,
     Stack,
-    Button
 } from "rsuite";
-import {ActionCell, BooleanCell, TranslatableCell} from "./CellComments";
+import { ActionCell, BooleanCell } from "./CellComments";
 import MoreIcon from "@rsuite/icons/legacy/More";
 import SearchIcon from "@rsuite/icons/Search";
-import { CommentContext } from "@/providers/comment.provider";
-const { Column, HeaderCell, Cell } = Table;
+import useWindowSize from "@/hooks/useWindowSize";
+import {useGetComments} from "@/hooks/data/useComments";
 
-const TableComments = () => {
-    const [ loading, setLoading ] = useState(true);
-    const { comments } = useContext(CommentContext);
-    const [ sortColumn, setSortColumn ] = useState("id");
-    const [ sortType, setSortType ] = useState();
-    const [ searchKeyword, setSearchKeyword ] = useState("");
+const {Column, HeaderCell, Cell} = Table;
 
-    const handleSortColumn = ( sortColumn : any, sortType : any) => {
+const TableComments = ({ tableData }: any) => {
+    const { screenHeight } = useWindowSize();
+    const { comments } = useGetComments(tableData);
+    const [sortColumn, setSortColumn] = useState("id");
+    const [sortType, setSortType] = useState();
+    const [searchKeyword, setSearchKeyword] = useState("");
+
+    const handleSortColumn = (sortColumn: any, sortType: any) => {
         setSortColumn(sortColumn);
         setSortType(sortType);
     };
 
     const filteredData = () => {
-        const filtered = comments.filter(( item: any )=> {
-            // if (!item.title.toLowerCase().includes(searchKeyword.toLowerCase())) {
-            //     return false;
-            // }
-
+        const filtered = comments.filter((item: any) => {
             return true;
         });
 
@@ -38,11 +35,11 @@ const TableComments = () => {
 
     return (
         <>
-            <Stack className="table-toolbar" style={{ marginTop: "10px" }} justifyContent="space-between">
+            <Stack className="table-toolbar" style={{marginTop: "10px"}} justifyContent="space-between">
                 <Stack spacing={6}>
                     <InputGroup inside>
                         <Input
-                            style={{ width: "400px" }}
+                            style={{width: "400px"}}
                             placeholder="Search"
                             value={searchKeyword}
                             onChange={setSearchKeyword}
@@ -52,12 +49,12 @@ const TableComments = () => {
                         </InputGroup.Addon>
                     </InputGroup>
                 </Stack>
-                <Stack style={{ marginRight: "20px" }}>
+                <Stack style={{marginRight: "20px"}}>
                 </Stack>
             </Stack>
 
             <Table
-                height={window.innerHeight - 200}
+                height={screenHeight - 200}
                 data={filteredData()}
                 sortColumn={sortColumn}
                 sortType={sortType}

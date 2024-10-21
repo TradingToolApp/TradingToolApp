@@ -1,27 +1,27 @@
 import NextAuth from 'next-auth';
-import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from 'next-auth/providers/google';
-// import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { encode, decode } from 'next-auth/jwt';
 
-// const bcrypt = require("bcrypt");
-
-const authOptions = {
-    // ... Other options ...
-
+export const authOptions = {
+    session: {
+        strategy: 'jwt',
+        maxAge: 1 * 24 * 60 * 60, // 1 day
+    },
+    jwt: { encode, decode },
     providers: [
-        // CredentialsProvider({
-        //     name: "Credentials",
-        //     async authorize(credentials, req) {
-        //         await dbConnect();
-        //         const user = await User.findOne({ email: credentials.email });
-        //         if (user) {
-        //             // Handling traditional email/password authentication
-        //             // ... [Code for email/password authentication] ...
-        //         } else {
-        //             return null;
-        //         }
-        //     },
-        // }),
+        CredentialsProvider({
+            name: 'Credentials',
+            async authorize( credentials ) {
+                if (!credentials) return null
+                const { email, password } = credentials
+                if (email === process.env.ADMIN_EMAIL_TEST && password === process.env.ADMIN_PASSWORD_TEST) {
+                    return { email: email, name: "admin", role: "admin" }
+                } else {
+                    throw new Error('Invalid credentials')
+                }
+            },
+        }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -29,20 +29,20 @@ const authOptions = {
                 params: {
                     prompt: "consent",
                     access_type: "offline",
-                    response_type: "code"
-                }
-            }
+                    response_type: "code",
+                },
+            },
         }),
     ],
+    pages: {
+        signIn: "/login",
+        error: "/error",
+    },
     callbacks: {
-        // ... Other callbacks ...
-
-        async signIn({ user, account, profile }) {
+        async signIn( { user, account, profile } ) {
             if (account?.provider === "google") {
-                // Handling Gmail authentication
-                // ... [Code for creating user account after successful Gmail authentication] ...
-                console.log(account)
                 if (profile.email === process.env.ADMIN_EMAIL) {
+                    account.role = "admin";
                     return account;
                 } else {
                     return false;
@@ -52,21 +52,22 @@ const authOptions = {
             }
         },
         async jwt({ token, user, account }) {
-            if (account) {
-                token.account = account;
-                token.role = "admin"
-            }
-            return token;
+            token.user = user
+            return token
         },
         async session({ session, token, user }) {
+            session.userData = user;
             session.account = token.account;
             session.role = token.role;
             return session;
         },
+        authorized({ auth }) {
+            const isAuthenticated = !!auth?.user;
+
+            return isAuthenticated;
+        },
     },
-    // adapter: PrismaAdapter(prisma),
     secret: process.env.NEXTAUTH_SECRET,
-    // ... Other options ...
 };
 
 export default NextAuth(authOptions);

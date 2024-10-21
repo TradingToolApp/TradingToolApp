@@ -1,13 +1,12 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Slider from "react-slick";
-import { AppContext } from "@/providers/app.provider";
-import { useTranslation } from 'react-i18next';
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
+import useTranslate from "@/hooks/useTranslate";
 
 const SliderTwo = ({ slidePost }) => {
-  const { t } = useTranslation()
+  const t = useTranslate();
 
   function SlickNextArrow(props) {
     const { className, onClick } = props;
@@ -86,24 +85,6 @@ const SliderTwo = ({ slidePost }) => {
               <Slider {...slideSettingsContent} asNavFor={nav3} ref={(slider1 => setNav1(slider1))} className="slick-slider slick-slider-for">
                 {slidePost.slice(0, 3).map((data) => (
                   <div className="item" key={data.slug}>
-                    <div className="post-metas home-banner-post-metas m-b-xs-20">
-                      <ul className="list-inline">
-                        <li className="m-r-xs-20">
-                          {/* <Link href={`/author/${slugify(data.author_name)}`}>
-                                        <span  className="d-flex align-items-center">
-                                            <Image
-                                            src={data.author_img}
-                                            alt={data.author_name}
-                                            width={50}
-                                            height={50}
-                                            />
-                                            <span className="m-l-xs-20">{data.author_name}</span>
-                                        </span>
-                                    </Link> */}
-                        </li>
-                      </ul>
-                    </div>
-                    {/* End of .post-metas */}
                     <h1 className="page-title m-b-xs-40 hover-line">
                       <Link href={`/post/${data.slug}`}>
                         <span>{data.title}</span>
@@ -111,11 +92,8 @@ const SliderTwo = ({ slidePost }) => {
                     </h1>
                     <div className="btn-group">
                       <Link href={`/post/${data.slug}`}>
-                        <span className="btn btn-primary m-r-xs-30">{t("button.readMore")}</span>
+                        <span className="btn btn-primary m-r-xs-30">{t.button.readMore}</span>
                       </Link>
-                      {/* <Link href={`/category/${slugify(data.cate)}`}>
-                                <span className="btn-link">ALL CURRENT NEWS</span>
-                            </Link> */}
                     </div>
                   </div>
                 ))}

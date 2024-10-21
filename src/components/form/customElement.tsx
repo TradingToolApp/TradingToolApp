@@ -1,6 +1,5 @@
 import React from "react";
-import {InputGroup, Input, SelectPicker, Whisper, Tooltip} from "rsuite";
-import SearchIcon from '@rsuite/icons/Search';
+import {InputGroup, Input, SelectPicker, CheckPicker, Whisper, Tooltip} from "rsuite";
 import {FaCopy} from "react-icons/fa";
 
 const styles = {
@@ -26,4 +25,10 @@ export const InputWithCopyButton = ({placeholder = "", ...props}: any) => (
         </InputGroup>
     </Whisper>
 );
+
+export const CheckPickerCustom = React.forwardRef<HTMLInputElement, any>((props: any, ref: any) =>
+    <CheckPicker searchable={false} menuMaxHeight={200}
+                  style={{width: "100px"}}
+                  defaultValue={"false"} {...props} ref={ref}/>);
+CheckPickerCustom.displayName = "CheckPickerCustom";
 

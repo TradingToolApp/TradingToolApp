@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from "react";
-import Image from "next/image";
-import {Popover, Whisper, Checkbox, Dropdown, IconButton, Table, CellProps} from "rsuite";
+import React, {useState} from "react";
+import {Popover, Whisper, Dropdown, IconButton, Table} from "rsuite";
 import MoreIcon from "@rsuite/icons/legacy/More";
 import ModalUpdateYoutube from "@/components/modal/widgets/youtube/ModalUpdateYoutube";
 import ModalDeleteYoutube from "@/components/modal/widgets/youtube/ModalDeleteYoutube";

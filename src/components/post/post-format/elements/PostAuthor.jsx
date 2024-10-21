@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { slugify } from "../../../../utils";
 
 const PostAuthor = ( { authorData } ) => {
     return (
         <div className="about-author m-b-xs-60">
             <div className="media">
-                <Link href={`/author/${slugify(authorData.author_name)}`}>
+                <Link href={`/author/${authorData.author_slug}`}>
             <span>
                 <Image
                     src={authorData.author_img}
@@ -20,7 +19,7 @@ const PostAuthor = ( { authorData } ) => {
                 <div className="media-body">
                     <div className="media-body-title">
                         <h3>
-                            <Link href={`/author/${slugify(authorData.author_name)}`}>
+                            <Link href={`/author/${authorData.author_slug}`}>
                                 <span>{authorData.author_name}</span>
                             </Link>
                         </h3>

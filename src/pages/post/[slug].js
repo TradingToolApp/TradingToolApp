@@ -1,6 +1,4 @@
-import React, { useContext, useEffect } from "react";
-import { useRouter } from 'next/router'
-import { AppContext } from "@/providers/app.provider";
+import React, { useState, useContext, useEffect } from "react";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import HeadMeta from "../../components/elements/HeadMeta";
 import FooterOne from "../../components/footer/FooterOne";
@@ -10,15 +8,20 @@ import PostFormatQuote from "../../components/post/post-format/PostFormatQuote";
 import PostFormatStandard from "../../components/post/post-format/PostFormatStandard";
 import PostFormatText from "../../components/post/post-format/PostFormatText";
 import PostFormatVideo from "../../components/post/post-format/PostFormatVideo";
-import { Loader } from "rsuite";
+import { AppContext } from "@/providers/app.provider";
+import { getPublicPosts, getPostBySlug } from "@/services/prisma/post.api";
+import { translateOnePost } from "@/lib/formatData";
+import { useGetPublicPosts } from "@/hooks/data/usePosts";
 
-const PostDetails = ( { allPosts, params } ) => {
-    const router = useRouter()
-    const { publicPosts } = useContext(AppContext);
-    allPosts = publicPosts;
+const PostDetails = ( { slug, postData, allPostsData } ) => {
+    const { language } = useContext(AppContext);
+    const [ postContent, setPostContent ] = useState(translateOnePost(postData, language));
+    const { publicPosts } = useGetPublicPosts(allPostsData);
+    const allPosts = publicPosts;
 
-    const post = allPosts.filter(post => post.slug === router.query.slug);
-    const postContent = post[0];
+    useEffect(() => {
+        setPostContent(translateOnePost(postData, language));
+    }, [ language, postData ]);
 
     const PostFormatHandler = () => {
         if (!postContent) return null;
@@ -35,18 +38,11 @@ const PostDetails = ( { allPosts, params } ) => {
         }
     }
 
-    if (allPosts.length === 0) return <Loader style={{marginTop: "25%"}} backdrop size="md" content="loading..."/>;
-
-    if (allPosts && post.length === 0) {
-        router.push('/404');
-        return null;
-    }
-
     return (
         <>
             <HeadMeta metaTitle={postContent.title}/>
             <HeaderThree/>
-            <Breadcrumb bCat={postContent.cate} aPage={postContent.title}/>
+            <Breadcrumb bCat={postContent.cate_slug} cateTitle={postContent.cate} aPage={postContent.title}/>
             <PostFormatHandler/>
             <FooterOne/>
         </>
@@ -54,3 +50,42 @@ const PostDetails = ( { allPosts, params } ) => {
 }
 
 export default PostDetails;
+
+export async function getStaticPaths() {
+    const publicPosts = await getPublicPosts();
+    const paths = publicPosts.map(( post ) => ({
+        params: { slug: post.slug },
+    }));
+
+    return { paths, fallback: "blocking" };
+}
+
+export async function getStaticProps( { params } ) {
+    const post = await getPostBySlug(params.slug)
+    const allPostsData = await getPublicPosts([
+        'title',
+        'featureImg',
+        'postFormat',
+        'createdAt',
+        'slug',
+        'category',
+        'author',
+    ]);
+
+    if (!post) {
+        return {
+            redirect: {
+                destination: "/404",
+            },
+        }
+    }
+
+    return {
+        props: {
+            slug: params.slug,
+            postData: post,
+            allPostsData
+        },
+        revalidate: 1,
+    }
+}

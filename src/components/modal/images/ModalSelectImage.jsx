@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Modal, Stack, Divider, Panel, ButtonGroup } from 'rsuite';
-import imageAPI from '@/services/image-api';
+import imageAPI from '@/services/restful/image-api';
 import ModalFullScreenImage from "@/components/modal/images/ModalFullScreenImage";
 
 const ModalSelectImage = ( { open, handleClose, multiple = false, setReturnedImg } ) => {
@@ -23,7 +23,7 @@ const ModalSelectImage = ( { open, handleClose, multiple = false, setReturnedImg
         if (!multiple) {
             setReturnedImg(selectedImg);
         } else {
-            setReturnedImg(selectedImg.map(item => `<Image src="${item}" width="100%" height="100%" alt="Image" />`).join("\n"))
+            setReturnedImg(selectedImg.map(item => `![Image Name](${item})`).join("\n"))
         }
         handleClose();
     }

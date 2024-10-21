@@ -10,7 +10,7 @@ const MetaDataOne = ({ metaData }) => {
           <div className="col-lg-6">
             <div className="post-title-wrapper">
               <div className="btn-group">
-                <Link href={`/category/${slugify(metaData.cate)}`}>
+                <Link href={`/category/${metaData.cate_slug}`}>
                   <span className={`cat-btn ${metaData.cate_bg ?? "bg-color-blue-one"}`}>{metaData.cate}</span>
                 </Link>
               </div>
@@ -18,18 +18,18 @@ const MetaDataOne = ({ metaData }) => {
               <div className="post-metas banner-post-metas m-t-xs-20">
                 <ul className="list-inline">
                   <li>
-                    <Link href={`/author/${slugify(metaData.author_name)}`}>
-                      <span className="post-author post-author-with-img">
-                        <Image
-                          src={metaData.author_img}
-                          alt={metaData.author_name}
-                          width={30}
-                          height={30}
-                        />
-                        <span className="author-name">{metaData.author_name}</span>
+                    {/*<Link href={`/author/${slugify(metaData.author_name)}`}>*/}
+                    {/*  <span className="post-author post-author-with-img">*/}
+                    {/*    <Image*/}
+                    {/*      src={metaData.author_img}*/}
+                    {/*      alt={metaData.author_name}*/}
+                    {/*      width={30}*/}
+                    {/*      height={30}*/}
+                    {/*    />*/}
+                    {/*    <span className="author-name">{metaData.author_name}</span>*/}
 
-                      </span>
-                    </Link>
+                    {/*  </span>*/}
+                    {/*</Link>*/}
                   </li>
                   {/*<li>*/}
                   {/*  <i className="feather icon-activity" />*/}

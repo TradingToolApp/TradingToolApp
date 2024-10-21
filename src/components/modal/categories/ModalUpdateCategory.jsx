@@ -4,11 +4,11 @@ import { ACTION } from "@/lib/constant";
 
 const ModalUpdateCategory = ( { modalData, open, handleClose }) => {
     return (
-        <Modal size={"50%"} open={open} onClose={handleClose}>
+        <Modal open={open} onClose={handleClose}>
             <Modal.Header>
                 <Modal.Title>Update Category</Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{overflow: "hidden"}}>
+            <Modal.Body>
                 <FormCategories formData={modalData} handleClose={handleClose} action={ACTION.UPDATE} />
             </Modal.Body>
         </Modal>

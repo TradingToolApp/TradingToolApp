@@ -1,10 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { slugify } from "../../../utils";
 import { useTranslation } from "react-i18next";
 
 const PostLayoutTwo = ({data, postSizeMd, postBgDark}) => {
-  const { t } = useTranslation();
 
   return (
       	<div className={`media post-block m-b-xs-30 ${postSizeMd === true ? "post-block__mid" : ""} ${postBgDark === true ? "post-block__on-dark-bg": "" }`}>
@@ -22,7 +20,7 @@ const PostLayoutTwo = ({data, postSizeMd, postBgDark}) => {
             </Link>
          <div className="media-body">
            <div className="post-cat-group m-b-xs-10">
-            <Link href={`/category/${slugify(data.cate)}`}>
+            <Link href={`/category/${data.cate_slug}`}>
                 <span className={`post-cat cat-btn ${data.cate_bg ?? "bg-color-blue-one"}`}>{data.cate}</span>
             </Link>
            </div>

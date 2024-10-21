@@ -1,24 +1,20 @@
-import React, { useContext } from 'react';
-import { Modal, Button, useToaster, Message } from 'rsuite';
-import { AuthorContext } from "@/providers/author.provider";
-import { toast } from 'react-toastify';
-import { toastConfig } from "@/lib/constant";
-import authorAPI from "@/services/author-api";
+import React, { useState } from 'react';
+import { Modal, Button } from 'rsuite';
 import RemindIcon from '@rsuite/icons/legacy/Remind';
+import { useDeleteAuthor } from "@/hooks/data/useAuthors";
 
 const ModalDeleteAuthor = ({ modalData, open, handleClose, ...rests }) => {
-    const toaster = useToaster();
-    const { allDataAuthors, setAllDataAuthors } = useContext(AuthorContext);
+    const deleteAuthor = useDeleteAuthor();
+    const [loading, setLoading] = useState(false);
 
     const handleConfirmDelete = async () => {
         try {
-            const response = await authorAPI.deleteAuthor(modalData);
-            if (!response.success) {
-                return toast.error(response.message, toastConfig.error);
+            setLoading(true);
+            const response = await deleteAuthor.mutateAsync(modalData);
+            if (response.success) {
+                handleClose();
             }
-            const newAuthors = allDataAuthors.filter(author => author.id !== modalData.id);
-            setAllDataAuthors(newAuthors);
-            handleClose();
+            setLoading(false);
         } catch (error) {
             console.log(error)
         }
@@ -32,11 +28,11 @@ const ModalDeleteAuthor = ({ modalData, open, handleClose, ...rests }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
-                        onClick={handleConfirmDelete} appearance="primary"
+                        onClick={handleConfirmDelete} appearance="primary" disabled={loading}
                     >
                         Yes
                     </Button>
-                    <Button onClick={handleClose} appearance="subtle">
+                    <Button onClick={handleClose} appearance="subtle" disabled={loading}>
                         No
                     </Button>
                 </Modal.Footer>

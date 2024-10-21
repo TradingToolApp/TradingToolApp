@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import Image from "next/image";
 import { Popover, Whisper, Dropdown, IconButton, Table,  } from "rsuite";
 import MoreIcon from "@rsuite/icons/legacy/More";
 import ModalUpdateComment from "@/components/modal/comments/ModalUpdateComment";
 import ModalDeleteComment from "@/components/modal/comments/ModalDeleteComment";
 import { AppContext } from "@/providers/app.provider";
+import {useRouter} from "next/navigation";
 
 const {Cell} = Table;
 
@@ -14,27 +14,8 @@ export const BooleanCell = ({rowData, dataKey, ...props}: any) => (
     </Cell>
 );
 
-export const TranslatableCell = ({rowData, field, dataKey, ...props}: any) => {
-    const { language } = useContext(AppContext);
-    let translations;
-
-    if (field) {
-        translations = rowData[field].translations;
-    } else {
-        translations = rowData.translations;
-    }
-
-    const data = translations.filter((item: any) => item.languageCode === language)[0];
-    return (
-        <Cell {...props}>
-            <div>
-                {data[dataKey]}
-            </div>
-        </Cell>
-    );
-}
-
 export const ActionCell = ({rowData, ...rests}: any) => {
+    const router = useRouter();
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
@@ -48,9 +29,13 @@ export const ActionCell = ({rowData, ...rests}: any) => {
             switch (eventKey) {
                 case 1:
                     // Edit
-                    handleOpenUpdate();
+                    router.push(`/post/${rowData.post_slug}`)
                     break;
                 case 2:
+                    // Edit
+                    handleOpenUpdate();
+                    break;
+                case 3:
                     // Delete
                     handleOpenDelete();
                     break;
@@ -63,8 +48,9 @@ export const ActionCell = ({rowData, ...rests}: any) => {
             <>
                 <Popover ref={ref} className={className} style={{left, top}} full>
                     <Dropdown.Menu onSelect={handleSelect}>
-                        <Dropdown.Item eventKey={1}>Edit</Dropdown.Item>
-                        <Dropdown.Item eventKey={2}>Delete</Dropdown.Item>
+                        <Dropdown.Item eventKey={1}>Open</Dropdown.Item>
+                        <Dropdown.Item eventKey={2}>Edit</Dropdown.Item>
+                        <Dropdown.Item eventKey={3}>Delete</Dropdown.Item>
                     </Dropdown.Menu>
                 </Popover>
             </>

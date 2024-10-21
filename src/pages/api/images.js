@@ -53,13 +53,6 @@ const postHandler = async ( req, res ) => {
 
 const getImages = async ( req, res ) => {
     try {
-        // Get all images from local server
-        // const files = fs.readdirSync(imageUploadDir);
-        // const images = files.map((file) => {
-        //     return {
-        //         filepath: `/uploadImages/${file}`
-        //     }
-        // });
 
         // Get all images from the database
         const images = await prisma.image.findMany();
@@ -121,7 +114,6 @@ const createImages = async ( req, res ) => {
 
         return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: images });
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
     }
 };
@@ -129,7 +121,6 @@ const createImages = async ( req, res ) => {
 const deleteImages = async ( req, res ) => {
     const rawBody = await buffer(req);
     const urls = JSON.parse(rawBody.toString());
-    console.log(urls)
     try {
         const keys = await prisma.image.findMany({
             where: {

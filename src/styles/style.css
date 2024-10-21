@@ -10625,11 +10625,13 @@ li {
     justify-content: center;
 
 }
+
 .content-post a {
     color: var(--color-blue-one);
     text-decoration: none;
     width: fit-content;
 }
+
 .content-post a:hover {
     color: var(--primary-color);
     text-decoration: none;
@@ -10681,4 +10683,44 @@ li {
     font-weight: var(--p-regular);
 }
 
+.rsuite-custom-tab button {
+    border: none;
+}
 
+.iframe-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+    /*-webkit-overflow-scrolling: touch;*/
+}
+
+/* Then style the iframe to fit in the container div with full height and width */
+.iframe-responsive {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+html {
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
+}
+
+.player-wrapper {
+    position: relative;
+    padding-top: 56.25%; /* Player ratio: 100 / (1280 / 720) */
+}
+
+.react-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

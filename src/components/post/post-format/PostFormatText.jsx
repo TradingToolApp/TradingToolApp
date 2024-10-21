@@ -1,20 +1,14 @@
-import WidgetAd from "../../widget/WidgetAd";
-import WidgetInstagram from "../../widget/WidgetInstagram";
-import WidgetNewsletter from "../../widget/WidgetNewsletter";
 import WidgetPost from "../../widget/WidgetPost";
-import WidgetSocialShare from "../../widget/WidgetSocialShare";
-import WidgetYoutubeList from "../../widget/WidgetYoutubeList";
+import WidgetYoutubeList from "../../widget/WidgetYoutubeVideo";
 import PostAuthor from "./elements/PostAuthor";
 import PostComment from "./elements/PostComment";
 import SocialShareBottom from "./elements/SocialShareBottom";
 import SocialShareSide from "./elements/SocialShareSide";
 import React from "react";
+import MarkdownRenderer from "@/components/post/post-format/Markdown/MarkdownRenderer";
 
 const PostFormatText = ({ postData, allData }) => {
   const basePathLink = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH ?? "" : "";
-  
-  // let postContent = postData.content.replaceAll('/images/', basePathLink + '/images/');
-  // postContent = postContent.replaceAll('\n', '<br />');
   const postContent = postData.content;
 
   return (
@@ -28,9 +22,7 @@ const PostFormatText = ({ postData, allData }) => {
                   <div className="single-blog-wrapper">
                     <SocialShareSide />
 					<h2 className="axil-post-title hover-line">{postData.title}</h2>
-                    <div className="content-post"
-                      dangerouslySetInnerHTML={{ __html: postContent }}
-                    ></div>
+                    <MarkdownRenderer content={postContent}/>
                   </div>
                 </article>
                 <SocialShareBottom shareData={postData}/>

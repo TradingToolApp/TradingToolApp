@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
     Input,
     InputGroup,
@@ -9,17 +9,19 @@ import {
 } from "rsuite";
 import SearchIcon from "@rsuite/icons/Search";
 import MoreIcon from "@rsuite/icons/legacy/More";
-import { ActionCell, UpperCaseCell } from "./CellPosts";
-import { AppContext } from "@/providers/app.provider";
-import { CategoryContext } from "@/providers/category.provider";
+import { ActionCell, BooleanCell, UpperCaseCell } from "./CellPosts";
 import ModalAddPost from "../../modal/posts/ModalAddPost";
+import useWindowSize from "@/hooks/useWindowSize";
+import { useGetPosts } from "@/hooks/data/usePosts";
+import { useGetCategories } from "@/hooks/data/useCategories";
 
 const { Column, HeaderCell, Cell } = Table;
 
 
-const TablePosts = () => {
-    const { posts } = useContext(AppContext);
-    const { categories } = useContext(CategoryContext);
+const TablePosts = ( { tableData, allCategoriesData } ) => {
+    const { screenHeight } = useWindowSize();
+    const { posts } = useGetPosts(tableData);
+    const { categories } = useGetCategories(allCategoriesData);
     const [ sortColumn, setSortColumn ] = useState("id");
     const [ sortType, setSortType ] = useState();
     const [ searchKeyword, setSearchKeyword ] = useState("");
@@ -29,7 +31,8 @@ const TablePosts = () => {
     const handleSortColumn = ( sortColumn, sortType ) => {
         setSortColumn(sortColumn);
         setSortType(sortType);
-    };
+    }
+
     const handleOpenAddPost = () => setOpenAddPost(true);
     const handleCloseAddPost = () => setOpenAddPost(false);
 
@@ -39,7 +42,7 @@ const TablePosts = () => {
                 return false;
             }
 
-            if (cate && item.cate !== cate) {
+            if (cate && item.cate_slug !== cate) {
                 return false;
             }
 
@@ -51,21 +54,21 @@ const TablePosts = () => {
                 let x = a[sortColumn];
                 let y = b[sortColumn];
 
+                if (sortColumn === "status") {
+                    return sortType === "asc" ? (x === "public" ? -1 : 1) : (x === "public" ? 1 : -1);
+                }
+
+                if (sortColumn === "createdAt" || sortColumn === "updatedAt") {
+                    x = new Date(x).getTime();
+                    y = new Date(y).getTime();
+                    return sortType === "asc" ? x - y : y - x;
+                }
+
                 if (typeof x === 'string') {
                     x = x.charCodeAt(0);
                 }
                 if (typeof y === 'string') {
                     y = y.charCodeAt(0);
-                }
-
-                const regex = /\d{4}-\d{2}-\d{2}/g;
-
-                if (regex.test(x)) {
-                    x = new Date(x);
-                    // console.log(x.valueOf())
-                }
-                if (regex.test(y)) {
-                    y = new Date(y);
                 }
 
                 if (sortType === 'asc') {
@@ -77,7 +80,6 @@ const TablePosts = () => {
         }
         return filtered;
     };
-
     return (
         <div>
             <Stack className="table-toolbar my-3" justifyContent="space-between">
@@ -110,7 +112,7 @@ const TablePosts = () => {
             </Stack>
 
             <Table
-                height={window.innerHeight - 200}
+                height={screenHeight - 200 }
                 data={filteredData()}
                 sortColumn={sortColumn}
                 sortType={sortType}
@@ -133,7 +135,7 @@ const TablePosts = () => {
 
                 <Column align="center" width={120} sortable>
                     <HeaderCell>Create Date</HeaderCell>
-                    <Cell dataKey="date"/>
+                    <Cell dataKey="createdAt"/>
                 </Column>
 
                 <Column align="center" width={120} sortable>
@@ -142,13 +144,13 @@ const TablePosts = () => {
                 </Column>
 
                 <Column align="center" width={100} sortable>
-                    <HeaderCell>Comments</HeaderCell>
-                    <Cell dataKey="post_share"/>
+                    <HeaderCell>Status</HeaderCell>
+                    <UpperCaseCell dataKey="status"/>
                 </Column>
 
                 <Column align="center" width={100} sortable>
-                    <HeaderCell>Status</HeaderCell>
-                    <UpperCaseCell dataKey="status"/>
+                    <HeaderCell>Trending</HeaderCell>
+                    <BooleanCell dataKey="trending"/>
                 </Column>
 
                 <Column align="center" width={100}>
@@ -159,7 +161,7 @@ const TablePosts = () => {
                 </Column>
             </Table>
 
-            <ModalAddPost open={openAddPost} handleClose={handleCloseAddPost}/>
+            <ModalAddPost modalData={posts} open={openAddPost} handleClose={handleCloseAddPost}/>
         </div>
     );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useRef, useContext, useState} from "react";
+import React, {useRef, useState} from "react";
 import {
     Form,
     Schema,
@@ -8,15 +8,9 @@ import {
     ButtonToolbar,
     Button,
     Grid,
-    Row,
-    Col, SelectPicker,
+    Row, SelectPicker,
 } from "rsuite";
-import slugify from "slugify";
-import {AppContext} from "@/providers/app.provider";
-import {YoutubeContext} from "@/providers/widgets/youtube.provider";
-import youtubeAPI from "@/services/widgets/youtube-api";
-import {toast} from "react-toastify";
-import {toastConfig} from "@/lib/constant";
+import {useAddYoutubeVideo, useUpdateYoutubeVideo} from "@/hooks/data/useYoutubeVideos";
 
 const SelectPickerCustom = React.forwardRef<HTMLInputElement, any>((props: any, ref: any) => <SelectPicker searchable={false} menuMaxHeight={200}
                                                                                                  style={{width: "100px"}}
@@ -42,8 +36,9 @@ const initialFormValue = {
 
 //This component do 2 jobs, create new tag and update tag
 const FormYoutube = ({formData, handleClose, action, ...rests}: any) => {
-    const {language} = useContext(AppContext);
-    const {allDataYoutube, setAllDataYoutube} = useContext(YoutubeContext);
+    const addYoutubeVideo = useAddYoutubeVideo();
+    const updateYoutubeVideo = useUpdateYoutubeVideo();
+    const [loading, setLoading] = useState(false);
     const [, setFormError] = React.useState({});
     const [formValue, setFormValue] = useState<any>(formData || initialFormValue);
 
@@ -63,35 +58,28 @@ const FormYoutube = ({formData, handleClose, action, ...rests}: any) => {
                 ...formValue,
             };
 
-            console.log(newYoutube)
             switch (action) {
                 case "CREATE":
-                    const resCreate = await youtubeAPI.createYoutubeURL(newYoutube);
-                    if (!resCreate.success) {
-                        return toast.error(resCreate.message, toastConfig.error as any);
+                    setLoading(true);
+                    const resCreate = await addYoutubeVideo.mutateAsync(newYoutube);
+                    if (resCreate.success) {
+                        setFormValue(initialFormValue);
+                        handleClose();
                     }
-                    setAllDataYoutube([...allDataYoutube, resCreate.data]);
+                    setLoading(false);
                     break;
                 case "UPDATE":
-                    const resUpdate = await youtubeAPI.updateYoutubeURL(newYoutube);
-                    if (!resUpdate.success) {
-                        return toast.error(resUpdate.message, toastConfig.error as any);
+                    setLoading(true);
+                    const resUpdate = await updateYoutubeVideo.mutateAsync(newYoutube);
+                    if (resUpdate.success) {
+                        setFormValue(initialFormValue);
+                        handleClose();
                     }
-
-                    const updatedTags: any[] = allDataYoutube.map((tag: any) => {
-                        if (tag.id === formValue.id) {
-                            return resUpdate.data;
-                        }
-                        return tag;
-                    });
-                    setAllDataYoutube(updatedTags);
+                    setLoading(false);
                     break;
                 default:
                     break;
             }
-
-            setFormValue(initialFormValue);
-            handleClose();
         } catch (error) {
             console.log(error);
         }
@@ -121,10 +109,10 @@ const FormYoutube = ({formData, handleClose, action, ...rests}: any) => {
             </Panel>
         </Row>
         <ButtonToolbar style={{marginTop: "20px", marginRight: "10px", float: "right"}}>
-            <Button appearance="primary" onClick={handleSubmit}>
+            <Button appearance="primary" onClick={handleSubmit} disabled={loading}>
                 Submit
             </Button>
-            <Button appearance="default" onClick={handleClose}>
+            <Button appearance="default" onClick={handleClose} disabled={loading}>
                 Cancel
             </Button>
         </ButtonToolbar>
