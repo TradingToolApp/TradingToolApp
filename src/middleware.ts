@@ -1,7 +1,8 @@
 import {NextRequest, NextResponse} from 'next/server';
 
 export async function middleware(request: NextRequest) {
-    const session = request.cookies.get('next-auth.session-token');
+    const nameCookies = process.env.NODE_ENV === 'production' ? "__Secure-next-auth.session-token" : "next-auth.session-token"
+    const session = request.cookies.get(nameCookies);
 
     const {pathname} = request.nextUrl;
 
