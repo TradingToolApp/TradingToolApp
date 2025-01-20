@@ -1,3 +1,4 @@
+import React from "react";
 import WidgetPost from "../../widget/WidgetPost";
 import WidgetYoutubeList from "../../widget/WidgetYoutubeVideo";
 import MetaDataOne from "./elements/meta/MetaDataOne";
@@ -5,9 +6,11 @@ import PostAuthor from "./elements/PostAuthor";
 import PostComment from "./elements/PostComment";
 import SocialShareBottom from "./elements/SocialShareBottom";
 import SocialShareSide from "./elements/SocialShareSide";
-import React from "react";
-import MarkdownRenderer from "@/components/post/post-format/Markdown/MarkdownRenderer";
-const PostFormatStandard = ( { postData, allData } ) => {
+import dynamic from 'next/dynamic'
+
+const MarkdownRenderer = dynamic(() => import("@/components/post/post-format/Markdown/MarkdownRenderer"), {ssr: false})
+
+const PostFormatStandard = ({postData, allData}) => {
     const basePathLink = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH ?? "" : "";
     const postContent = postData.content;
 

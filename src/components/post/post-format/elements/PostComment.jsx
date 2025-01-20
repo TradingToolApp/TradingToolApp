@@ -1,24 +1,24 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, {useState, useRef, useMemo} from 'react';
 import axios from 'axios';
 import FormGroup from "../../../contact/FormGroup";
-import { useEffect } from "react";
+import {useEffect} from "react";
 import Image from "next/image";
-import { Loader, Pagination } from "rsuite";
-import { toast } from "react-toastify";
-import { toastConfig } from "@/lib/constant";
-import commentAPI from "@/services/restful/comment-api";
+import {Loader, Pagination} from "rsuite";
+import {toast} from "react-toastify";
+import {toastConfig} from "@/libs/constant";
+import commentAPI from "@/libs/api-client/restful/comment-api";
 
-const PostComment = ( { commentData } ) => {
-    const [ data, setData ] = useState([]);
-    const [ loading, setLoading ] = useState(true);
-    const [ activePage, setActivePage ] = useState(1);
+const PostComment = ({commentData}) => {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [activePage, setActivePage] = useState(1);
     const formRef = useRef();
 
     const renderComment = useMemo(() => {
         return data.slice(activePage * 4 - 4, activePage * 4);
-    }, [ data, activePage ])
+    }, [data, activePage])
 
-    const handlePostComment = async ( e ) => {
+    const handlePostComment = async (e) => {
         try {
             e.preventDefault();
 
@@ -36,7 +36,7 @@ const PostComment = ( { commentData } ) => {
 
             toast.success("Thank you for leaving reply!", toastConfig);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
@@ -50,9 +50,9 @@ const PostComment = ( { commentData } ) => {
             fetchData();
             setLoading(false);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }, [ commentData.slug ])
+    }, [commentData.slug])
 
     if (loading) return <Loader style={{marginTop: "25%"}} backdrop size="md" content="loading..."/>
     return (
@@ -69,7 +69,8 @@ const PostComment = ( { commentData } ) => {
                   ref={formRef}
                   className="comment-form row m-b-xs-10">
                 <div className="col-12">
-                    <FormGroup pClass="comment-message-field" label="Comment" type="textarea" name="comment-message" rows={3}/>
+                    <FormGroup pClass="comment-message-field" label="Comment" type="textarea" name="comment-message"
+                               rows={3}/>
                 </div>
                 <div className="col-md-4">
                     <FormGroup type="text" name="name" label="Name"/>
@@ -83,14 +84,14 @@ const PostComment = ( { commentData } ) => {
             </form>
             {renderComment.length !== 0 &&
                 <div className="reply-box">
-                    <div style={{ display: "flex", gap: "1rem", alignItems: "center", marginBottom: "20px" }}>
+                    <div style={{display: "flex", gap: "1rem", alignItems: "center", marginBottom: "20px"}}>
                         <span>Page: </span>
                         <Pagination size={"md"} total={data.length} limit={4} activePage={activePage}
                                     onChangePage={setActivePage}/>
                     </div>
                     <ul className="comment-list">
                         {
-                            renderComment.map(( comment, index ) => (
+                            renderComment.map((comment, index) => (
                                 <li key={comment.id}>
                                     <div className="comment">
                                         <div className="comment-user">
@@ -109,7 +110,8 @@ const PostComment = ( { commentData } ) => {
                                         <div className="comment-author">
                                             <div className="comment-meta">
                                                 <div className="author-meta">
-                                                    <Image src={commentData.author_img} height={50} width={50} alt="author"/>
+                                                    <Image src={commentData.author_img} height={50} width={50}
+                                                           alt="author"/>
                                                     <h4 className="comment-author-name">{commentData.author_name}</h4>
                                                 </div>
                                                 <span className="comment-date">{comment.updatedAt.slice(0, 10)}</span>

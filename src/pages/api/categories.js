@@ -1,8 +1,9 @@
-import prisma from "@/lib/prisma";
-import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "@/lib/constant";
+import db from "@/libs/prisma/db";
+import {SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
 import slugify from "slugify";
+import {Prisma} from "@prisma/client";
 
-const APIHandler = async ( req, res ) => {
+const APIHandler = async (req, res) => {
     switch (req.method) {
         case "GET":
             return getCategories(req, res);
@@ -15,9 +16,9 @@ const APIHandler = async ( req, res ) => {
     }
 }
 
-const getCategories = async ( req, res ) => {
+const getCategories = async (req, res) => {
     try {
-        const categories = await prisma.category.findMany({
+        const categories = await db.category.findMany({
             include: {
                 translations: true,
             },
@@ -26,42 +27,32 @@ const getCategories = async ( req, res ) => {
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: categories });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: categories});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: true, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const createCategory = async ( req, res ) => {
+const createCategory = async (req, res) => {
     try {
-        const { data } = req.body;
+        const {data} = req.body;
 
-        const isCategoryExist = await prisma.category.findFirst({
-            where: {
-                cate_slug: slugify(data.cateEN, { lower: true }),
-            }
-        });
-
-        if(isCategoryExist) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Category already exist!", data: [] });
-        }
-
-        const newCategory = await prisma.category.create({
+        const newCategory = await db.category.create({
             data: {
                 cate_slug: slugify(data.cateEN.toLowerCase()),
                 cate_bg: data.cate_bg,
                 cate_img: data.cate_img,
                 translations: {
-                    create: [ {
+                    create: [{
                         cate: data.cateEN,
                         description: data.descriptionEN,
-                        language: { connect: { code: "en" } },
+                        language: {connect: {code: "en"}},
                     }, {
                         cate: data.cateVI,
                         description: data.descriptionVI,
-                        language: { connect: { code: "vi" } },
-                    } ],
+                        language: {connect: {code: "vi"}},
+                    }],
                 }
             },
             include: {
@@ -69,41 +60,38 @@ const createCategory = async ( req, res ) => {
             },
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newCategory });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newCategory});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2002') {
+                return res.status(400).json({
+                    success: false,
+                    code: ERROR_CODE,
+                    message: 'This category already exists or name EN, name VI are the same! Please try another name!',
+                    data: []
+                });
+            }
+        }
+        console.log(error.code);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const updateCategory = async ( req, res ) => {
+const updateCategory = async (req, res) => {
     try {
-        const { data } = req.body;
+        const {data} = req.body;
 
-        const category = await prisma.category.findUnique({
+        const category = await db.category.findUnique({
             where: {
                 id: data.id
             }
         });
 
-        if(!category) {
-            return res.status(404).json({ success: false, code: ERROR_CODE, message: "Category not found", data: [] });
+        if (!category) {
+            return res.status(404).json({success: false, code: ERROR_CODE, message: "Category not found!", data: []});
         }
 
-        const isSlugExist = await prisma.category.findFirst({
-            where: {
-                cate_slug: slugify(data.cateEN, { lower: true }),
-                id: {
-                    not: category.id
-                }
-            }
-        });
-
-        if (isSlugExist) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Category already exist!", data: [] });
-        }
-
-        await prisma.categoryTranslation.update({
+        await db.categoryTranslation.update({
             where: {
                 categoryId_languageCode: {
                     categoryId: category.id,
@@ -116,7 +104,7 @@ const updateCategory = async ( req, res ) => {
             }
         })
 
-        await prisma.categoryTranslation.update({
+        await db.categoryTranslation.update({
             where: {
                 categoryId_languageCode: {
                     categoryId: category.id,
@@ -129,7 +117,7 @@ const updateCategory = async ( req, res ) => {
             }
         })
 
-        const updatedCategory = await prisma.category.update({
+        const updatedCategory = await db.category.update({
             where: {
                 id: category.id
             },
@@ -143,54 +131,76 @@ const updateCategory = async ( req, res ) => {
             },
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedCategory });
+        return res.status(200).json({
+            success: true,
+            code: SUCCESS_CODE,
+            message: SUCCESS_MESSAGE,
+            data: updatedCategory
+        });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2002') {
+                return res.status(400).json({
+                    success: false,
+                    code: ERROR_CODE,
+                    message: 'This category already exists or name EN, name VI are the same! Please try another name!',
+                    data: []
+                });
+            }
+        }
+        console.log(error.code);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const deleteCategory = async ( req, res ) => {
+const deleteCategory = async (req, res) => {
     try {
-        const { data } = req.body;
+        const {data} = req.body;
 
-        const category = await prisma.category.findUnique({
+        const category = await db.category.findUnique({
             where: {
                 id: data.id
             }
         });
 
-        if(!category) {
-            return res.status(404).json({ success: false, code: ERROR_CODE, message: "Category not found", data: [] });
+        if (!category) {
+            return res.status(404).json({success: false, code: ERROR_CODE, message: "Category not found", data: []});
         }
 
-        const posts = await prisma.post.findMany({
+        const posts = await db.post.findMany({
             where: {
                 cate_slug: category.cate_slug
             }
         });
 
-        if(posts.length > 0) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Category is being used in some posts. Delete these posts" +
-                    " first!", data: [] });
+        if (posts.length > 0) {
+            return res.status(400).json({
+                success: false, code: ERROR_CODE, message: "Category is being used in some posts. Delete these posts" +
+                    " first!", data: []
+            });
         }
 
-        await prisma.categoryTranslation.deleteMany({
+        await db.categoryTranslation.deleteMany({
             where: {
                 categoryId: category.id
             }
         });
 
-        const deletedCategory = await prisma.category.delete({
+        const deletedCategory = await db.category.delete({
             where: {
                 id: category.id
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedCategory });
+        return res.status(200).json({
+            success: true,
+            code: SUCCESS_CODE,
+            message: SUCCESS_MESSAGE,
+            data: deletedCategory
+        });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 

@@ -1,73 +1,76 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { encode, decode } from 'next-auth/jwt';
+import db from '@/libs/prisma/db';
+import {PrismaAdapter} from "@next-auth/prisma-adapter";
+import {PrismaClient} from "@prisma/client";
+import {comparePassword, hashedPassword} from "../libs-server/bcrypt";
+
+const prisma = new PrismaClient();
 
 export const authOptions = {
     session: {
         strategy: 'jwt',
         maxAge: 1 * 24 * 60 * 60, // 1 day
     },
-    jwt: { encode, decode },
+    pages: {
+        signIn: "/login",
+        error: "/404",
+    },
     providers: [
         CredentialsProvider({
             name: 'Credentials',
-            async authorize( credentials ) {
-                if (!credentials) return null
-                const { email, password } = credentials
-                if (email === process.env.ADMIN_EMAIL_TEST && password === process.env.ADMIN_PASSWORD_TEST) {
-                    return { email: email, name: "admin", role: "admin" }
-                } else {
-                    throw new Error('Invalid credentials')
-                }
+            async authorize(credentials) {
+                if (!credentials) return null;
+                const {email, password} = credentials
+
+                const user = await db.user.findFirst({
+                    where: {
+                        email: email,
+                    }
+                });
+
+                const isPasswordMatch = await comparePassword(password, user.password);
+
+                if (!user || !isPasswordMatch) return null;
+                return user;
             },
         }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            authorization: {
-                params: {
-                    prompt: "consent",
-                    access_type: "offline",
-                    response_type: "code",
-                },
+            profile: (profile, tokens) => {
+                const newUser = {
+                    id: profile.sub,
+                    email: profile.email,
+                    emailVerified: profile.email_verified,  //somehow email_verified is not working
+                    name: profile.name,
+                    image: profile.picture
+                }
+                return newUser;
             },
         }),
     ],
-    pages: {
-        signIn: "/login",
-        error: "/error",
-    },
+    adapter: PrismaAdapter(prisma),
     callbacks: {
-        async signIn( { user, account, profile } ) {
-            if (account?.provider === "google") {
-                if (profile.email === process.env.ADMIN_EMAIL) {
-                    account.role = "admin";
-                    return account;
-                } else {
-                    return false;
-                }
-            } else {
-                return true;
+        async jwt({token, user, trigger, session}) {
+            if (user) {
+                token.role = user.role
+                token.id = user?.id
             }
-        },
-        async jwt({ token, user, account }) {
-            token.user = user
+            if (trigger === "update" && session) {
+                token.name = session.name
+            }
             return token
         },
-        async session({ session, token, user }) {
-            session.userData = user;
-            session.account = token.account;
-            session.role = token.role;
+        async session({session, token}) {
+            session.user.role = token.role;
+            session.user.id = token?.id;
             return session;
-        },
-        authorized({ auth }) {
-            const isAuthenticated = !!auth?.user;
-
-            return isAuthenticated;
         },
     },
     secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);
+

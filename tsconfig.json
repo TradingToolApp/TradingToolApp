@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    //    "module": "CommonJS",
     "target": "es5",
     "lib": [
       "dom",
@@ -29,15 +30,18 @@
       "@/hooks/*": [
         "./src/hooks/*"
       ],
-      "@/services/*": [
-        "./services/*"
+      "@/libs/*": [
+        "./src/libs/*"
       ],
-      "@/lib/*": [
-        "./lib/*"
+      "@/utils/*": [
+        "./src/utils/*"
       ],
       "@/middlewares/*": [
         "./src/middlewares/*"
       ],
+      "@/types/*": [
+        "./src/types/*"
+      ]
     }
   },
   "include": [
@@ -50,7 +54,7 @@
     "**/*.js",
     "**/*.json",
     "lib/**/*.ts",
-    "lib/**/*.js",
+    "lib/**/*.js"
   ],
   "exclude": [
     "node_modules"

@@ -5,12 +5,12 @@ import SignIn from "../components/authenticate/SignIn";
 
 const LogIn = () => {
     return (
-        <>
-            <HeadMeta metaTitle="LogIn" />
-            <HeaderThree />
-            <SignIn />
-            <FooterOne />
-        </>
+        <div>
+            <HeadMeta metaTitle="LogIn"/>
+            <HeaderThree/>
+            <SignIn/>
+            <FooterOne/>
+        </div>
     );
 }
 

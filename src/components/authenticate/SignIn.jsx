@@ -1,19 +1,22 @@
-import { signIn } from "next-auth/react"
+import {useRef} from "react";
+import {useRouter} from "next/router";
+import {signIn, getSession} from "next-auth/react"
+import {toast} from "react-toastify";
+import {toastConfig} from "@/libs/constant";
 import Link from "next/link";
 import FormGroup from "../contact/FormGroup";
-import { FcGoogle } from "react-icons/fc";
-import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import {FcGoogle} from "react-icons/fc";
 
 const SignIn = () => {
     const router = useRouter();
     const form = useRef();
-    const [ error, setError ] = useState("")
 
-    const handleSubmit = async ( e ) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
         const email = form.current.email.value;
         const password = form.current.password.value;
+
         try {
             const res = await signIn("credentials", {
                 email,
@@ -22,11 +25,16 @@ const SignIn = () => {
             })
 
             if (!res.ok) {
-                setError(res.error)
-            } else {
-                router.push("/admin/dashboard/posts");
+                return toast.error("Invalid credentials", toastConfig.error);
             }
 
+            const session = await getSession();
+            if (session.user.role === "ADMIN") {
+                return router.push("/admin/dashboard/posts")
+            }
+            if (session.user.role === "USER") {
+                return router.push(`/user/dashboard/${session.user.id}`)
+            }
         } catch (err) {
             console.log(err);
         }
@@ -46,7 +54,6 @@ const SignIn = () => {
                     <form className="axil-contact-form row no-gutters" ref={form} onSubmit={handleSubmit}>
                         <FormGroup pClass="col-12" type="email" label="Email" name="email"/>
                         <FormGroup pClass="col-12" type="password" label="Password" name="password"/>
-                        {error && <div className="col-12 text-danger">{error}</div>}
                         <div className="col-12 text-center">
                             <button className="btn btn-primary m-t-xs-0 m-t-lg-20">
                                 SUBMIT
@@ -60,7 +67,7 @@ const SignIn = () => {
                             </button>
                         </div>
                         <div className="col-12">
-                            <div className="text-center text-black-50 font-weight-light">
+                            <div className="text-center font-weight-light">
                                 <Link href={"/register"}>
                                     Do not have an account? Sign Up
                                 </Link>
