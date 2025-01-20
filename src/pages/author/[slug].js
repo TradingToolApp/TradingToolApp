@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Image from "next/image";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import HeadMeta from "../../components/elements/HeadMeta";
@@ -7,16 +7,16 @@ import HeaderThree from "../../components/header/HeaderThree";
 import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
 import WidgetPost from "../../components/widget/WidgetPost";
 import WidgetYoutubeList from "@/components/widget/WidgetYoutubeVideo";
-import { getPublicPosts } from "@/services/prisma/post.api";
-import { translatePosts } from "@/lib/formatData";
-import { AppContext } from "@/providers/app.provider";
-import { useGetPublicPosts } from "@/hooks/data/usePosts";
-import { useRouter } from 'next/router'
-import { Loader } from "rsuite";
+import {getPublicPosts} from "@/libs/api-client/prisma/post.api";
+import {translatePosts} from "@/utils/formatData";
+import {AppContext} from "@/providers/app.provider";
+import {useGetPublicPosts} from "@/hooks/data/admin/usePosts";
+import {useRouter} from 'next/router'
+import {Loader} from "rsuite";
 
-const PostAuthor = ({ authorData, allPostsData }) => {
-    const { language } = useContext(AppContext);
-    const { publicPosts } = useGetPublicPosts(allPostsData);
+const PostAuthor = ({authorData, allPostsData}) => {
+    const {language} = useContext(AppContext);
+    const {publicPosts} = useGetPublicPosts(allPostsData);
     const [postData, setPostData] = useState(translatePosts(authorData, language));
     const [authorContent, setAuthorContent] = useState(translatePosts(authorData, language)[0]);
     const allPosts = publicPosts;
@@ -49,18 +49,23 @@ const PostAuthor = ({ authorData, allPostsData }) => {
                                     </span>
                                     <div className="media-body">
                                         <h2 className="h4 m-b-xs-15">{authorContent.author_name}</h2>
-                                        <p className="hover-line"><span href="https://example.com">https//www.example.com</span></p>
+                                        <p className="hover-line"><span
+                                            href="https://example.com">https//www.example.com</span></p>
                                         <p className="mid">{authorContent.author_bio}</p>
                                         <div className="post-metas">
                                             <ul className="list-inline">
-                                                <li><span href="#"><i className="fal fa-user-edit"/>Total Post ({postData.length})</span></li>
-                                                <li><span href="#"><i className="fal fa-comment"/>Comments (12)</span></li>
+                                                <li><span href="#"><i
+                                                    className="fal fa-user-edit"/>Total Post ({postData.length})</span>
+                                                </li>
+                                                <li><span href="#"><i className="fal fa-comment"/>Comments (12)</span>
+                                                </li>
                                             </ul>
                                         </div>
                                         <div className="author-social-share">
                                             <ul className="social-share social-share__with-bg">
-                                                {authorContent.author_social.map(( data, index ) => (
-                                                    <li key={index}><span href={data.url}><i className={data.icon}/></span></li>
+                                                {authorContent.author_social.map((data, index) => (
+                                                    <li key={index}><span href={data.url}><i
+                                                        className={data.icon}/></span></li>
                                                 ))}
                                             </ul>
                                         </div>
@@ -77,15 +82,15 @@ const PostAuthor = ({ authorData, allPostsData }) => {
                         <div className="col-lg-8">
                             <div className="axil-content">
                                 <h2 className="h3 m-b-xs-40">Articles By This Author</h2>
-                                {postData.map(( data ) => (
+                                {postData.map((data) => (
                                     <PostLayoutTwo data={data} postSizeMd={true} key={data.slug}/>
                                 ))}
                             </div>
                         </div>
                         <div className="col-lg-4">
                             <div className="post-sidebar">
-                                <WidgetPost dataPost={allPosts} />
-                                <WidgetYoutubeList dataPost={allPosts} />
+                                <WidgetPost dataPost={allPosts}/>
+                                <WidgetYoutubeList dataPost={allPosts}/>
                             </div>
                         </div>
                     </div>
@@ -98,7 +103,7 @@ const PostAuthor = ({ authorData, allPostsData }) => {
 
 export default PostAuthor;
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps({params}) {
     const postParams = params.slug;
 
     const allPostsData = await getPublicPosts([

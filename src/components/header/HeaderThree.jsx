@@ -1,72 +1,53 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, {useState, useRef, useEffect, useContext} from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { signOut } from "next-auth/react"
-import { Dropdown } from 'rsuite';
+import {
+    Dropdown,
+    Toggle
+} from 'rsuite';
 import HeaderMenu from "../../data/menu/HeaderMenu.json";
 import OffcanvasMenu from "./OffcanvasMenu";
-import { AppContext } from '@/providers/app.provider';
-import { useSession } from "next-auth/react";
-import { FaChevronDown } from "react-icons/fa6";
-import { useRouter } from "next/router";
+import {AppContext} from '@/providers/app.provider';
+import {FaChevronDown} from "react-icons/fa6";
+import useCurrentSession from "@/hooks/useCurrentSession";
+import AvatarOne from "@/components/avatar/AvatarOne";
+import {useRouter} from "next/router";
+import CheckIcon from '@rsuite/icons/Check';
+import CloseIcon from '@rsuite/icons/Close';
+import {MdOutlineDarkMode, MdOutlineLightMode} from "react-icons/md";
+import useCurrentUser from "@/hooks/useCurrentUser";
+
+const buttonStyles = {
+    width: "72px",
+    fontSize: "1.6rem",
+    fontFamily: "Roboto",
+    fontWeight: 700
+}
+
 const HeaderThree = () => {
     // Main Menu Toggle
     var menuRef = useRef();
+    const {language, handleLanguageChange, theme, setTheme} = useContext(AppContext);
+    const [languageSelect, setLanguageSelect] = useState("EN");
+    const user = useCurrentUser();
+    const [MenuData, setMenuData] = useState([]);
     const router = useRouter();
-    const { language, handleLanguageChange } = useContext(AppContext);
-    const [ languageSelect, setLanguageSelect ] = useState("EN");
-    const { data: session } = useSession();
-    const [ MenuData, setMenuData ] = useState([]);
-
     useEffect(() => {
-        setMenuData(HeaderMenu.filter(( menu ) => menu.language === language)[0].data);
+        setMenuData(HeaderMenu.filter((menu) => menu.language === language)[0].data);
         setLanguageSelect(language);
-    }, [ language ]);
+    }, [language]);
 
-    const toggleDropdownMenu = () => {
-        const dropdownSelect = menuRef.current.childNodes;
-        let dropdownList = [];
-
-        for (let i = 0; i < dropdownSelect.length; i++) {
-            const element = dropdownSelect[i];
-            if (element.classList.contains("has-dropdown")) {
-                dropdownList.push(element);
-            }
-        }
-
-        dropdownList.forEach(( element ) => {
-            element.children[0].addEventListener("click", () => {
-                if (element.classList.contains("active")) {
-                    element.classList.remove("active");
-                    element.childNodes[1].classList.remove("opened");
-                } else {
-                    dropdownList.forEach(( submenu ) => {
-                        if (element !== submenu) {
-                            submenu.classList.remove("active");
-                            submenu.childNodes[1].classList.remove("opened");
-                        } else {
-                            submenu.classList.add("active");
-                            submenu.childNodes[1].classList.add("opened");
-                        }
-                    });
-                }
-            });
-        });
-    };
-
-    useEffect(() => {
-        toggleDropdownMenu();
-    }, []);
+    // console.log(user)
 
     // Offcanvas Menu
 
-    const [ show, setShow ] = useState(false);
+    const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    // Header Seharch
+    // Header Search
 
-    const [ searchshow, setSearchShow ] = useState(false);
+    const [searchshow, setSearchShow] = useState(false);
 
     const headerSearchShow = () => {
         setSearchShow(true);
@@ -76,7 +57,7 @@ const HeaderThree = () => {
     };
 
     // Mobile Menu Toggle
-    const [ mobileToggle, setMobileToggle ] = useState(false);
+    const [mobileToggle, setMobileToggle] = useState(false);
 
     const MobileMenuToggler = () => {
         setMobileToggle(!mobileToggle);
@@ -91,7 +72,7 @@ const HeaderThree = () => {
             }, 800);
         }
 
-        menuSelect.forEach(( element ) => {
+        menuSelect.forEach((element) => {
             element.addEventListener("click", function () {
                 if (!element.classList.contains("has-dropdown")) {
                     HtmlTag.classList.remove("main-menu-opened");
@@ -120,17 +101,17 @@ const HeaderThree = () => {
                             </div>
                             <div className="main-nav-wrapper">
                                 <ul className="main-navigation list-inline" ref={menuRef}>
-                                    {MenuData.map(( data, index ) =>
+                                    {MenuData.map((data, index) =>
                                         data.submenu ? (
                                             <li className="has-dropdown" key={index}>
                                                 <Link href={data.path}>
 													<span>
 														{data.label}
-                                                        <FaChevronDown style={{ top: "-100px", marginLeft: "3px" }}/>
+                                                        <FaChevronDown style={{top: "-100px", marginLeft: "3px"}}/>
 													</span>
                                                 </Link>
                                                 <ul className="submenu">
-                                                    {data.submenu.map(( data, index ) =>
+                                                    {data.submenu.map((data, index) =>
                                                         data.thirdmenu ? (
                                                             <li className="has-dropdown" key={index}>
                                                                 <Link href={data.subpath}>
@@ -139,7 +120,7 @@ const HeaderThree = () => {
 																	</span>
                                                                 </Link>
                                                                 <ul className="submenu">
-                                                                    {data.thirdmenu.map(( data, index ) => (
+                                                                    {data.thirdmenu.map((data, index) => (
                                                                         <li key={index}>
                                                                             <Link href={data.tpath}>
                                                                                 <span>{data.tlabel}</span>
@@ -191,36 +172,36 @@ const HeaderThree = () => {
 										<i className="fal fa-times"/>
 									</span>
                                 </form>
-
-                                {/*<button*/}
-                                {/*    className="nav-search-field-toggler"*/}
-                                {/*    onClick={headerSearchShow}*/}
-                                {/*>*/}
-                                {/*    <i className="far fa-search"/>*/}
-                                {/*</button>*/}
-                                <Dropdown title={languageSelect.toUpperCase()} size="lg" className="rsuite-langDropdown">
-                                    <Dropdown.Item onClick={() => handleLanguageChange("en")} style={{
-                                        width: "72px",
-                                        fontSize: "1.6rem",
-                                        fontFamily: "Roboto",
-                                        fontWeight: 700
-                                    }}>EN</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleLanguageChange("vi")} style={{
-                                        width: "72px",
-                                        fontSize: "1.6rem",
-                                        fontFamily: "Roboto",
-                                        fontWeight: 700
-                                    }}>VI</Dropdown.Item>
-                                </Dropdown>
-                                {session && !router.pathname.includes('/admin') &&
-                                    <Link className="btn btn-outline-danger text-danger p-4 m-2" href="/admin/dashboard/posts">My
-                                        Dashboard</Link>
-                                }
-                                {session && <Link className="btn btn-outline-danger text-danger p-4 m-2" href="/login"
-                                                  onClick={() => signOut({ callbackUrl: "/login" })}>Sign Out</Link>
-                                }
+                                <div style={{display: "flex", alignItems: "center", gap: "10px"}}>
+                                    <div>
+                                        <Toggle
+                                            style={{marginRight: "10px"}}
+                                            size="lg"
+                                            color="yellow"
+                                            checkedChildren={<MdOutlineLightMode color={"yellow"}/>}
+                                            unCheckedChildren={<MdOutlineDarkMode color={"white"}/>}
+                                            defaultChecked
+                                            onChange={() => {
+                                                setTheme(theme === "light" ? "dark" : "light")
+                                            }}
+                                        />
+                                        <Dropdown title={languageSelect.toUpperCase()} size="lg"
+                                                  className="rsuite-langDropdown">
+                                            <Dropdown.Item onClick={() => handleLanguageChange("en")}
+                                                           style={buttonStyles}>EN</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleLanguageChange("vi")}
+                                                           style={buttonStyles}>VI</Dropdown.Item>
+                                        </Dropdown>
+                                    </div>
+                                    {
+                                        user.status === "unauthenticated" && router.pathname !== "/login" &&
+                                        <button className={"btn btn-primary"}
+                                                onClick={() => router.push("/login")}>Sign In
+                                        </button>
+                                    }
+                                    {user.status === "authenticated" && <AvatarOne user={user}/>}
+                                </div>
                             </div>
-
                             <div
                                 className={`main-nav-toggler d-block d-lg-none ${mobileToggle ? "expanded" : ""
                                 }`}

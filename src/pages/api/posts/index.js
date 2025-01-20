@@ -1,8 +1,9 @@
-import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "@/lib/constant";
-import prisma from "@/lib/prisma";
+import {SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
+import db from "@/libs/prisma/db";
 import slugify from "slugify";
+import {Prisma} from "@prisma/client";
 
-const postHandler = async ( req, res ) => {
+const postHandler = async (req, res) => {
     switch (req.method) {
         case "GET":
             return getPosts(req, res);
@@ -15,9 +16,9 @@ const postHandler = async ( req, res ) => {
     }
 };
 
-const getPosts = async ( req, res ) => {
+const getPosts = async (req, res) => {
     try {
-        const posts = await prisma.post.findMany({
+        const posts = await db.post.findMany({
             include: {
                 translations: true,
                 tags: {
@@ -50,28 +51,18 @@ const getPosts = async ( req, res ) => {
             ],
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: posts });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: posts});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: true, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: true, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const createPost = async ( req, res ) => {
+const createPost = async (req, res) => {
     try {
-        const { data } = req.body;
+        const {data} = req.body;
 
-        const isSlugExist = await prisma.post.findFirst({
-            where: {
-                slug: slugify(data.titleEN, { lower: true })
-            }
-        });
-
-        if (isSlugExist) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Slug already exist, Please change title English!", data: [] });
-        }
-
-        const newPost = await prisma.post.create({
+        const newPost = await db.post.create({
             data: {
                 postFormat: data.postFormat,
                 slug: slugify(data.titleEN.toLowerCase()),
@@ -86,25 +77,25 @@ const createPost = async ( req, res ) => {
                 trending: data.trending ? data.trending : false,
                 status: data.status,
                 translations: {
-                    create: [ {
+                    create: [{
                         title: data.titleEN,
                         excerpt: data.excerptEN,
                         content: data.contentEN,
                         quoteText: data.quoteTextEN,
-                        language: { connect: { code: "en" } },
+                        language: {connect: {code: "en"}},
                     }, {
                         title: data.titleVI,
                         excerpt: data.excerptVI,
                         content: data.contentVI,
                         quoteText: data.quoteTextVI,
-                        language: { connect: { code: "vi" } },
-                    } ],
+                        language: {connect: {code: "vi"}},
+                    }],
                 },
                 author: {
-                    connect: { author_slug: data.author_slug },
+                    connect: {author_slug: data.author_slug},
                 },
                 category: {
-                    connect: { cate_slug: data.cate_slug },
+                    connect: {cate_slug: data.cate_slug},
                 },
                 tags: {
                     connect: data.tags.map(tag => {
@@ -134,40 +125,37 @@ const createPost = async ( req, res ) => {
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newPost });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newPost});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2002') {
+                return res.status(400).json({
+                    success: false,
+                    code: ERROR_CODE,
+                    message: 'This title already exists or title English, title Vietnamese are the same! Please try another title!',
+                    data: []
+                });
+            }
+        }
+        console.log(error.code);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const updatePost = async ( req, res ) => {
+const updatePost = async (req, res) => {
     try {
-        const { data } = req.body;
-        const post = await prisma.post.findUnique({
+        const {data} = req.body;
+        const post = await db.post.findUnique({
             where: {
                 id: data.id
             }
         });
 
         if (!post) {
-            return res.status(404).json({ success: false, code: ERROR_CODE, message: "Post not found", data: [] });
+            return res.status(404).json({success: false, code: ERROR_CODE, message: "Post not found", data: []});
         }
 
-        const isSlugExist = await prisma.post.findFirst({
-            where: {
-                slug: slugify(data.titleEN, { lower: true }),
-                id: {
-                    not: post.id
-                }
-            }
-        });
-
-        if (isSlugExist) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Slug already exist, Please change title English!", data: [] });
-        }
-
-        await prisma.postTranslation.update({
+        await db.postTranslation.update({
             where: {
                 postId_languageCode: {
                     postId: post.id,
@@ -182,7 +170,7 @@ const updatePost = async ( req, res ) => {
             }
         })
 
-        await prisma.postTranslation.update({
+        await db.postTranslation.update({
             where: {
                 postId_languageCode: {
                     postId: post.id,
@@ -197,7 +185,7 @@ const updatePost = async ( req, res ) => {
             }
         })
 
-        const updatedPost = await prisma.post.update({
+        const updatedPost = await db.post.update({
             where: {
                 id: post.id
             },
@@ -215,10 +203,10 @@ const updatePost = async ( req, res ) => {
                 trending: data.trending ? data.trending : false,
                 status: data.status,
                 author: {
-                    connect: { author_slug: data.author_slug },
+                    connect: {author_slug: data.author_slug},
                 },
                 category: {
-                    connect: { cate_slug: data.cate_slug },
+                    connect: {cate_slug: data.cate_slug},
                 },
                 tags: {
                     connect: data.tags.map(tag => {
@@ -248,44 +236,54 @@ const updatePost = async ( req, res ) => {
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedPost });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedPost});
     } catch
         (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2002') {
+                return res.status(400).json({
+                    success: false,
+                    code: ERROR_CODE,
+                    message: 'This title already exists or title English, title Vietnamese are the same! Please try another title!',
+                    data: []
+                });
+            }
+        }
+        console.log(error.code);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const deletePost = async ( req, res ) => {
+const deletePost = async (req, res) => {
     try {
-        const { data } = req.body;
+        const {data} = req.body;
 
-        const post = await prisma.post.findUnique({
+        const post = await db.post.findUnique({
             where: {
                 id: data.id
             }
         });
 
         if (!post) {
-            return res.status(404).json({ success: false, code: ERROR_CODE, message: "Post not found", data: [] });
+            return res.status(404).json({success: false, code: ERROR_CODE, message: "Post not found", data: []});
         }
 
-        await prisma.postTranslation.deleteMany({
+        await db.postTranslation.deleteMany({
             where: {
                 postId: post.id
             }
         });
 
-        const deletedPost = await prisma.post.delete({
+        const deletedPost = await db.post.delete({
             where: {
                 id: post.id
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedPost });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedPost});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 

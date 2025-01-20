@@ -1,3 +1,7 @@
+.content {
+    white-space: pre-wrap;
+}
+
 .content table {
     border-spacing: 0 !important;
     border-collapse: collapse !important;

@@ -1,43 +1,52 @@
 [
-    {
-        "language": "en",
-        "data": [
-        {
-            "label": "News",
-            "path": "/category/news"
-        },
-        {
-            "label": "Tools",
-            "path": "/category/tools"
-        },
-        {
-            "label": "Study",
-            "path": "/category/study"
-        },
-        {
-            "label": "Discussion",
-            "path": "/category/discussion"
-        }]
-    },
-    {
-        "language": "vi",
-        "data": [
-        {
-            "label": "Tin tức",
-            "path": "/category/news"
-        },
-        {
-            "label": "Công cụ",
-            "path": "/category/tools"
-        },
-        {
-            "label": "Nghiên cứu",
-            "path": "/category/study"
-        },
-        {
-            "label": "Thảo luận",
-            "path": "/category/discussion"
-        }]
-    }
-   
+  {
+    "language": "en",
+    "data": [
+      {
+        "label": "News",
+        "path": "/category/news"
+      },
+      {
+        "label": "Tools",
+        "path": "/category/tools"
+      },
+      {
+        "label": "Study",
+        "path": "/category/study"
+      },
+      {
+        "label": "Discussion",
+        "path": "/category/discussion"
+      },
+      {
+        "label": "Pricing",
+        "path": "/pricing"
+      }
+    ]
+  },
+  {
+    "language": "vi",
+    "data": [
+      {
+        "label": "Tin Tức",
+        "path": "/category/news"
+      },
+      {
+        "label": "Công Cụ",
+        "path": "/category/tools"
+      },
+      {
+        "label": "Nghiên Cứu",
+        "path": "/category/study"
+      },
+      {
+        "label": "Thảo Luận",
+        "path": "/category/discussion"
+      },
+      {
+        "label": "Mua Dịch Vụ",
+        "path": "/pricing"
+      }
+    ]
+  }
 ]

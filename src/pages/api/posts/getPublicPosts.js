@@ -1,16 +1,16 @@
-import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE, PostStatus } from "@/lib/constant";
-import prisma from "@/lib/prisma";
+import {SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE, PostStatus} from "@/libs/constant";
+import db from "@/libs/prisma/db";
 
-export default async function handler ( req, res ) {
+export default async function handler(req, res) {
     switch (req.method) {
         case "GET":
             return getPublicPosts(req, res);
     }
 }
 
-const getPublicPosts = async ( req, res ) => {
+const getPublicPosts = async (req, res) => {
     try {
-        const posts = await prisma.post.findMany({
+        const posts = await db.post.findMany({
             where: {
                 status: "public",
             },
@@ -46,8 +46,8 @@ const getPublicPosts = async ( req, res ) => {
             ],
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: posts });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: posts});
     } catch (error) {
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }

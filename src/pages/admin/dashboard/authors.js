@@ -1,33 +1,34 @@
 import React from "react";
-import { Grid, Row, Col } from 'rsuite';
+import {Grid, Row, Col} from 'rsuite';
 import HeadMeta from "@/components/elements/HeadMeta";
 import HeaderThree from "@/components/header/HeaderThree";
-import SideBarThree from "@/components/sidebar/SideBarThree";
-import { getAuthors } from "@/services/prisma/author.api";
+import {getAuthors} from "@/libs/api-client/prisma/author.api";
 import dynamic from "next/dynamic";
+import useWindowSize from "@/hooks/useWindowSize";
 
-const TableAuthors = dynamic( // lazy loading
-    () => {
-        return import("@/components/table/authors/TableAuthors");
-    },
-);
+const SideBarOne = dynamic(() => import("@/components/sidebar/SideBarAdmin"), {ssr: false})
+const TableAuthors = dynamic(() => import("@/components/table/admin/authors/TableAuthors"), {ssr: false});
 
-const Authors = ( { allAuthorsData } ) => {
+const Authors = ({allAuthorsData}) => {
+    const {screenHeight} = useWindowSize();
+
     return (
-            <Grid className="d-flex flex-column vh-100 vw-100" fluid>
-                <Row>
-                    <HeadMeta metaTitle="Admin Dashboard"/>
-                    <HeaderThree/>
-                </Row>
-                <Row className="h-100 overflow-y-auto d-flex flex-row">
-                    <Col className="h-100">
-                        <SideBarThree/>
-                    </Col>
-                    <Col className="flex-grow-1 h-100">
-                        <TableAuthors tableData={allAuthorsData}/>
-                    </Col>
-                </Row>
-            </Grid>
+        <Grid className="d-flex flex-column vh-100 vw-100" fluid>
+            <Row>
+                <HeadMeta metaTitle="Admin Dashboard"/>
+                <HeaderThree/>
+            </Row>
+            <Row className="h-100 overflow-y-auto d-flex flex-row">
+                <Col className="sidebar"
+                     style={{height: `${screenHeight - 120}px`}}>
+                    <SideBarOne/>
+                </Col>
+                <Col className="flex-grow-1 bordered"
+                     style={{height: `${screenHeight - 120}px`}}>
+                    <TableAuthors tableData={allAuthorsData}/>
+                </Col>
+            </Row>
+        </Grid>
     );
 }
 export default Authors;

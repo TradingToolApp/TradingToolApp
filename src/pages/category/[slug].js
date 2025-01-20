@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AppContext } from "@/providers/app.provider";
+import React, {useContext, useEffect, useState} from "react";
+import {AppContext} from "@/providers/app.provider";
 import FooterOne from "../../components/footer/FooterOne";
 import HeaderThree from "../../components/header/HeaderThree";
 import Breadcrumb from "../../components/common/Breadcrumb";
@@ -7,14 +7,14 @@ import HeadMeta from "../../components/elements/HeadMeta";
 import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
 import WidgetPost from "../../components/widget/WidgetPost";
 import WidgetYoutubeList from "@/components/widget/WidgetYoutubeVideo";
-import { getPublicPosts } from "@/services/prisma/post.api";
-import { getCategories } from "@/services/prisma/category.api";
-import { translatePosts } from "@/lib/formatData";
-import { useGetPublicPosts } from "@/hooks/data/usePosts";
+import {getPublicPosts} from "@/libs/api-client/prisma/post.api";
+import {getCategories} from "@/libs/api-client/prisma/category.api";
+import {translatePosts} from "@/utils/formatData";
+import {useGetPublicPosts} from "@/hooks/data/admin/usePosts";
 
-const PostCategory = ({ cateData, allPostsData }) => {
-    const { language } = useContext(AppContext);
-    const { publicPosts } = useGetPublicPosts(allPostsData);
+const PostCategory = ({cateData, allPostsData}) => {
+    const {language} = useContext(AppContext);
+    const {publicPosts} = useGetPublicPosts(allPostsData);
     const [postData, setPostData] = useState(translatePosts(cateData, language));
     const [cateContent, setCateContent] = useState(translatePosts(cateData, language)[0]);
     const allPosts = publicPosts;
@@ -29,7 +29,7 @@ const PostCategory = ({ cateData, allPostsData }) => {
         <>
             <HeadMeta metaTitle={cateContent.cate}/>
             <HeaderThree/>
-            <Breadcrumb bCat={cateContent.cate_slug} cateTitle={cateContent.cate}  aPage={cateContent.cate}/>
+            <Breadcrumb bCat={cateContent.cate_slug} cateTitle={cateContent.cate} aPage={cateContent.cate}/>
             {/* Banner Start here  */}
             <div className="banner banner__default bg-grey-light-three">
                 <div className="container">
@@ -48,15 +48,15 @@ const PostCategory = ({ cateData, allPostsData }) => {
                     <div className="row">
                         <div className="col-lg-8">
                             <div className="axil-content">
-                                {postData.map(( data ) => (
+                                {postData.map((data) => (
                                     <PostLayoutTwo data={data} postSizeMd={true} key={data.slug}/>
                                 ))}
                             </div>
                         </div>
                         <div className="col-lg-4">
                             <div className="post-sidebar">
-                                <WidgetPost dataPost={allPosts} />
-                                <WidgetYoutubeList dataPost={allPosts} />
+                                <WidgetPost dataPost={allPosts}/>
+                                <WidgetYoutubeList dataPost={allPosts}/>
                             </div>
                         </div>
                     </div>
@@ -102,7 +102,7 @@ export async function getStaticProps(context) {
 export async function getStaticPaths() {
     const categories = await getCategories();
     const paths = categories.map(category => ({
-        params: { slug: category.cate_slug }
+        params: {slug: category.cate_slug}
     }));
 
     return {

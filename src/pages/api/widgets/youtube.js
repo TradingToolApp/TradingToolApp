@@ -1,5 +1,5 @@
-import prisma from "@/lib/prisma";
-import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "@/lib/constant";
+import db from "@/libs/prisma/db";
+import {SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
 
 export default async function handler(req, res) {
     switch (req.method) {
@@ -14,46 +14,56 @@ export default async function handler(req, res) {
     }
 }
 
-const getYoutubeURLs = async ( req, res ) => {
+const getYoutubeURLs = async (req, res) => {
     try {
-        const youtubeURLs = await prisma.youtube.findMany({
+        const youtubeURLs = await db.youtube.findMany({
             orderBy: {
                 id: 'asc'
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: youtubeURLs });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: youtubeURLs});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const createYoutubeURL = async ( req, res ) => {
+const createYoutubeURL = async (req, res) => {
     try {
-        const { data } = req.body;
+        const {data} = req.body;
 
-        const isExist = await prisma.youtube.findFirst({
+        const isExist = await db.youtube.findFirst({
             where: {
                 videoId: data.videoUrl.split("?v=")[1]
             }
         });
 
         if (isExist) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "This video already exists", data: [] });
+            return res.status(400).json({
+                success: false,
+                code: ERROR_CODE,
+                message: "This video already exists",
+                data: []
+            });
         }
 
-        const numberPublished = await prisma.youtube.count({
+        const numberPublished = await db.youtube.count({
             where: {
                 published: true
             }
         });
 
         if (numberPublished >= 3 && data.published) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "You can only have 3 published videos", data: [] });
+            return res.status(400).json({
+                success: false,
+                code: ERROR_CODE,
+                message: "You can only have 3 published videos",
+                data: []
+            });
         }
 
-        const newYoutubeURL = await prisma.youtube.create({
+        const newYoutubeURL = await db.youtube.create({
             data: {
                 videoId: data.videoUrl.split("?v=")[1],
                 title: data.title,
@@ -63,18 +73,18 @@ const createYoutubeURL = async ( req, res ) => {
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newYoutubeURL });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newYoutubeURL});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const updateYoutubeURL = async ( req, res ) => {
+const updateYoutubeURL = async (req, res) => {
     try {
-        const { data } = req.body;
+        const {data} = req.body;
 
-        const numberPublished = await prisma.youtube.count({
+        const numberPublished = await db.youtube.count({
             where: {
                 published: true,
                 id: {
@@ -84,10 +94,15 @@ const updateYoutubeURL = async ( req, res ) => {
         });
 
         if (numberPublished >= 3 && data.published) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "You can only have 3 published videos", data: [] });
+            return res.status(400).json({
+                success: false,
+                code: ERROR_CODE,
+                message: "You can only have 3 published videos",
+                data: []
+            });
         }
 
-        const updatedYoutubeURL = await prisma.youtube.update({
+        const updatedYoutubeURL = await db.youtube.update({
             where: {
                 id: data.id
             },
@@ -100,27 +115,32 @@ const updateYoutubeURL = async ( req, res ) => {
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedYoutubeURL });
+        return res.status(200).json({
+            success: true,
+            code: SUCCESS_CODE,
+            message: SUCCESS_MESSAGE,
+            data: updatedYoutubeURL
+        });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const deleteYoutubeURL = async ( req, res ) => {
+const deleteYoutubeURL = async (req, res) => {
     try {
-        const { data } = req.body;
+        const {data} = req.body;
 
-        await prisma.youtube.delete({
+        await db.youtube.delete({
             where: {
                 id: data.id
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: [] });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: []});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 

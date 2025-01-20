@@ -1,0 +1,318 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("RAILWAY_POSTGRESQL_PUBLIC_URL") // uses connection pooling
+  // directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Language {
+  id   String @id @default(cuid())
+  code String @unique
+  name String
+
+  // Relations
+  postTranslations     PostTranslation[]
+  categoryTranslations CategoryTranslation[]
+  tagTranslations      TagTranslation[]
+  authorTranslations   AuthorTranslation[]
+  productTranslations  ProductTranslation[]
+}
+
+// Table for posts
+model Post {
+  id          String    @id @default(cuid())
+  author_slug String
+  cate_slug   String
+  postFormat  String
+  slug        String    @unique
+  featureImg  String
+  date        String
+  videoLink   String?
+  audioLink   String?
+  gallery     String[]  @default([])
+  story       Boolean   @default(false)
+  trending    Boolean   @default(false)
+  status      String    @default("public")
+  post_views  String    @default("0")
+  post_share  String    @default("0")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+
+  // Relations
+  translations PostTranslation[]
+  tags         Tag[]
+  author       Author            @relation(fields: [author_slug], references: [author_slug])
+  category     Category          @relation(fields: [cate_slug], references: [cate_slug])
+  comments     Comment[]
+}
+
+// Table for post translations
+model PostTranslation {
+  id           String  @id @default(cuid())
+  postId       String
+  languageCode String
+  title        String  @unique
+  excerpt      String
+  content      String
+  quoteText    String?
+
+  // Relations
+  post     Post     @relation(fields: [postId], references: [id])
+  language Language @relation(fields: [languageCode], references: [code])
+
+  @@unique([postId, languageCode]) // Ensure each post has a unique translation per language
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  post_slug   String
+  author_slug String?
+  name        String
+  email       String
+  comment     String
+  reply       String?  @default("")
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  post   Post    @relation(fields: [post_slug], references: [slug])
+  author Author? @relation(fields: [author_slug], references: [author_slug])
+}
+
+// Table for categories
+model Category {
+  id        String   @id @default(cuid())
+  cate_slug String   @unique
+  cate_bg   String?
+  cate_img  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  translations CategoryTranslation[]
+  Post         Post[]
+}
+
+// Table for category translations
+model CategoryTranslation {
+  id           String  @id @default(cuid())
+  categoryId   String
+  languageCode String
+  cate         String  @unique
+  description  String?
+
+  // Relations
+  category Category @relation(fields: [categoryId], references: [id])
+  language Language @relation(fields: [languageCode], references: [code])
+
+  @@unique([categoryId, languageCode]) // Ensure each category has a unique translation per language
+}
+
+// Table for tags
+model Tag {
+  id        String   @id @default(cuid())
+  tag_slug  String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  translations TagTranslation[]
+  posts        Post[]
+}
+
+// Table for tag translations
+model TagTranslation {
+  id           String @id @default(cuid())
+  tagId        String
+  languageCode String
+  tag          String @unique
+
+  // Relations
+  tagR     Tag      @relation(fields: [tagId], references: [id])
+  language Language @relation(fields: [languageCode], references: [code])
+
+  @@unique([tagId, languageCode]) // Ensure each tag has a unique translation per language
+}
+
+// Table for authors
+model Author {
+  id            String  @id @default(cuid())
+  author_slug   String  @unique
+  author_name   String
+  author_img    String?
+  author_social Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  translations AuthorTranslation[]
+  posts        Post[]
+  comments     Comment[]
+}
+
+model AuthorTranslation {
+  id           String  @id @default(cuid())
+  authorId     String
+  languageCode String
+  author_desg  String?
+  author_bio   String?
+
+  // Relations
+  author   Author   @relation(fields: [authorId], references: [id])
+  language Language @relation(fields: [languageCode], references: [code])
+
+  @@unique([authorId, languageCode]) // Ensure each author has a unique translation per language
+}
+
+model Product {
+  id           String               @id @default(cuid())
+  image        String
+  url          String
+  active       Boolean              @default(true)
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  translations ProductTranslation[]
+}
+
+model ProductTranslation {
+  id           String @id @default(cuid())
+  productId    String
+  languageCode String
+  name         String @unique
+  description  String
+
+  // Relations
+  product  Product  @relation(fields: [productId], references: [id])
+  language Language @relation(fields: [languageCode], references: [code])
+
+  @@unique([productId, languageCode]) // Ensure each product has a unique translation per language
+}
+
+model Image {
+  id           String   @id @default(cuid())
+  originalname String   @unique
+  encoding     String
+  mimetype     String
+  size         Int?
+  Key          String   @unique
+  url          String?  @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Youtube {
+  id        String   @id @default(cuid())
+  videoId   String   @unique
+  title     String
+  videoUrl  String   @unique
+  embedUrl  String   @unique
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
+  phone         String?
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role            @default(USER)
+  subscriptions Subscription[]
+  accounts      Account[]
+  sessions      Session[]
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Subscription {
+  id                String           @id @default(cuid())
+  userId            String
+  type              SubscriptionType
+  startDate         DateTime
+  endDate           DateTime
+  licenseKey        String           @unique
+  registeredDevices String[]         @default([])
+  active            Boolean          @default(true)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  user              User             @relation(fields: [userId], references: [id])
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// Optional for WebAuthn support
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
+}
+
+enum SubscriptionType {
+  MONTHLY
+  YEARLY
+}
+
+enum Role {
+  USER
+  ADMIN
+}

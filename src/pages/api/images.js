@@ -1,9 +1,8 @@
 import multer from "multer";
-import path from "path";
-import prisma from "../../../lib/prisma";
-import { buffer } from "micro";
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectsCommand } from '@aws-sdk/client-s3';
-import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "@/lib/constant";
+import {buffer} from "micro";
+import {S3Client, PutObjectCommand, DeleteObjectsCommand} from '@aws-sdk/client-s3';
+import {SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
+import db from "@/libs/prisma/db";
 
 const fs = require('fs');
 
@@ -19,8 +18,8 @@ const upload = multer({
     limits: {
         fileSize: 8000000 // 8MB
     },
-    fileFilter: ( req, file, cb ) => {
-        const allowedTypes = [ 'image/jpeg', 'image/png', 'image/jpg' ];
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
         if (!allowedTypes.includes(file.mimetype)) {
             const error = new Error('Invalid file type. Allowed: jpeg, jpg, png');
@@ -40,7 +39,7 @@ const s3 = new S3Client({
     },
 });
 
-const postHandler = async ( req, res ) => {
+const postHandler = async (req, res) => {
     switch (req.method) {
         case "GET":
             return getImages(req, res);
@@ -51,23 +50,23 @@ const postHandler = async ( req, res ) => {
     }
 };
 
-const getImages = async ( req, res ) => {
+const getImages = async (req, res) => {
     try {
 
         // Get all images from the database
-        const images = await prisma.image.findMany();
+        const images = await db.image.findMany();
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: images });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: images});
     } catch (error) {
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const createImages = async ( req, res ) => {
+const createImages = async (req, res) => {
     try {
         // Upload to server
-        await new Promise(( resolve, reject ) => {
-            upload.array("file", 5)(req, res, ( err ) => {
+        await new Promise((resolve, reject) => {
+            upload.array("file", 5)(req, res, (err) => {
                 if (err) {
                     return reject(err);
                 }
@@ -80,15 +79,15 @@ const createImages = async ( req, res ) => {
         const files = req.files;
 
         if (!files) {
-            return res.status(400).json({ error: "No file uploaded" });
+            return res.status(400).json({error: "No file uploaded"});
         }
 
         // Upload to S3
         for (let i = 0; i < files.length; i++) {
-            const key = "images/" + files[i].originalname;
+            const keyS3 = "admin/images/" + files[i].originalname;
             const command = new PutObjectCommand({
-                Bucket: "tradingtoolapp",
-                Key: key,
+                Bucket: process.env.AWS_S3_BUCKET_NAME,
+                Key: keyS3,
                 Body: files[i].buffer,
                 ContentType: files[i].mimetype,
                 ACL: 'public-read',
@@ -96,33 +95,34 @@ const createImages = async ( req, res ) => {
             await s3.send(command);
         }
 
-        const images = files.map(( file ) => {
+        const images = files.map((file) => {
+            const keyS3 = "admin/images/" + file.originalname;
             return {
                 originalname: file.originalname,
                 mimetype: file.mimetype,
                 encoding: file.encoding,
                 size: file.size,
-                Key: "images/" + file.originalname,
-                url: "https://tradingtoolapp.s3.ap-southeast-1.amazonaws.com/images/" + file.originalname,
+                Key: keyS3,
+                url: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/` + keyS3,
             }
         })
 
         // Save the image data to the database
-        await prisma.image.createMany({
+        await db.image.createMany({
             data: images,
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: images });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: images});
     } catch (error) {
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 };
 
-const deleteImages = async ( req, res ) => {
+const deleteImages = async (req, res) => {
     const rawBody = await buffer(req);
     const urls = JSON.parse(rawBody.toString());
     try {
-        const keys = await prisma.image.findMany({
+        const keys = await db.image.findMany({
             where: {
                 url: {
                     in: urls
@@ -133,11 +133,11 @@ const deleteImages = async ( req, res ) => {
             }
         })
 
-        const posts = await prisma.post.findMany({
+        const posts = await db.post.findMany({
             where: {
-                    featureImg: {
-                        in: urls
-                    }
+                featureImg: {
+                    in: urls
+                }
             }
         });
 
@@ -150,7 +150,7 @@ const deleteImages = async ( req, res ) => {
             });
         }
 
-        const categories = await prisma.category.findMany({
+        const categories = await db.category.findMany({
             where: {
                 cate_img: {
                     in: urls
@@ -167,7 +167,7 @@ const deleteImages = async ( req, res ) => {
             });
         }
 
-        const authors = await prisma.author.findMany({
+        const authors = await db.author.findMany({
             where: {
                 author_img: {
                     in: urls
@@ -195,7 +195,7 @@ const deleteImages = async ( req, res ) => {
         const response = await s3.send(command);
 
         // Delete the image from the database
-        const file = await prisma.image.deleteMany({
+        const file = await db.image.deleteMany({
             where: {
                 url: {
                     in: urls
@@ -203,9 +203,9 @@ const deleteImages = async ( req, res ) => {
             },
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: file });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: file});
     } catch (error) {
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 

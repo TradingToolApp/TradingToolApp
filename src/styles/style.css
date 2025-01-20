@@ -308,6 +308,15 @@ Date Created: Oct 14, 2022
     --shadow-light: 0 2px 6px 0 rgba(0, 0, 0, 0.05);
     --shadow-dark: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
     --cubic-easing: cubic-bezier(0.86, 0, 0.07, 1);
+
+    /*--light-bg: ghostwhite;*/
+    /*--light-color: darkslategray;*/
+    /*--light-code: tomato;*/
+
+    /*--dark-bg: darkslategray;*/
+    /*--dark-color: ghostwhite;*/
+    /*--dark-code: gold;*/
+    /*color-scheme: light dark;*/
 }
 
 /*--Spacing--*/
@@ -3691,12 +3700,55 @@ Date Created: Oct 14, 2022
     margin-right: 0 !important;
 }
 
+.light {
+    --bg-color: var(--rs-body);
+    --text-color: var(--rs-text-primary);
+    --dark-text: #5E4B56;
+    --light-text: #5E4B56;
+    --dark-background: #DBE7E4;
+    --light-background: var(--rs-body);
+    --accent: #DBE7E4;
+    --button-border: #5E4B56;
+}
+
+.dark {
+    --bg-color: var(--rs-gray-700);
+    --text-color: var(--rs-text-primary);
+    --dark-text: #292929;
+    --light-text: #F9F8F8;
+    --dark-background: var(--rs-gray-50);
+    --light-background: #586F7C;
+    --accent: #B8DBD9;
+    --button-border: #B8DBD9;
+}
+
+::-webkit-scrollbar {
+    /*-webkit-appearance: none;*/
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    /*background-color: rgba(0, 0, 0, .5);*/
+    background-color: var(--rs-text-secondary);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+::-webkit-scrollbar-track {
+    /*box-shadow: inset 0 0 5px grey;*/
+    /*border-radius: 10px;*/
+    background: var(--rs-body);
+}
+
 /*--Base css--*/
 html {
     font-size: 10px;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    /*overflow: scroll;*/
+    /*overflow-x: hidden;*/
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 body {
@@ -3706,7 +3758,9 @@ body {
     line-height: 1.7;
     margin: 0;
     padding: 0;
-    color: var(--grey-dark-two);
+    background-color: var(--rs-bg-well);
+    /*background-color: var(--rs-blue-50);*/
+    color: var(--rs-text-primary);
 }
 
 ::-moz-selection {
@@ -4439,7 +4493,7 @@ figure {
 }
 
 .bg-grey-light-three {
-    background-color: var(--grey-light-three);
+    background-color: var(--bg-color);
 }
 
 .border-bg-color {
@@ -4627,7 +4681,7 @@ figure {
 }
 
 .grad-bg {
-    background: linear-gradient(135deg, #ebeaf4 0%, #b5c0e1 100%, #b5c0e1 100%);
+    background: linear-gradient(135deg, var(--bg-color) 0%, #b5c0e1 100%, #b5c0e1 100%);
 }
 
 /*--Typography--*/
@@ -4644,7 +4698,7 @@ h6,
 .h5,
 .h6 {
     font-family: var(--primary-font);
-    color: var(--grey-dark-one);
+    color: var(--text-color);
     font-weight: var(--p-semi-bold);
     line-height: 1.4;
     margin-bottom: 2rem;
@@ -4732,7 +4786,7 @@ p {
     font-family: var(--secondary-font);
     font-size: 1.8rem;
     line-height: 3rem;
-    color: var(--grey-dark-two);
+    color: var(--rs-text-primary);
 }
 
 p.big {
@@ -5334,11 +5388,11 @@ select {
     width: 100%;
     height: auto;
     /* border: none; */
-    background: transparent;
+    /*background: transparent;*/
     font-family: var(--secondary-font);
     font-size: 1.6rem;
     line-height: 3rem;
-    color: var(--grey-dark-one);
+    color: var(--text-color);
     padding: 0.9rem 2rem;
     border-radius: 0;
     /* border: 0.2rem solid var(--grey-light-one); */
@@ -5866,6 +5920,11 @@ input[type="radio"] + label::after {
 .navbar {
     padding: 0;
     z-index: 10;
+    background-color: var(--bg-color);
+    color: var(--rs-btn-ghost-text);
+    box-shadow: var(--rs-drawer-shadow);
+    border: 1px solid var(--rs-border-primary);
+    border-radius: 6px;
 }
 
 @media (max-width: 991px) {
@@ -6304,7 +6363,7 @@ input[type="radio"] + label::after {
 }
 
 .navbar__style-three .main-navigation li {
-    color: var(--grey-dark-one);
+    color: var(--text-color);
     padding: 3.8rem 0.5rem 3.7rem;
 }
 
@@ -6325,7 +6384,8 @@ input[type="radio"] + label::after {
 
 @media (max-width: 1199px) {
     .navbar__style-three .main-navigation li {
-        color: #fff;
+        /*color: #fff;*/
+        color: var(--rs-sidenav-subtle-text);
     }
 
     .navbar__style-three .main-navigation a::before,
@@ -6772,7 +6832,7 @@ input[type="radio"] + label::after {
     font-family: var(--primary-font);
     font-size: 1.4rem;
     line-height: 2.1rem;
-    color: var(--grey-dark-four);
+    color: var(--rs-text-secondary);
     font-weight: var(--p-light);
     margin: 0;
 }
@@ -7188,7 +7248,7 @@ input[type="radio"] + label::after {
 /*--Banner--*/
 .banner {
     position: relative;
-    background-color: var(--grey-light-three);
+    background-color: var(--bg-color);
 }
 
 .banner .grad-overlay {
@@ -8130,7 +8190,7 @@ input[type="radio"] + label::after {
 /*--Banner category counter--*/
 .axil-banner-cat-counter {
     margin-top: -14rem;
-    background-color: var(--grey-light-three);
+    background-color: var(--rs-bg-card);
 }
 
 @media (max-width: 1199px) {
@@ -8168,7 +8228,7 @@ input[type="radio"] + label::after {
 
 .axil-banner-cat-counter .category-list-wrapper {
     position: relative;
-    background: #fff;
+    background-color: var(--bg-color);
     margin: 0 -2.5rem;
     padding: 3rem;
 }
@@ -10375,7 +10435,7 @@ address .tel i {
     }
 
     .hover-line a {
-        color: var(--grey-dark-one);
+        color: var(--rs-text-primary);
     }
 
     .video-container__type-2 .axil-img-container .media-body {
@@ -10704,16 +10764,6 @@ li {
     height: 100%;
 }
 
-html {
-    overflow: scroll;
-    overflow-x: hidden;
-}
-
-::-webkit-scrollbar {
-    width: 0; /* Remove scrollbar space */
-    background: transparent; /* Optional: just make scrollbar invisible */
-}
-
 .player-wrapper {
     position: relative;
     padding-top: 56.25%; /* Player ratio: 100 / (1280 / 720) */
@@ -10723,4 +10773,49 @@ html {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.frame {
+    background-color: var(--rs-bg-card);
+    /*height: 100%;*/
+    box-shadow: var(--rs-drawer-shadow);
+    border: 1px solid var(--rs-border-primary);
+    border-radius: 6px;
+}
+
+
+.bordered {
+    background-color: var(--rs-bg-card);
+    box-shadow: var(--rs-drawer-shadow);
+    border: 1px solid var(--rs-border-primary);
+    border-radius: 6px;
+}
+
+.page-header {
+    margin-bottom: 10px;
+}
+
+.sidebar {
+    /*overflow-y: scroll;*/
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+}
+
+.table-toolbar {
+    color: var(--text-color)
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 0; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
+    display: none;
+}
+
+.modal-add {
+    overflow-x: hidden
+}
+
+.rs-pagination-group-limit {
+    position: relative;
+    width: 100px;
 }

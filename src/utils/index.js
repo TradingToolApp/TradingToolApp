@@ -28,11 +28,9 @@ const removeDuplicates = function (originalArray, prop) {
 const SortingByDate = function (posts) {
 	return posts
 		.sort((post1, post2) => {
-
 			const beforeDate = DateTime.fromFormat(post1.date, "LLL dd yyyy");
 			const afterDate = DateTime.fromFormat(post2.date, "LLL dd yyyy");
 			return afterDate - beforeDate;
-
 		})
 }
 

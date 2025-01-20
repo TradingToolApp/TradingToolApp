@@ -1,8 +1,8 @@
-import prisma from "@/lib/prisma";
-import { SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE } from "@/lib/constant";
+import db from "@/libs/prisma/db";
+import {SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
 import slugify from "slugify";
 
-const APIHandler = async ( req, res ) => {
+const APIHandler = async (req, res) => {
     switch (req.method) {
         case "GET":
             return getAuthors(req, res);
@@ -15,9 +15,9 @@ const APIHandler = async ( req, res ) => {
     }
 };
 
-const getAuthors = async ( req, res ) => {
+const getAuthors = async (req, res) => {
     try {
-        const authors = await prisma.author.findMany({
+        const authors = await db.author.findMany({
             include: {
                 translations: true,
             },
@@ -26,43 +26,43 @@ const getAuthors = async ( req, res ) => {
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: authors });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: authors});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const createAuthor = async ( req, res ) => {
+const createAuthor = async (req, res) => {
     try {
-        const { data } = req.body;
+        const {data} = req.body;
 
-        const isAuthorExist = await prisma.author.findFirst({
+        const isAuthorExist = await db.author.findFirst({
             where: {
-                author_slug: slugify(data.author_name, { lower: true }),
+                author_slug: slugify(data.author_name, {lower: true}),
             }
         });
 
-        if(isAuthorExist) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Author already exist!", data: [] });
+        if (isAuthorExist) {
+            return res.status(400).json({success: false, code: ERROR_CODE, message: "Author already exist!", data: []});
         }
 
-        const newAuthor = await prisma.author.create({
+        const newAuthor = await db.author.create({
             data: {
-                author_slug: slugify(data.author_name, { lower: true }),
+                author_slug: slugify(data.author_name, {lower: true}),
                 author_name: data.author_name,
                 author_img: data.author_img,
                 author_social: data.author_social,
                 translations: {
-                    create: [ {
+                    create: [{
                         author_desg: data.author_desgEN,
                         author_bio: data.author_bioEN,
-                        language: { connect: { code: "en" } },
+                        language: {connect: {code: "en"}},
                     }, {
                         author_desg: data.author_desgVI,
                         author_bio: data.author_bioVI,
-                        language: { connect: { code: "vi" } },
-                    } ],
+                        language: {connect: {code: "vi"}},
+                    }],
                 }
             },
             include: {
@@ -70,30 +70,30 @@ const createAuthor = async ( req, res ) => {
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newAuthor });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newAuthor});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const updateAuthor = async ( req, res ) => {
+const updateAuthor = async (req, res) => {
     try {
-        const { data } = req.body;
+        const {data} = req.body;
 
-        const author = await prisma.author.findUnique({
+        const author = await db.author.findUnique({
             where: {
                 id: data.id
             }
         });
 
-        if(!author) {
-            return res.status(404).json({ success: false, code: ERROR_CODE, message: "Author not found", data: [] });
+        if (!author) {
+            return res.status(404).json({success: false, code: ERROR_CODE, message: "Author not found", data: []});
         }
 
-        const isSlugExist = await prisma.author.findFirst({
+        const isSlugExist = await db.author.findFirst({
             where: {
-                author_slug: slugify(data.author_name, { lower: true }),
+                author_slug: slugify(data.author_name, {lower: true}),
                 id: {
                     not: data.id
                 }
@@ -101,10 +101,10 @@ const updateAuthor = async ( req, res ) => {
         });
 
         if (isSlugExist) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Author already exist!", data: [] });
+            return res.status(400).json({success: false, code: ERROR_CODE, message: "Author already exist!", data: []});
         }
 
-        await prisma.authorTranslation.update({
+        await db.authorTranslation.update({
             where: {
                 authorId_languageCode: {
                     authorId: author.id,
@@ -117,7 +117,7 @@ const updateAuthor = async ( req, res ) => {
             }
         })
 
-        await prisma.authorTranslation.update({
+        await db.authorTranslation.update({
             where: {
                 authorId_languageCode: {
                     authorId: author.id,
@@ -130,12 +130,12 @@ const updateAuthor = async ( req, res ) => {
             }
         })
 
-        const updatedAuthor = await prisma.author.update({
+        const updatedAuthor = await db.author.update({
             where: {
                 id: author.id
             },
             data: {
-                author_slug: slugify(data.author_name, { lower: true }),
+                author_slug: slugify(data.author_name, {lower: true}),
                 author_name: data.author_name,
                 author_img: data.author_img,
                 author_social: data.author_social,
@@ -145,54 +145,56 @@ const updateAuthor = async ( req, res ) => {
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedAuthor });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: updatedAuthor});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
-const deleteAuthor = async ( req, res ) => {
+const deleteAuthor = async (req, res) => {
     try {
-        const { data } = req.body;
+        const {data} = req.body;
 
-        const author = await prisma.author.findUnique({
+        const author = await db.author.findUnique({
             where: {
                 id: data.id
             }
         });
 
-        if(!author) {
-            return res.status(404).json({ success: false, code: ERROR_CODE, message: "Author not found", data: [] });
+        if (!author) {
+            return res.status(404).json({success: false, code: ERROR_CODE, message: "Author not found", data: []});
         }
 
-        const posts = await prisma.post.findMany({
+        const posts = await db.post.findMany({
             where: {
                 author_slug: author.author_slug
             }
         });
 
-        if(posts.length > 0) {
-            return res.status(400).json({ success: false, code: ERROR_CODE, message: "Author is being used in some posts. Delete these posts" +
-                    " first!", data: [] });
+        if (posts.length > 0) {
+            return res.status(400).json({
+                success: false, code: ERROR_CODE, message: "Author is being used in some posts. Delete these posts" +
+                    " first!", data: []
+            });
         }
 
-        await prisma.authorTranslation.deleteMany({
+        await db.authorTranslation.deleteMany({
             where: {
                 authorId: author.id
             }
         });
 
-        const deletedAuthor = await prisma.author.delete({
+        const deletedAuthor = await db.author.delete({
             where: {
                 id: author.id
             }
         });
 
-        return res.status(200).json({ success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedAuthor });
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: deletedAuthor});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, code: ERROR_CODE, message: error, data: [] });
+        console.log(error);
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
 
