@@ -15,7 +15,6 @@ export const DateTimeCell = ({rowData, dataKey, ...props}: any) => (
 
 const styles = {
     width: "auto",
-    // marginBottom: 10
 };
 
 export const LicenseKeyCell = ({rowData, dataKey, show, ...props}: any) => {

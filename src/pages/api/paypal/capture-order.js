@@ -80,10 +80,7 @@ export default async function Handler(req, res) {
                 licenseKey: licenseKey,
             }
         })
-
-        console.log(licenseObj)
         //send license key to user email
-
         return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: licenseObj});
     } catch (error) {
         console.error("Failed to create order:", error);
