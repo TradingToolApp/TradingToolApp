@@ -67,7 +67,7 @@ const SignIn = () => {
                             </button>
                         </div>
                         <div className="col-12">
-                            <div className="text-center text-black-50 font-weight-light">
+                            <div className="text-center font-weight-light">
                                 <Link href={"/register"}>
                                     Do not have an account? Sign Up
                                 </Link>

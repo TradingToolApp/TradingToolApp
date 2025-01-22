@@ -2,18 +2,20 @@ import {useRouter} from 'next/navigation';
 import userAPI from "@/libs/api-client/restful/user.api";
 import {useSession} from "next-auth/react";
 import {useQuery} from "@tanstack/react-query";
+import {useGetUserById} from "@/hooks/data/user/useUser";
 
 export default function useCurrentUser() {
     const {data: session, status} = useSession();
     const router = useRouter();
     // @ts-ignore
     const id: any = session?.user.id;
-    const queryInfo = useQuery({
-        queryKey: ['currentUser', id],
-        queryFn: () => userAPI.getUserById(id),
-        initialData: session?.user,
-        enabled: !!id
-    })
+    const queryInfo = useGetUserById(id, session);
+    // const queryInfo = useQuery({
+    //     queryKey: ['currentUser', id],
+    //     queryFn: () => userAPI.getUserById(id),
+    //     initialData: session?.user,
+    //     enabled: !!id
+    // })
     const profile = queryInfo.data;
 
     const redirect = async (route: any) => {

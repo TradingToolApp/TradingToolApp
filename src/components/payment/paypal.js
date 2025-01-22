@@ -25,7 +25,7 @@ const PayPal = ({paymentPlan, user, handleClose, ...rests}) => {
                 paymentType: paymentPlan.type
             })
 
-            if (response.data.status === "COMPLETED") {
+            if (response.data.success) {
                 toast.success('Payment Successful', toastConfig.success);
                 handleClose();
             }

@@ -37,8 +37,6 @@ const HeaderThree = () => {
         setLanguageSelect(language);
     }, [language]);
 
-    // console.log(user)
-
     // Offcanvas Menu
 
     const [show, setShow] = useState(false);

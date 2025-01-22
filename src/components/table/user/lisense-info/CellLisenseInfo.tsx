@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from "react";
-import {Popover, Whisper, Tooltip, IconButton, Table, Input, InputGroup, Text, Tag, Button, HStack} from "rsuite";
+import React, {useState} from "react";
+import {Table, Input, InputGroup, Text, VStack, Button, HStack} from "rsuite";
 import CopyIcon from '@rsuite/icons/Copy';
 import {toast} from 'react-toastify';
 import {toastConfig} from "@/libs/constant";
+import ModalRemoveRegisteredDevice from "@/components/modal/user/info/ModalRemoveRegisteredDevice";
 
 const {Cell} = Table;
 
 export const DateTimeCell = ({rowData, dataKey, ...props}: any) => (
     <Cell {...props}>
-        {new Date(rowData[dataKey!]).toLocaleDateString().slice(0, 8)}
+        {new Date(rowData[dataKey!]).toLocaleDateString().slice(0, 9)}
     </Cell>
 );
 
 const styles = {
-    width: 300,
-    marginBottom: 10
+    width: "auto",
 };
 
 export const LicenseKeyCell = ({rowData, dataKey, show, ...props}: any) => {
@@ -23,11 +23,11 @@ export const LicenseKeyCell = ({rowData, dataKey, show, ...props}: any) => {
         return toast.success("Copied!", toastConfig.success as any);
     }
     return (
-        <Cell {...props} style={{padding: "5px"}}>
+        <Cell {...props}>
             <InputGroup inside style={styles}>
                 {
                     show ?
-                        <Input as="textarea" rows={9} value={rowData[dataKey!]}/>
+                        <Input as="textarea" rows={6} value={rowData[dataKey!]}/>
                         :
                         <Input value={rowData[dataKey!]} readOnly/>
                 }
@@ -41,27 +41,36 @@ export const LicenseKeyCell = ({rowData, dataKey, show, ...props}: any) => {
 
 export const ArrayCell = ({rowData, dataKey, show, ...props}: any) => {
     const devices = rowData[dataKey!];
-    const handleRemoveDevice = (id: any) => {
-        console.log(id)
+    const [openRemoveRegisteredDevice, setOpenRemoveRegisteredDevice] = useState(false);
+    const [removeItem, setRemoveItem] = useState({})
+    const handleOpenRemoveRegisteredDevice = () => setOpenRemoveRegisteredDevice(true);
+    const handleCloseRemoveRegisteredDevice = () => setOpenRemoveRegisteredDevice(false);
+
+    const handleRemoveDevice = async (item: any) => {
+        handleOpenRemoveRegisteredDevice();
+        setRemoveItem(item);
     };
+
     return (
-        <Cell {...props}>
-            {
-                show ?
-                    devices.map((item: any, index: any) => {
-                        return (
-                            <HStack key={index} justifyContent="space-between">
-                                <Text size="xl">Device {index}: {item.name}</Text>
-                                <Button size="xs" appearance="link"
-                                        onClick={() => handleRemoveDevice(item.name)}>remove</Button>
-                            </HStack>
-                        )
-                    })
-                    :
-                    <>
-                        <Text size="xl">Device 0: {devices[0].name}</Text>
-                    </>
-            }
-        </Cell>
+        <>
+            <Cell {...props} style={{paddingTop: 17}}>
+                {
+                    show ?
+                        devices.map((item: any, index: any) => {
+                            return (
+                                <HStack key={index} justifyContent="space-between" style={{marginBottom: 10}}>
+                                    <Text size="lg">{item.macAddress} - {item.name}</Text>
+                                    <Button size="xs"
+                                            onClick={() => handleRemoveDevice(item)}>remove</Button>
+                                </HStack>
+                            )
+                        })
+                        :
+                        <Text size="lg">{devices[0].macAddress} - {devices[0].name}</Text>
+                }
+            </Cell>
+            <ModalRemoveRegisteredDevice modalData={removeItem} open={openRemoveRegisteredDevice}
+                                         handleClose={handleCloseRemoveRegisteredDevice}/>
+        </>
     )
 };

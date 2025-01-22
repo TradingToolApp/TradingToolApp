@@ -31,7 +31,7 @@ const SideBarUser = () => {
                         <Nav onSelect={handleSelect} activeKey={selectedKey}>
                             <NavItem eventKey="1-1" as={Link} href={`/user/dashboard/${user.profile.id}`}
                                      icon={<DashboardIcon/>}>Info</NavItem>
-                            <NavItem eventKey="2-1" as={Link} href="/user/products/trading-tools"
+                            <NavItem eventKey="2-1" as={Link} href="/user/dashboard/trading-tools"
                                      icon={<ProjectIcon/>}>Trading Tools</NavItem>
                         </Nav>
                     </Sidenav.Body>

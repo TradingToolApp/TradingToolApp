@@ -118,9 +118,9 @@ const Pricing = () => {
                 </Stack>
 
             </div>
-            <FooterOne/>
             <ModalCreatePayment open={openModalPayment} handleClose={handleCloseModalPayment}
                                 paymentPlan={paymentPlan} user={user}/>
+            <FooterOne/>
         </>
     );
 }

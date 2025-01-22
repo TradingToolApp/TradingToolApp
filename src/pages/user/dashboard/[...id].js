@@ -18,27 +18,7 @@ const UserDashboard = () => {
         return <Loader size="md" style={{minHeight: "100vh", margin: "0"}} backdrop
                        content="loading..." vertical/>
     }
-
-    if (user.status === 'authenticated' && user.profile.length !== 0) {
-        user.profile.subscriptions[0].registeredDevices = [
-            {
-                name: "iphone",
-            },
-            {
-                name: "ipad",
-            },
-            {
-                name: "desktop1",
-            },
-            {
-                name: "desktop2",
-            },
-            {
-                name: "desktop3",
-            },
-        ]
-    }
-
+                       
     return (
         <>
             <Grid className="d-flex flex-column vh-100 vw-100" fluid>
@@ -67,7 +47,6 @@ const UserDashboard = () => {
                     </HStack.Item>
                 </HStack>
             </Grid>
-
         </>
     );
 }

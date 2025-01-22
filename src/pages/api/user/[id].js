@@ -33,6 +33,9 @@ const getUserById = async (req, res) => {
                 subscriptions: {
                     where: {
                         active: true
+                    },
+                    include: {
+                        devices: true,
                     }
                 }
             },

@@ -3746,7 +3746,7 @@ html {
     margin: 0;
     padding: 0;
     /*overflow: scroll;*/
-    /*overflow-x: hidden;*/
+    overflow-x: hidden
     background-color: var(--bg-color);
     color: var(--text-color);
 }
@@ -9755,7 +9755,8 @@ ul.gallery img {
 
 .axil-contact-form-block,
 .axil-contact-info-inner {
-    background: #fff;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     padding: 5rem;
 }
 

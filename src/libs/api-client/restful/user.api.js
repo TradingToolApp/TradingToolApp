@@ -64,6 +64,15 @@ async function resetPassword(data) {
     }
 }
 
+async function removeRegisteredDevice(data) {
+    try {
+        const res = await axios.delete('/api/user/remove-registered-device', {data: {data}});
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
+
 const userAPI = {
     getUsers,
     getUserById,
@@ -71,7 +80,8 @@ const userAPI = {
     createUser,
     deleteUser,
     changePassword,
-    resetPassword
+    resetPassword,
+    removeRegisteredDevice
 };
 
 export default userAPI;

@@ -71,7 +71,7 @@ export default async function Handler(req, res) {
             });
         }
 
-        await db.subscription.create({
+        const licenseObj = await db.subscription.create({
             data: {
                 userId: licenseData.id,
                 type: paymentType,
@@ -80,10 +80,8 @@ export default async function Handler(req, res) {
                 licenseKey: licenseKey,
             }
         })
-
         //send license key to user email
-
-        return res.status(httpStatusCode).json(licenseData);
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: licenseObj});
     } catch (error) {
         console.error("Failed to create order:", error);
         return res.status(500).json({error: "Failed to capture order."});

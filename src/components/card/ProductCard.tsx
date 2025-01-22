@@ -7,9 +7,8 @@ const ProductCard = ({productData}: any) => {
     const {screenHeight} = useWindowSize();
     const maxHeight = screenHeight - 200;
     return (
-
         <Stack justifyContent='flex-start' alignItems="flex-start" wrap spacing={40}
-               style={{overflowY: "scroll", maxHeight: `${maxHeight}px`, paddingBlock: "10px"}}
+               style={{overflowY: "scroll", maxHeight: `${maxHeight}px`, paddingBlock: "10px", marginLeft: 10}}
         >
             {productData.map((item: any, index: any) =>
                 <Card key={index} width={260} shaded>

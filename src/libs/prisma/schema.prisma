@@ -239,17 +239,27 @@ model User {
 }
 
 model Subscription {
-  id                String           @id @default(cuid())
-  userId            String
-  type              SubscriptionType
-  startDate         DateTime
-  endDate           DateTime
-  licenseKey        String           @unique
-  registeredDevices String[]         @default([])
-  active            Boolean          @default(true)
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  user              User             @relation(fields: [userId], references: [id])
+  id         String               @id @default(cuid())
+  userId     String
+  type       SubscriptionType
+  startDate  DateTime
+  endDate    DateTime
+  licenseKey String               @unique
+  active     Boolean              @default(true)
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+  devices    SubscriptionDevice[]
+  user       User                 @relation(fields: [userId], references: [id])
+}
+
+model SubscriptionDevice {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  name           String
+  macAddress     String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
 }
 
 model Account {
