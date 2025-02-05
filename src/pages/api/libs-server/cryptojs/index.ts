@@ -11,11 +11,34 @@ export const generateSecretKey = (): string => {
 };
 
 export const encryptData = (data: any, secretKey: string): string => {
-    const encryptedData = AES.encrypt(JSON.stringify(data), secretKey).toString();
-    return encryptedData;
+    const key = CryptoJS.enc.Utf8.parse(secretKey);
+    
+    // mã hoá với mode ECB và padding Pkcs7
+    const encrypted = CryptoJS.AES.encrypt(
+        CryptoJS.enc.Utf8.parse(data),
+        key,
+        {
+            mode: CryptoJS.mode.ECB,
+            padding: CryptoJS.pad.Pkcs7,
+        }
+    );
+    // trả về dạng base64
+    return encrypted.toString();
+
+    // const encryptedData = AES.encrypt(JSON.stringify(data), secretKey).toString();
+    // return encryptedData;
 };
 
 export const decryptData = (encryptedData: string, secretKey: string): any => {
-    const decryptedData = AES.decrypt(encryptedData, secretKey).toString(CryptoJS.enc.Utf8);
-    return JSON.parse(decryptedData);
+    const key = CryptoJS.enc.Utf8.parse(secretKey);
+
+    const decrypted = CryptoJS.AES.decrypt(encryptedData, key, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7,
+    });
+    return decrypted.toString(CryptoJS.enc.Utf8);
+
+    // const decryptedData = AES.decrypt(encryptedData.toString(), secretKey).toString(CryptoJS.enc.Utf8);
+    // return decryptedData;
+    // return JSON.parse(decryptedData);
 };
