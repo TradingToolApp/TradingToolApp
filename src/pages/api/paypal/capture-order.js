@@ -68,7 +68,7 @@ export default async function Handler(req, res) {
                 break;
         }
 
-        const licenseKey = encryptData(licenseData, process.env.LICENSE_KEY_SECRET)
+        const licenseKey = encryptData(JSON.stringify(licenseData), process.env.LICENSE_KEY_SECRET)
 
         const isBuyingPackage = [ProductType.EA_PRO, ProductType.INDI_PRO, ProductType.PLUS].includes(product.type)
         let subscription;

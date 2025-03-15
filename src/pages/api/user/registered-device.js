@@ -29,6 +29,23 @@ const createRegisteredDevice = async (req, res) => {
             });
         }
 
+        const devices = await db.subscriptionDevice.findMany({
+            where: {
+                user: {
+                    id: data.userId
+                }
+            }
+        });
+
+        if (devices.length >= 5) {
+            return res.status(400).json({
+                success: false,
+                code: ERROR_CODE,
+                message: "You can only register up to 5 devices!",
+                data: []
+            });
+        }
+
         const newDevice = await db.subscriptionDevice.create({
             data: {
                 name: data.name,
@@ -51,14 +68,6 @@ const createRegisteredDevice = async (req, res) => {
 const updateRegisteredDevice = async (req, res) => {
     try {
         const {data} = req.body;
-
-        const device = await db.subscriptionDevice.findUnique({
-            where: {id: data.id}
-        });
-
-        if (!device) {
-            return res.status(400).json({success: false, code: ERROR_CODE, message: "Device not found!", data: []});
-        }
 
         const updatedDevice = await db.subscriptionDevice.update({
             where: {id: data.id},

@@ -25,6 +25,9 @@ const getUserSubscriptionsById = async (req, res) => {
                 id: true,
                 name: true,
                 login: true,
+            },
+            orderBy: {
+                createdAt: "asc"
             }
         });
 

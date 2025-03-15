@@ -69,10 +69,10 @@ const getUserProduct = async (req, res) => {
             }
         });
 
-        const encryptJson = encryptData(jsonData, process.env.LICENSE_KEY_SECRET);
+        const encryptJson = encryptData(JSON.stringify(jsonData), process.env.LICENSE_KEY_SECRET);
 
         const data = "###!!!" + encryptJson + "!!!###"
-        console.log(data);
+
         return res.status(200).json(data);
     } catch (error) {
         console.log(error.stack);

@@ -40,7 +40,6 @@ const SignUp = () => {
         const emailValidate = validator.emailValidator(data.email);
         const passValidate = validator.passwordValidator(data.password);
         const cpassValidate = validator.confirmPasswordValidator(data.cpassword, data.password);
-        const phoneValidate = validator.phoneNumberValidator(phone);
 
         setError((prev) => ({
             ...prev,
@@ -48,10 +47,9 @@ const SignUp = () => {
             email: emailValidate.error,
             password: passValidate.error,
             cpassword: cpassValidate.error,
-            phone: phoneValidate.error
         }));
 
-        if (!passValidate.isTrue || !cpassValidate.isTrue || !phoneValidate.isTrue || !nameValidate.isTrue || !emailValidate.isTrue) {
+        if (!passValidate.isTrue || !cpassValidate.isTrue || !nameValidate.isTrue || !emailValidate.isTrue) {
             return;
         }
 

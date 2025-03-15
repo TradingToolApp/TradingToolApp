@@ -47,7 +47,10 @@ const createUser = async (req, res) => {
         const hashed = await hashedPassword(data.password);
         const newUser = await db.user.create({
             data: {
-                ...data,
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                image: data.image,
                 password: hashed,
             }
         });
@@ -57,7 +60,7 @@ const createUser = async (req, res) => {
 
         return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newUser});
     } catch (error) {
-        console.log(error);
+        console.log(error.stack);
         return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }
