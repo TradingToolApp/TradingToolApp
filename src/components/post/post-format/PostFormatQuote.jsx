@@ -1,16 +1,11 @@
-import WidgetAd from "../../widget/WidgetAd";
-import WidgetInstagram from "../../widget/WidgetInstagram";
-import WidgetNewsletter from "../../widget/WidgetNewsletter";
+import React from "react";
+import dynamic from 'next/dynamic'
 import WidgetPost from "../../widget/WidgetPost";
-import WidgetSocialShare from "../../widget/WidgetSocialShare";
 import WidgetYoutubeList from "../../widget/WidgetYoutubeVideo";
 import MetaDataFour from "./elements/meta/MetaDataFour";
 import PostAuthor from "./elements/PostAuthor";
-import PostComment from "./elements/PostComment";
 import SocialShareBottom from "./elements/SocialShareBottom";
 import SocialShareSide from "./elements/SocialShareSide";
-import React from "react";
-import dynamic from 'next/dynamic'
 
 const MarkdownRenderer = dynamic(() => import("@/components/post/post-format/Markdown/MarkdownRenderer"), {ssr: false})
 
@@ -35,7 +30,6 @@ const PostFormatQuote = ({postData, allData}) => {
                                 <SocialShareBottom shareData={postData}/>
                                 <hr className="m-t-xs-50 m-b-xs-60"/>
                                 <PostAuthor authorData={postData}/>
-                                <PostComment commentData={postData}/>
                             </main>
                         </div>
                         <div className="col-lg-4">

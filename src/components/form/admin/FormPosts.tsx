@@ -14,8 +14,6 @@ import {
     Col,
     Divider,
     VStack,
-    InputGroup,
-    Input,
 } from "rsuite";
 import Image from "next/image";
 import ModalSelectImage from "@/components/modal/admin/images/ModalSelectImage";
@@ -24,6 +22,7 @@ import {useAddPost, useUpdatePost} from "@/hooks/data/admin/usePosts";
 import {useGetCategories} from "@/hooks/data/admin/useCategories";
 import {useGetAuthors} from "@/hooks/data/admin/useAuthors";
 import {useGetTags} from "@/hooks/data/admin/useTags";
+import {StatusType} from "@prisma/client";
 
 const postFormatList = [
     {value: "standard", label: "Standard"},
@@ -47,11 +46,11 @@ const initialFormValue = {
     gallery: [],
     quoteText: "",
     tags: [],
+    status: StatusType.PUBLIC,
     post_views: "1000",
     post_share: "0",
     story: false,
     trending: true,
-    status: "public",
     titleEN: "",
     excerptEN: "",
     contentEN: "",
@@ -63,8 +62,8 @@ const initialFormValue = {
 };
 
 const PostStatusList = [
-    {label: "Public", value: "public"},
-    {label: "Private", value: "private"},
+    {label: "Public", value: StatusType.PUBLIC},
+    {label: "Private", value: StatusType.PRIVATE},
 ];
 
 const TrendingList = [
@@ -243,9 +242,9 @@ const FormPosts = ({formData, handleClose, action, ...rests}: any) => {
                             </Grid>
                             {/*Update the image when the user selects a new one, work on both CREATE and UPDATE*/}
                             {featureImg.length !== 0 &&
-                                <Image src={featureImg[0]} alt="feature image" width={100} height={100}/>}
+                                <Image src={featureImg[0]} alt="feature image" width={150} height={150}/>}
                             {action === "UPDATE" && featureImg.length === 0 &&
-                                <Image src={formValue.featureImg} alt="Feature image" width={100} height={100}/>}
+                                <Image src={formValue.featureImg} alt="Feature image" width={150} height={150}/>}
                             <Divider/>
                             <Form.Group controlId="contentImg">
                                 <Form.ControlLabel>Content Image</Form.ControlLabel>

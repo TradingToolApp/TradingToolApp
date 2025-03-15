@@ -1,12 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import Image from 'next/image';
-import {Modal, Stack, Divider, Panel, ButtonGroup} from 'rsuite';
+import {Modal, CardGroup, Divider, ButtonGroup, Card, Text, Input, InputGroup} from 'rsuite';
 import imageAPI from '@/libs/api-client/restful/image-api';
 import ModalFullScreenImage from "@/components/modal/admin/images/ModalFullScreenImage";
+import SearchIcon from "@rsuite/icons/Search";
 
 const ModalSelectImage = ({open, handleClose, multiple = false, setReturnedImg}) => {
     const [loading, setLoading] = useState(false);
     const [images, setImages] = useState([]);
+    const [searchKeyword, setSearchKeyword] = useState("");
     const [selectedImg, setSelectedImg] = useState([]);
     const [openFullScreen, setOpenFullScreen] = useState(false);
     const [fullScreenURL, setFullScreenURL] = useState("");
@@ -41,6 +43,16 @@ const ModalSelectImage = ({open, handleClose, multiple = false, setReturnedImg})
         }
     }
 
+    const filteredData = useMemo(() => {
+        return images.filter((item) => {
+            if (!item.originalname.toLowerCase().includes(searchKeyword.toLowerCase())) {
+                return false;
+            }
+
+            return true;
+        });
+    }, [images, searchKeyword]);
+
     useEffect(() => {
         setLoading(true);
         const fetchData = async () => {
@@ -53,37 +65,79 @@ const ModalSelectImage = ({open, handleClose, multiple = false, setReturnedImg})
 
     return (
         <>
-            <Modal size={"80%"} open={open} onClose={handleClose}>
+            <Modal size="lg" open={open} onClose={handleClose}>
                 <Modal.Header>
                     <Modal.Title>Images</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <Divider/>
+                    <div className="mx-4">
+                        <InputGroup inside>
+                            <Input
+
+                                placeholder="Search"
+                                value={searchKeyword}
+                                onChange={setSearchKeyword}
+                            />
+                            <InputGroup.Addon>
+                                <SearchIcon/>
+                            </InputGroup.Addon>
+                        </InputGroup>
+                    </div>
                     {loading ? <div>Loading...</div> :
                         <div>
-                            <Divider/>
-                            <div style={{height: "500px"}}>
-                                <Stack justifyContent='center' wrap>
-                                    {images.map((item, index) =>
-                                        <Panel key={index}
-                                               className={`${selectedImg.includes(item.url) ? "border-2 border-info" : ""} m-4`}
-                                               style={{display: 'inline-block', width: 200, height: 200}}
-                                               onClick={() => handleSelectImg(item.url)}
-                                               onDoubleClick={() => handleDoubleClick(item.url)}
-                                               shaded bordered bodyFill
-                                        >
-                                            <Image
-                                                src={item.url}
+                            <div style={{height: "400px"}}>
+                                <CardGroup className="m-3">
+                                    {filteredData.map((item, index) =>
+                                            <Card
+                                                bordered
+                                                shaded
+                                                size="md"
+                                                key={index}
                                                 width={200}
-                                                height={200}
-                                                style={{
-                                                    width: "auto",
-                                                    objectFit: 'contain', // cover, contain, none
-                                                }}
-                                                alt="Image"
-                                            />
-                                        </Panel>
+                                                className={`${selectedImg.includes(item.url) ? "border-2 border-info" : ""} m-2`}
+                                                onClick={() => handleSelectImg(item.url)}
+                                                onDoubleClick={() => handleDoubleClick(item.url)}
+                                            >
+                                                <Card.Header>
+                                                    <Image
+                                                        src={item.url}
+                                                        width={200}
+                                                        height={100}
+                                                        style={{
+                                                            objectFit: 'contain',
+                                                        }}
+                                                        alt="Image"
+                                                        priority
+                                                    />
+                                                </Card.Header>
+                                                <Card.Body>
+                                                    <Text className="w-100" align="center" size="sm" maxLines={2}>
+                                                        {item.originalname}
+                                                    </Text>
+                                                </Card.Body>
+                                            </Card>
+
+                                        // <Panel key={index}
+                                        //        className={`${selectedImg.includes(item.url) ? "border-2 border-info" : ""} m-4`}
+                                        //        style={{display: 'inline-block', width: 200, height: 200}}
+                                        //        onClick={() => handleSelectImg(item.url)}
+                                        //        onDoubleClick={() => handleDoubleClick(item.url)}
+                                        //        shaded bordered bodyFill
+                                        // >
+                                        //     <Image
+                                        //         src={item.url}
+                                        //         width={200}
+                                        //         height={200}
+                                        //         style={{
+                                        //             width: "auto",
+                                        //             objectFit: 'contain', // cover, contain, none
+                                        //         }}
+                                        //         alt="Image"
+                                        //     />
+                                        // </Panel>
                                     )}
-                                </Stack>
+                                </CardGroup>
                             </div>
                         </div>
                     }

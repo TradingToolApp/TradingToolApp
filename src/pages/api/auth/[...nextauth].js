@@ -4,14 +4,14 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import db from '@/libs/prisma/db';
 import {PrismaAdapter} from "@next-auth/prisma-adapter";
 import {PrismaClient} from "@prisma/client";
-import {comparePassword, hashedPassword} from "../libs-server/bcrypt";
+import {comparePassword} from "@/libs/bcrypt";
 
 const prisma = new PrismaClient();
 
 export const authOptions = {
     session: {
         strategy: 'jwt',
-        maxAge: 1 * 24 * 60 * 60, // 1 day
+        maxAge: 24 * 60 * 60, // 1 day
     },
     pages: {
         signIn: "/login",
@@ -39,27 +39,23 @@ export const authOptions = {
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            profile: (profile, tokens) => {
-                const newUser = {
+            profile: (profile) => {
+                return {
                     id: profile.sub,
                     email: profile.email,
                     emailVerified: profile.email_verified,  //somehow email_verified is not working
                     name: profile.name,
                     image: profile.picture
-                }
-                return newUser;
+                };
             },
         }),
     ],
     adapter: PrismaAdapter(prisma),
     callbacks: {
-        async jwt({token, user, trigger, session}) {
+        async jwt({token, user}) {
             if (user) {
                 token.role = user.role
                 token.id = user?.id
-            }
-            if (trigger === "update" && session) {
-                token.name = session.name
             }
             return token
         },

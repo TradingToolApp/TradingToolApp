@@ -17,7 +17,7 @@ import {
 } from 'rsuite';
 import Image from "next/image";
 import HeadMeta from "@/components/elements/HeadMeta";
-import HeaderThree from "@/components/header/HeaderThree";
+import HeaderFive from "@/components/header/HeaderFive";
 import ModalDeleteImage from "@/components/modal/admin/images/ModalDeleteImage";
 import ModalAddImage from "@/components/modal/admin/images/ModalAddImage";
 import ModalFullScreenImage from "@/components/modal/admin/images/ModalFullScreenImage";
@@ -71,7 +71,7 @@ const Images = ({allImages}) => {
             <Grid className="d-flex flex-column vh-100 vw-100" fluid>
                 <Row>
                     <HeadMeta metaTitle="Admin Dashboard"/>
-                    <HeaderThree/>
+                    <HeaderFive/>
                 </Row>
                 <Row className="h-100 overflow-y-auto d-flex flex-row">
                     <Col className="h-100">
@@ -107,50 +107,34 @@ const Images = ({allImages}) => {
                         <Stack justifyContent='flex-start' alignItems="flex-start" wrap
                                style={{overflowY: "scroll"}}>
                             <CardGroup>
-
                                 {filteredData.map((item, index) =>
-                                    // <Panel key={index}
-                                    //        className={`${selectedImg.includes(item.url) ? "border-2 border-info" : ""} m-2`}
-                                    //        onClick={() => handleSelectImg(item.url)}
-                                    //        onDoubleClick={() => handleDoubleClick(item.url)}
-                                    //        shaded bordered bodyFill
-                                    // >
-                                    //     <Image
-                                    //         src={item.url}
-                                    //         width={200}
-                                    //         height={200}
-                                    //         style={{
-                                    //             objectFit: 'contain', // cover, contain, none
-                                    //         }}
-                                    //         alt="Image"
-                                    //         priority
-                                    //     />
-                                    // </Panel>
                                     <Card
-                                        justifyContent="space-between"
-                                        alignItems="center"
                                         shaded
+                                        bordered
                                         size="md"
                                         key={index}
-                                        width={150}
+                                        width={200}
                                         className={`${selectedImg.includes(item.url) ? "border-2 border-info" : ""} m-2`}
                                         onClick={() => handleSelectImg(item.url)}
                                         onDoubleClick={() => handleDoubleClick(item.url)}
                                     >
-                                        <VStack height={150}>
+                                        <Card.Header>
                                             <Image
                                                 src={item.url}
-                                                width={150}
-                                                height={150}
+                                                width={200}
+                                                height={100}
                                                 style={{
-                                                    objectFit: 'contain', // cover, contain, none
+                                                    objectFit: 'contain',
                                                 }}
                                                 alt="Image"
                                                 priority
                                             />
-                                            <Text className="m-2 w-100" align="center"
-                                                  size="sm">{item.originalname}</Text>
-                                        </VStack>
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <Text className="w-100" align="center" size="sm" maxLines={2}>
+                                                {item.originalname}
+                                            </Text>
+                                        </Card.Body>
                                     </Card>
                                 )}
                             </CardGroup>

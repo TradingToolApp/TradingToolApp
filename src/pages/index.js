@@ -2,19 +2,20 @@ import React from "react";
 import CategoryOne from "../../src/components/category/CategoryOne";
 import HeadMeta from "../../src/components/elements/HeadMeta";
 import FooterOne from "../../src/components/footer/FooterOne";
-import HeaderThree from "../../src/components/header/HeaderThree";
+import HeaderFive from "../../src/components/header/HeaderFive";
 import PostSectionFive from "../../src/components/post/PostSectionFive";
 import SliderTwo from "../../src/components/slider/SliderTwo";
-import {getPublicPosts} from "@/libs/api-client/prisma/post.api";
 import {useGetPublicPosts} from "@/hooks/data/admin/usePosts";
+import {getPublicPosts} from "@/libs/api-client/prisma/post.api";
 
 const Home = ({allPosts}) => {
-    const {publicPosts} = useGetPublicPosts(allPosts);
+    const {publicPosts, sliderPosts} = useGetPublicPosts(allPosts);
+
     return (
         <>
             <HeadMeta metaTitle="Home"/>
-            <HeaderThree/>
-            <SliderTwo slidePost={publicPosts}/>
+            <HeaderFive/>
+            <SliderTwo slidePost={sliderPosts}/>
             <CategoryOne cateData={publicPosts}/>
             <PostSectionFive postData={publicPosts} pClass="section-gap bg-grey-light-three"/>
             <FooterOne/>

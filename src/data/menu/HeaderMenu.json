@@ -1,51 +1,103 @@
 [
   {
-    "language": "en",
-    "data": [
+    "label": "Home",
+    "path": "#",
+    "submenu": [
       {
-        "label": "News",
-        "path": "/category/news"
+        "sublabel": "Home One",
+        "subpath": "/"
       },
       {
-        "label": "Tools",
-        "path": "/category/tools"
+        "sublabel": "Home Two",
+        "subpath": "/home-two"
       },
       {
-        "label": "Study",
-        "path": "/category/study"
+        "sublabel": "Home Three",
+        "subpath": "/home-three"
       },
       {
-        "label": "Discussion",
-        "path": "/category/discussion"
+        "sublabel": "Home Four",
+        "subpath": "/home-four"
       },
       {
-        "label": "Pricing",
-        "path": "/pricing"
+        "sublabel": "Home Five",
+        "subpath": "/home-five"
       }
     ]
   },
   {
-    "language": "vi",
-    "data": [
+    "label": "Posts",
+    "path": "#",
+    "submenu": [
       {
-        "label": "Tin Tức",
-        "path": "/category/news"
+        "sublabel": "Post Standard",
+        "subpath": "/post/vr-is-the-use-of-computer-technology-to-create-a-simulated-environment."
       },
       {
-        "label": "Công Cụ",
-        "path": "/category/tools"
+        "sublabel": "Post Gallery",
+        "subpath": "/post/trip-to-iqaluit-in-nunavut-a-canadian-arctic-city"
       },
       {
-        "label": "Nghiên Cứu",
-        "path": "/category/study"
+        "sublabel": "Post Video",
+        "subpath": "/post/want-to-win-a-travelPro-bag"
       },
       {
-        "label": "Thảo Luận",
-        "path": "/category/discussion"
+        "sublabel": "Post Audio",
+        "subpath": "/post/teslas-cooking-up-a-new-way-to-wire-its-cars-report-says"
       },
       {
-        "label": "Mua Dịch Vụ",
-        "path": "/pricing"
+        "sublabel": "Post Quote",
+        "subpath": "/post/barbecue-party-tips-for-a-truly-amazing-event"
+      },
+      {
+        "sublabel": "Post Text Only",
+        "subpath": "/post/deep-fryer-pieces-of-wisdom"
+      }
+    ]
+  },
+  {
+    "label": "Fashion",
+    "path": "/category/fashion"
+  },
+  {
+    "label": "Lifestyle",
+    "path": "/category/lifestyle"
+  },
+  {
+    "label": "Technology",
+    "path": "/category/technology"
+  },
+  {
+    "label": "Sports",
+    "path": "/category/sports"
+  },
+  {
+    "label": "Pages",
+    "path": "#",
+    "submenu": [
+      {
+        "sublabel": "Author",
+        "subpath": "/author/amachea-jajah"
+      },
+      {
+        "sublabel": "404 Error",
+        "subpath": "/404"
+      },
+      {
+        "sublabel": "Coming Soon",
+        "subpath": "/coming-soon"
+      },
+      {
+        "sublabel": "About Us",
+        "subpath": "/about-us"
+      },
+      {
+        "sublabel": "Team",
+        "subpath": "/team"
+      },
+      {
+        "sublabel": "Contact Us",
+        "subpath": "/contact"
       }
     ]
   }

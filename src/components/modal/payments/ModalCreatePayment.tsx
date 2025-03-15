@@ -6,45 +6,39 @@ import PayPal from "@/components/payment/paypal";
 interface ModalCreatePaymentProps {
     open: boolean;
     handleClose: () => void;
-    paymentPlan: any;
+    product: any;
     user: any;
 }
 
-const ModalCreatePayment = ({open, handleClose, paymentPlan, user}: ModalCreatePaymentProps) => {
+const ModalCreatePayment = ({open, handleClose, product, user}: ModalCreatePaymentProps) => {
     return (
         <Modal open={open} onClose={handleClose} backdrop={"static"} size="lg">
             <Modal.Header>
                 <Modal.Title>Payment</Modal.Title>
             </Modal.Header>
-            <Modal.Body style={{overflow: "scroll", overflowX: "hidden"}}>
+            <Modal.Body style={{overflow: "scroll", overflowX: "hidden", overflowY: "hidden"}}>
                 <div style={{display: "flex", flexDirection: "row"}}>
-                    <Image src={"/images/1200x1200.jpg"} width={500} height={550} alt={"payment image"}/>
+                    <Image src={product.image} width={390} height={390} alt={"payment image"}/>
                     <Card size="sm">
                         <Card.Header as="h5">
                             <div style={{display: "flex", justifyContent: "space-between", margin: "10px"}}>
                                 <h3>
-                                    {paymentPlan.title}
+                                    {product.name}
                                 </h3>
                                 <h3>
-                                    ${paymentPlan.amount}
+                                    ${product.price}
                                 </h3>
                             </div>
                         </Card.Header>
-                        <Card.Body style={{margin: "10px"}}>
+                        <Card.Body className="h-100" style={{margin: "10px"}}>
                             <div style={{marginBottom: "20px"}}>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet et excepturi facere
-                                inventore
-                                laboriosam laborum molestias necessitatibus optio possimus quisquam reiciendis rem
-                                repudiandae,
-                                similique totam ut! Alias amet culpa delectus eligendi in incidunt, ipsa libero maiores
-                                minima,
-                                molestias neque officia repudiandae temporibus ullam vitae. Dicta enim eveniet libero
-                                quaerat
-                                quibusdam.
+                                {product.description}
                             </div>
-                            <PayPal paymentPlan={paymentPlan} user={user}
-                                    handleClose={handleClose}/>
                         </Card.Body>
+                        <Card.Footer className="w-100">
+                            <PayPal product={product} user={user}
+                                    handleClose={handleClose}/>
+                        </Card.Footer>
                     </Card>
                 </div>
             </Modal.Body>

@@ -1,5 +1,5 @@
 import HeadMeta from "../components/elements/HeadMeta";
-import HeaderThree from "../components/header/HeaderThree";
+import HeaderFive from "../components/header/HeaderFive";
 import FooterOne from "../components/footer/FooterOne";
 import SignIn from "../components/authenticate/SignIn";
 
@@ -7,7 +7,7 @@ const LogIn = () => {
     return (
         <div>
             <HeadMeta metaTitle="LogIn"/>
-            <HeaderThree/>
+            <HeaderFive/>
             <SignIn/>
             <FooterOne/>
         </div>

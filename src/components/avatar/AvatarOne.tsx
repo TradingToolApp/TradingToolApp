@@ -1,26 +1,11 @@
 import React, {useRef} from "react";
-import {Divider, Dropdown, Popover, Whisper} from "rsuite";
+import {Divider, Dropdown, Loader, Popover, Whisper} from "rsuite";
 import {signOut} from "next-auth/react";
 import {GoSignOut, GoTab} from "react-icons/go";
-import {IoIosHelpCircleOutline} from "react-icons/io";
 import Image from "next/image";
+import {DUserSession} from "@/utils/types/user";
 
-interface IAvatarOne {
-    user: {
-        profile: {
-            id: string;
-            image: string;
-            name: string;
-            email: string;
-            phone: string;
-        },
-        status: string;
-        session: any;
-        redirect: (route: any) => void;
-    }
-}
-
-const AvatarOne = ({user}: IAvatarOne) => {
+const AvatarOne = ({user}: { user: DUserSession }) => {
     const trigger = useRef(null);
     const renderAdminSpeaker = ({onClose, left, top, className}: any, ref: any) => {
 
@@ -35,7 +20,7 @@ const AvatarOne = ({user}: IAvatarOne) => {
             }
             onClose();
         };
-        // console.log(user)
+
         return (
             <>
                 <Popover ref={ref} className={className} style={{left, top}} full>
@@ -43,25 +28,21 @@ const AvatarOne = ({user}: IAvatarOne) => {
                         <Dropdown.Item eventKey={1} icon={<GoTab/>}>Dashboard</Dropdown.Item>
                         <Divider style={{margin: "5px"}}/>
                         <Dropdown.Item eventKey={2} icon={<GoSignOut/>}>Sign Out</Dropdown.Item>
-                        <Dropdown.Item
-                            href="https://rsuitejs.com"
-                            target="_blank"
-                            as="a"
-                            icon={<IoIosHelpCircleOutline/>}
-                        >
-                            Help{' '}
-                        </Dropdown.Item>
                     </Dropdown.Menu>
                 </Popover>
             </>
         );
     };
 
+    if (user.profile === undefined) {
+        return;
+    }
     return (
         <>
             <Whisper placement="bottomEnd" trigger="click" ref={trigger}
                      speaker={renderAdminSpeaker}>
-                <Image src={user.profile.image} alt={"@avatar"} width={35} height={35} className="rounded-circle"/>
+                <Image src={user.profile.image} alt="@avatar" width={35} height={35}
+                       className="rounded-circle navbar-avatar"/>
             </Whisper>
         </>
     );

@@ -1,28 +1,53 @@
 {
-    "button": {
-        "readMore": "Đọc thêm",
-        "share": "Chia sẻ"
-    },
-    "category": {
-        "news": "Tin tức",
-        "tools": "Công cụ",
-        "study": "Nghiên cứu",
-        "discussion": "Thảo luận"
-    },
-    "page": {
-        "home": "Trang chủ",
-        "blog": "Blog",
-        "team": "Đội ngũ",
-        "contact": "Liên hệ"
-    },
-    "widget": {
-        "recent": "GẦN ĐÂY",
-        "popular": "PHỔ BIẾN",
-        "comment": "BÌNH LUẬN"
-    },
-    "vietnamese": "vietnamese",
-    "welcome": "Chào mừng đến với blog của tôi",
-    "aboutUs": "Về chúng tôi",
-    "contact": "Liên hệ",
-    "home": "Trang chủ"
+  "button": {
+    "readMore": "Đọc thêm",
+    "share": "Chia sẻ"
+  },
+  "category": {
+    "news": "Tin tức",
+    "tools": "Công cụ",
+    "study": "Nghiên cứu",
+    "discussion": "Thảo luận"
+  },
+  "page": {
+    "home": "Trang chủ",
+    "blog": "Blog",
+    "team": "Đội ngũ",
+    "contact": "Liên hệ"
+  },
+  "widget": {
+    "recent": "GẦN ĐÂY",
+    "popular": "PHỔ BIẾN",
+    "comment": "BÌNH LUẬN"
+  },
+  "vietnamese": "vietnamese",
+  "welcome": "Chào mừng đến với blog của tôi",
+  "aboutUs": "Về chúng tôi",
+  "contact": "Liên hệ",
+  "home": "Trang chủ",
+  "login": {
+    "title": "Đăng nhập",
+    "description": "Địa chỉ email của bạn sẽ được bảo mật. Tất cả các trường đều bắt buộc.",
+    "submit": "ĐĂNG NHẬP",
+    "register": "Chưa có tài khoản? Đăng ký",
+    "forgot": "Quên mật khẩu?"
+  },
+  "forgotPassword": {
+    "title": "Quên mật khẩu",
+    "description": "Nhập địa chỉ email của bạn để đặt lại mật khẩu.",
+    "submit": "LẤY MẬT KHẨU",
+    "login": "Đã có tài khoản? Quay lại đăng nhập"
+  },
+  "register": {
+    "title": "Đăng ký",
+    "description": "Địa chỉ email của bạn sẽ được bảo mật. Tất cả các trường đều bắt buộc.",
+    "submit": "ĐĂNG KÝ",
+    "login": "Đã có tài khoản? Đăng nhập"
+  },
+  "resetPassword": {
+    "title": "Đặt lại mật khẩu",
+    "description": "Nhập mật khẩu mới của bạn.",
+    "submit": "ĐẶT LẠI",
+    "login": "Đã có tài khoản? Đăng nhập"
+  }
 }

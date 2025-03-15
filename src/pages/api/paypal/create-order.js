@@ -1,4 +1,4 @@
-import client from '../../../libs/paypal'
+import client from '@/libs/paypal'
 
 import {
     ApiError,
@@ -7,7 +7,7 @@ import {
 
 const ordersController = new OrdersController(client);
 
-const createOrder = async (user, paymentAmount) => {
+const createOrder = async (user, price) => {
     const collect = {
         body: {
             intent: "CAPTURE",
@@ -15,7 +15,7 @@ const createOrder = async (user, paymentAmount) => {
                 {
                     amount: {
                         currencyCode: "USD",
-                        value: paymentAmount.toString(),
+                        value: price.toString(),
                     },
                 },
             ],
@@ -44,13 +44,13 @@ const createOrder = async (user, paymentAmount) => {
 export default async function Handler(req, res) {
     if (req.method !== "POST")
         return res.status(404).json({success: false, message: "Not Found"})
-    if (!req.body.user || !req.body.paymentAmount)
-        return res.status(400).json({success: false, message: "Please Provide order_price And User ID"})
+    if (!req.body.user || !req.body.product)
+        return res.status(400).json({success: false, message: "Please Provide product And User ID"})
 
     try {
         // use the cart information passed from the front-end to calculate the order amount detals
-        const {user, paymentAmount} = req.body;
-        const {jsonResponse, httpStatusCode} = await createOrder(user, paymentAmount);
+        const {user, product} = req.body;
+        const {jsonResponse, httpStatusCode} = await createOrder(user, product.price);
         return res.status(httpStatusCode).json(jsonResponse);
     } catch (error) {
         console.error("Failed to create order:", error);

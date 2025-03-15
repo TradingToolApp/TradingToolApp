@@ -1,6 +1,6 @@
 import {ERROR_CODE, SUCCESS_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
 import db from "@/libs/prisma/db";
-import {hashedPassword, comparePassword} from "../libs-server/bcrypt";
+import {hashedPassword, comparePassword} from "@/libs/bcrypt";
 
 const handler = async (req, res) => {
     try {

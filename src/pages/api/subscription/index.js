@@ -19,7 +19,9 @@ const getSubscribedUsers = async (req, res) => {
                         email: true,
                         phone: true,
                     }
-                }
+                },
+                product: true,
+                package: true
             },
             orderBy: [
                 {endDate: "asc"},
@@ -27,21 +29,12 @@ const getSubscribedUsers = async (req, res) => {
             ]
         });
 
-        const data = subscribedUsers.map((element) => {
-            return {
-                id: element.id,
-                userId: element.userId,
-                type: element.type,
-                startDate: moment(element.startDate).format("DD-MM-YYYY"),
-                endDate: moment(element.endDate).format("DD-MM-YYYY"),
-                registeredDevices: element.registeredDevices,
-                active: element.active,
-                name: element.user.name,
-                email: element.user.email,
-                phone: element.user.phone,
-            }
-        })
-        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: data});
+        return res.status(200).json({
+            success: true,
+            code: SUCCESS_CODE,
+            message: SUCCESS_MESSAGE,
+            data: subscribedUsers
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});

@@ -1,6 +1,6 @@
 import {Grid, Row, Col} from 'rsuite';
 import HeadMeta from "@/components/elements/HeadMeta";
-import HeaderThree from "@/components/header/HeaderThree";
+import HeaderFive from "@/components/header/HeaderFive";
 import {getTags} from "@/libs/api-client/prisma/tag.api";
 import dynamic from "next/dynamic";
 import useWindowSize from "@/hooks/useWindowSize"; // lazy loading
@@ -15,7 +15,7 @@ const Tags = ({allTags}) => {
         <Grid className="d-flex flex-column vh-100 vw-100" fluid>
             <Row>
                 <HeadMeta metaTitle="Admin Dashboard"/>
-                <HeaderThree/>
+                <HeaderFive/>
             </Row>
             <Row className="h-100 overflow-y-auto d-flex flex-row">
                 <Col className="sidebar"

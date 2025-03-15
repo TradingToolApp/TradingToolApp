@@ -3,12 +3,12 @@ import {toast} from 'react-toastify';
 import {toastConfig} from "@/libs/constant";
 import axios from "axios";
 
-const PayPal = ({paymentPlan, user, handleClose, ...rests}) => {
+const PayPal = ({product, user, handleClose, ...rests}) => {
     const paypalCreateOrder = async () => {
         try {
             let response = await axios.post('/api/paypal/create-order', {
                 user: user.profile,
-                paymentAmount: paymentPlan.amount,
+                product: product,
             })
 
             return response.data.id
@@ -22,7 +22,7 @@ const PayPal = ({paymentPlan, user, handleClose, ...rests}) => {
             let response = await axios.post('/api/paypal/capture-order', {
                 ...data,
                 user: user.profile,
-                paymentType: paymentPlan.type
+                product: product
             })
 
             if (response.data.success) {
@@ -43,6 +43,7 @@ const PayPal = ({paymentPlan, user, handleClose, ...rests}) => {
             }}
         >
             <PayPalButtons
+                className="w-100"
                 style={{
                     color: 'gold',
                     shape: 'rect',

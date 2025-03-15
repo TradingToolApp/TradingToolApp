@@ -1,6 +1,6 @@
+import db from "@/libs/prisma/db";
 import {ERROR_CODE, SUCCESS_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
-import {encryptData} from "../../libs-server/cryptojs";
-import userData from "./data"
+import {encryptData} from "@/libs/cryptojs";
 
 export default function handler(req, res) {
     switch (req.method) {
@@ -10,23 +10,72 @@ export default function handler(req, res) {
 }
 
 const getUserProduct = async (req, res) => {
-    const {name, id} = req.query
+    const {name, login} = req.query
     try {
-        if (!id) {
-            return res.status(400).json({error: "Missing user id"})
+        if (!name || !login) {
+            return res.status(400).json({error: "Missing name or login"})
         }
 
-        const jsondata = JSON.stringify(userData);
-        // const jsondata = "{\"name\":\"John Doe\",\"login\":\"johndoe123\",\"products\":[{\"name\":\"RSI\",\"id\":12345,\"expiry\":\"2025-02-03 23:00:00\",\"version\":2,\"update version required\":1,\"update required\":0},{\"name\":\"MACD\",\"id\":54321,\"expiry\":\"2025-07-10 18:45:30\",\"version\":1.7,\"update version required\":0,\"update required\":1}]}";
+        const jsonData = await db.subscriptionDevice.findMany({
+            where: {
+                name: name,
+                login: login,
+                user: {
+                    subscriptions: {
+                        some: {
+                            active: true,
+                            endDate: {
+                                gte: new Date()
+                            }
+                        },
+                    }
+                }
+            },
+            select: {
+                user: {
+                    select: {
+                        email: true,
+                        subscriptions: {
+                            select: {
+                                id: true,
+                                subscriptionType: true,
+                                startDate: true,
+                                endDate: true,
+                                licenseKey: true,
+                                active: true,
+                                product: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        type: true,
+                                        platform: true,
+                                        allowedVersion: true,
+                                        latestVersion: true,
+                                        forceUpdateCode: true,
+                                    }
+                                },
+                                package: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        type: true,
+                                        platform: true,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
-        // console.log(jsondata)
-        // return res.status(200).json(jsondata);
+        const encryptJson = encryptData(jsonData, process.env.LICENSE_KEY_SECRET);
 
-        const encryptJson = encryptData(jsondata, process.env.LICENSE_KEY_SECRET);
         const data = "###!!!" + encryptJson + "!!!###"
+        console.log(data);
         return res.status(200).json(data);
     } catch (error) {
-        console.log(error.code);
+        console.log(error.stack);
         return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
     }
 }

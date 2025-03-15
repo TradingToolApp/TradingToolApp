@@ -1,47 +1,46 @@
-import { useContext } from "react";
+import {useContext} from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { slugify } from "../../utils";
+import {slugify} from "../../utils";
 
-const CategoryOne = ({ cateData }) => {
-  const categories = cateData.map(data => {
-    const obj = {
-      name: data.cate,
-      thumb: data.cate_img
-    }
-    return obj;
-  });
+const CategoryOne = ({cateData}) => {
+    const categories = cateData.map(data => {
+        const obj = {
+            name: data.cate,
+            thumb: data.cate_img
+        }
+        return obj;
+    });
 
-  const category = categories.reduce((prev, curr) => {
-    prev[curr.name] = (prev[curr.name] || 0) + 1
-    return prev;
-  }, {})
+    const category = categories.reduce((prev, curr) => {
+        prev[curr.name] = (prev[curr.name] || 0) + 1
+        return prev;
+    }, {})
 
-  var cateList = Object.keys(category).map(cateTitle => {
-    const imgGet = categories.filter(post => post.name === cateTitle);
+    var cateList = Object.keys(category).map(cateTitle => {
+        const imgGet = categories.filter(post => post.name === cateTitle);
+        return {
+            name: cateTitle,
+            slug: slugify(cateTitle),
+            count: category[cateTitle],
+            cateImg: imgGet[0].thumb
+        };
+    });
 
-    return {
-      name: cateTitle,
-      slug: slugify(cateTitle),
-      count: category[cateTitle],
-      cateImg: imgGet[0].thumb
-    };
-  });
-
-  return (
-    <div className="axil-banner-cat-counter">
-      <div className="container">
-        <div className="axil-content">
-          <ul className="category-list-wrapper d-flex justify-content-center">
-            {cateList.slice(0, 5).map((data) => (
-              <li className="category-list perfect-square" key={data.slug}>
-                <Link href={`/category/${data.slug}`}>
+    return (
+        <div className="axil-banner-cat-counter">
+            <div className="container">
+                <div className="axil-content">
+                    <ul className="category-list-wrapper d-flex justify-content-center">
+                        {cateList.slice(0, 5).map((data) => (
+                            <li className="category-list perfect-square" key={data.slug}>
+                                <Link href={`/category/${data.slug}`}>
                   <span className="list-inner">
                     <Image
-                      src={data.cateImg}
-                      alt={data.name}
-                      width={160}
-                      height={160}
+                        src={data.cateImg}
+                        alt={data.name}
+                        width={160}
+                        height={160}
                     />
                     <div className="post-info-wrapper overlay">
                       <div className="counter-inner">
@@ -50,17 +49,17 @@ const CategoryOne = ({ cateData }) => {
                       <h4 className="cat-title">{data.name}</h4>
                     </div>
                   </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          {/* End of .category-list-wrapper */}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                    {/* End of .category-list-wrapper */}
+                </div>
+                {/* End of .axil-content */}
+            </div>
+            {/* End of .container */}
         </div>
-        {/* End of .axil-content */}
-      </div>
-      {/* End of .container */}
-    </div>
-  );
+    );
 };
 
 export default CategoryOne;

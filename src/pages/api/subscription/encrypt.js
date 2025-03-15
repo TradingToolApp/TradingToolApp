@@ -1,5 +1,5 @@
 import {ERROR_CODE, SUCCESS_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
-import {encryptData, generateSecretKey} from "../libs-server/cryptojs";
+import {encryptData} from "@/libs/cryptojs";
 
 const handler = async (req, res) => {
     switch (req.method) {
@@ -10,11 +10,13 @@ const handler = async (req, res) => {
 
 const encrypt = async (req, res) => {
     try {
-        const secretkey = generateSecretKey();
-        console.log(secretkey)
+        const {data, secret} = req.body;
 
-        const {object, secret} = req.body;
-        const encryptObj = encryptData(object, secret)
+        if (!data || !secret) {
+            return res.status(400).json({error: "Missing data or secret"})
+        }
+
+        const encryptObj = encryptData(data, secret)
 
         return res.status(200).json({
             success: true,

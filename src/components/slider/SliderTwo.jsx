@@ -84,7 +84,7 @@ const SliderTwo = ({slidePost}) => {
                         <div className="banner-slider-container banner-slider-container-two">
                             <Slider {...slideSettingsContent} asNavFor={nav3} ref={(slider1 => setNav1(slider1))}
                                     className="slick-slider slick-slider-for">
-                                {slidePost.slice(0, 3).map((data) => (
+                                {slidePost.map((data) => (
                                     <div className="item" key={data.slug}>
                                         <h1 className="page-title m-b-xs-40 hover-line">
                                             <Link href={`/post/${data.slug}`}>
@@ -105,7 +105,7 @@ const SliderTwo = ({slidePost}) => {
                 <div className="banner-slider-container-synced banner-slider-container-synced__two">
                     <Slider {...slideSettingsImage} asNavFor={nav1} ref={(slider2 => setNav2(slider2))}
                             className="slick-slider slick-slider-nav">
-                        {slidePost.slice(0, 3).map((data) => (
+                        {slidePost.map((data) => (
                             <div className="item" key={data.slug}>
                                 <Image
                                     src={data.featureImg}
@@ -120,7 +120,7 @@ const SliderTwo = ({slidePost}) => {
                 <div className="banner-share-slider-container banner-share-slider-container__two">
                     <Slider {...slideSettingsShare} asNavFor={nav2} ref={(slider3 => setNav3(slider3))}
                             className="slick-slider banner-share-slider">
-                        {slidePost.slice(0, 3).map((data) => (
+                        {slidePost.map((data) => (
                             <div className="item" key={data.slug}>
                                 <div className="banner-shares slick-banner-shares">
                                     {/* <div className="toggle-shares" onClick={ShareToggler}>

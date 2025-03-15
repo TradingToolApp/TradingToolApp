@@ -15,22 +15,21 @@ const ModalAddImage = ({open, handleClose}: ModalAddImagesProps) => {
 
     const handleUpload = async () => {
         try {
-            const validate = upload.some((file: any) => file.name.includes(" "));
-            if (validate) {
+            const validateNoSpace = upload.some((file: any) => file.name.includes(" "));
+            if (validateNoSpace) {
                 toaster.push(<Message type={"error"}>File name should not contain whitespace!</Message>);
                 return;
             }
 
             const formData = new FormData();
             upload.map((file: any) => formData.append("file", file.blobFile));
-
             setUploading(true);
             const res = await addImages.mutateAsync(formData as any);
+            setUploading(false);
             if (res.success) {
                 setUpload([]);
                 handleClose();
             }
-            setUploading(false);
         } catch (error) {
             console.log(error);
             setUploading(false);

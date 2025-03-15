@@ -1,12 +1,11 @@
+import React from "react";
+import dynamic from 'next/dynamic'
 import WidgetPost from "../../widget/WidgetPost";
 import WidgetYoutubeList from "../../widget/WidgetYoutubeVideo";
 import MetaDataThree from "./elements/meta/MetaDataThree";
 import PostAuthor from "./elements/PostAuthor";
-import PostComment from "./elements/PostComment";
 import SocialShareBottom from "./elements/SocialShareBottom";
 import SocialShareSide from "./elements/SocialShareSide";
-import React from "react";
-import dynamic from 'next/dynamic'
 
 const MarkdownRenderer = dynamic(() => import("@/components/post/post-format/Markdown/MarkdownRenderer"), {ssr: false})
 
@@ -31,7 +30,6 @@ const PostFormatAudio = ({postData, allData}) => {
                                 <SocialShareBottom shareData={postData}/>
                                 <hr className="m-t-xs-50 m-b-xs-60"/>
                                 <PostAuthor authorData={postData}/>
-                                <PostComment commentData={postData}/>
                             </main>
                         </div>
                         <div className="col-lg-4">

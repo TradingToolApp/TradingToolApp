@@ -9,29 +9,49 @@ import {
     Grid,
     VStack,
     FlexboxGrid,
-    Tabs
+    Tabs,
+    Row,
+    Col
 } from "rsuite";
-import {Textarea} from "@/components/form/customElement";
 import Image from "next/image";
-import ModalSelectImage from "@/components/modal/admin/images/ModalSelectImage";
 import {useAddProduct, useUpdateProduct} from "@/hooks/data/admin/useProducts";
+import ModalSelectImage from "@/components/modal/admin/images/ModalSelectImage";
+import {Textarea, SelectPickerCustom, InputWithCopyButton} from "../customElement";
+import {StatusListForm, PlatformListForm, ProductTypeListForm} from "@/libs/constant";
 
-const {StringType} = Schema.Types;
+const {StringType, NumberType} = Schema.Types;
 
 const model = Schema.Model({
-    name_EN: StringType().isRequired("This field is required."),
+    id: NumberType().isRequired("This field is required."),
+    name: StringType().isRequired("This field is required."),
+    image: StringType().isRequired("This field is required."),
+    price: StringType().isRequired("This field is required."),
+    type: StringType().isRequired("This field is required."),
+    platform: StringType().isRequired("This field is required."),
+    status: StringType().isRequired("This field is required."),
+    allowedVersion: NumberType().isRequired("This field is required."),
+    latestVersion: NumberType().isRequired("This field is required."),
+    forceUpdateCode: NumberType().isRequired("This field is required."),
+    urlPost: StringType().isRequired("This field is required."),
+    urlDownload: StringType().isRequired("This field is required."),
     description_EN: StringType().isRequired("This field is required."),
-    name_VI: StringType().isRequired("This field is required."),
     description_VI: StringType().isRequired("This field is required."),
 });
 
 const initialFormValue = {
     id: "",
+    name: "",
     image: "/images/390x390.png",
-    url: "",
-    name_EN: "",
+    price: "",
+    type: "",
+    platform: "",
+    status: "",
+    allowedVersion: "",
+    latestVersion: "",
+    forceUpdateCode: "",
+    urlPost: "",
+    urlDownload: "",
     description_EN: "",
-    name_VI: "",
     description_VI: "",
 }
 
@@ -94,46 +114,109 @@ const FormProducts = ({formData, handleClose, action, ...rests}: any) => {
 
     return (
         <>
-            <Form style={{all: "unset"}} fluid ref={formRef} model={model} onCheck={setFormError}
+            <Form className="h-100" fluid ref={formRef} model={model} onCheck={setFormError}
                   onChange={setFormValue} formValue={formValue} {...rests}>
-                <VStack>
-                    <FlexboxGrid style={{width: "100%"}}>
-                        <FlexboxGrid.Item colspan={12}>
-                            <Grid fluid>
-                                <Form.Group controlId="product_img">
-                                    <Form.ControlLabel>Image</Form.ControlLabel>
-                                    <Button onClick={handleOpenModalImage}>Select</Button>
+                <VStack className="h-100">
+                    <FlexboxGrid className="h-100 w-100" justify="space-between">
+                        <FlexboxGrid.Item colspan={16}>
+                            <Grid className="me-4" fluid>
+                                <Row className="my-4">
+                                    <Col xs={6}>
+                                        <Form.Group controlId="id">
+                                            <Form.ControlLabel>ID</Form.ControlLabel>
+                                            <Form.Control name="id" disabled={action === "UPDATE"}/>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col xs={12}>
+                                        <Form.Group controlId="name">
+                                            <Form.ControlLabel>Name</Form.ControlLabel>
+                                            <Form.Control name="name"/>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col xs={4}>
+                                        <Form.Group controlId="price">
+                                            <Form.ControlLabel>Price</Form.ControlLabel>
+                                            <Form.Control name="price"/>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row className="my-4" gutter={50}>
+                                    <Col>
+                                        <Form.Group controlId="type">
+                                            <Form.ControlLabel>Type</Form.ControlLabel>
+                                            <Form.Control name="type" accepter={SelectPickerCustom}
+                                                          data={ProductTypeListForm}/>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group controlId="platform">
+                                            <Form.ControlLabel>Platform</Form.ControlLabel>
+                                            <Form.Control name="platform" accepter={SelectPickerCustom}
+                                                          data={PlatformListForm}/>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group controlId="status">
+                                            <Form.ControlLabel>status</Form.ControlLabel>
+                                            <Form.Control name="status" accepter={SelectPickerCustom}
+                                                          data={StatusListForm}/>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row className="my-4">
+                                    <Col xs={8}>
+                                        <Form.Group controlId="allowedVersion">
+                                            <Form.ControlLabel>Allowed Version</Form.ControlLabel>
+                                            <Form.Control name="allowedVersion"/>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col xs={8}>
+                                        <Form.Group controlId="latestVersion">
+                                            <Form.ControlLabel>Latest Version</Form.ControlLabel>
+                                            <Form.Control name="latestVersion"/>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col xs={8}>
+                                        <Form.Group controlId="forceUpdateCode">
+                                            <Form.ControlLabel>Force Update Code</Form.ControlLabel>
+                                            <Form.Control name="forceUpdateCode"/>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Form.Group controlId="urlPost">
+                                    <Form.ControlLabel>urlPost</Form.ControlLabel>
+                                    <Form.Control name="urlPost"/>
                                 </Form.Group>
-                                {action === "UPDATE" && img.length === 0 &&
-                                    <Image src={formValue.image} alt="Product's Image" width={100} height={100}/>}
-                                {img.length !== 0 &&
-                                    <Image src={img[0]} alt="Product's Image" width={100} height={100}/>}
+                                <Form.Group controlId="urlDownload">
+                                    <Form.ControlLabel>urlDownload</Form.ControlLabel>
+                                    <Form.Control name="urlDownload"/>
+                                </Form.Group>
                             </Grid>
                         </FlexboxGrid.Item>
-                        <FlexboxGrid.Item colspan={12}>
+                        <FlexboxGrid.Item colspan={8}>
                             <div className="rsuite-custom-tab">
                                 <Tabs defaultActiveKey={"1"}>
                                     <Tabs.Tab eventKey="1" title="English">
-                                        <Form.Group controlId="name_EN">
-                                            <Form.ControlLabel>Name EN</Form.ControlLabel>
-                                            <Form.Control name="name_EN"/>
-                                        </Form.Group>
                                         <Form.Group controlId="description_EN">
                                             <Form.ControlLabel>Description EN</Form.ControlLabel>
                                             <Form.Control name="description_EN" accepter={Textarea} rows={5}/>
                                         </Form.Group>
                                     </Tabs.Tab>
                                     <Tabs.Tab eventKey="2" title="Vietnamese">
-                                        <Form.Group controlId="name_VI">
-                                            <Form.ControlLabel>Name VI</Form.ControlLabel>
-                                            <Form.Control name="name_VI"/>
-                                        </Form.Group>
                                         <Form.Group controlId="description_VI">
                                             <Form.ControlLabel>Description VI</Form.ControlLabel>
                                             <Form.Control name="description_VI" accepter={Textarea} rows={5}/>
                                         </Form.Group>
                                     </Tabs.Tab>
                                 </Tabs>
+                                <Form.Group className="my-4" controlId="image">
+                                    <Form.ControlLabel>Image</Form.ControlLabel>
+                                    <Button onClick={handleOpenModalImage}>Select</Button>
+                                </Form.Group>
+                                {action === "UPDATE" && img.length === 0 &&
+                                    <Image src={formValue.image} alt="Product's Image" width={150} height={150}/>}
+                                {img.length !== 0 &&
+                                    <Image src={img[0]} alt="Product's Image" width={150} height={150}/>}
                             </div>
                         </FlexboxGrid.Item>
                     </FlexboxGrid>

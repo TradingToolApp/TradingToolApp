@@ -4,7 +4,7 @@ import FormProducts from "@/components/form/admin/FormProducts";
 
 const ModalAddProduct = ({open, handleClose}: any) => {
     return (
-        <Modal open={open} onClose={handleClose}>
+        <Modal size="lg" open={open} onClose={handleClose}>
             <Modal.Header>
                 <Modal.Title>Add Product</Modal.Title>
             </Modal.Header>

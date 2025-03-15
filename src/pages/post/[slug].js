@@ -2,18 +2,18 @@ import React, {useState, useContext, useEffect} from "react";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import HeadMeta from "../../components/elements/HeadMeta";
 import FooterOne from "../../components/footer/FooterOne";
-import HeaderThree from "../../components/header/HeaderThree";
+import HeaderFive from "../../components/header/HeaderFive";
 import PostFormatAudio from "../../components/post/post-format/PostFormatAudio";
 import PostFormatQuote from "../../components/post/post-format/PostFormatQuote";
 import PostFormatStandard from "../../components/post/post-format/PostFormatStandard";
 import PostFormatText from "../../components/post/post-format/PostFormatText";
 import PostFormatVideo from "../../components/post/post-format/PostFormatVideo";
 import {AppContext} from "@/providers/app.provider";
-import {getPublicPosts, getPostBySlug} from "@/libs/api-client/prisma/post.api";
+import {getPostBySlug, getPosts, getPublicPosts} from "@/libs/api-client/prisma/post.api";
 import {translateOnePost} from "@/utils/formatData";
 import {useGetPublicPosts} from "@/hooks/data/admin/usePosts";
 
-const PostDetails = ({slug, postData, allPostsData}) => {
+const PostDetails = ({postData, allPostsData}) => {
     const {language} = useContext(AppContext);
     const [postContent, setPostContent] = useState(translateOnePost(postData, language));
     const {publicPosts} = useGetPublicPosts(allPostsData);
@@ -41,7 +41,7 @@ const PostDetails = ({slug, postData, allPostsData}) => {
     return (
         <>
             <HeadMeta metaTitle={postContent.title}/>
-            <HeaderThree/>
+            <HeaderFive/>
             <Breadcrumb bCat={postContent.cate_slug} cateTitle={postContent.cate} aPage={postContent.title}/>
             <PostFormatHandler/>
             <FooterOne/>
@@ -86,6 +86,6 @@ export async function getStaticProps({params}) {
             postData: post,
             allPostsData
         },
-        revalidate: 1,
+        revalidate: 300,
     }
 }

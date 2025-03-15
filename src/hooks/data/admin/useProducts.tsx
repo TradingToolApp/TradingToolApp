@@ -19,6 +19,19 @@ export function useGetProducts(initialData = []) {
     }
 }
 
+export function useGetPublicProducts(initialData = []) {
+    const {language} = useContext(AppContext);
+    const queryInfo = useQuery({
+        queryKey: ['products'],
+        queryFn: productAPI.getPublicProducts,
+        placeholderData: {data: initialData}
+    })
+    return {
+        ...queryInfo,
+        products: formatProducts(queryInfo.data.data, language),
+    }
+}
+
 export const useAddProduct = () => {
     const queryClient = useQueryClient()
     return useMutation({

@@ -1,41 +1,52 @@
-import React, {useState, useRef, useEffect, useContext} from "react";
+import React, {useState, useRef, useEffect} from 'react';
 import Link from "next/link";
 import Image from "next/image";
-import {
-    Dropdown,
-    Toggle
-} from 'rsuite';
-import HeaderMenu from "../../data/menu/HeaderMenu.json";
-import OffcanvasMenu from "./OffcanvasMenu";
-import {AppContext} from '@/providers/app.provider';
-import {FaChevronDown} from "react-icons/fa6";
-import useCurrentSession from "@/hooks/useCurrentSession";
-import AvatarOne from "@/components/avatar/AvatarOne";
-import {useRouter} from "next/router";
-import CheckIcon from '@rsuite/icons/Check';
-import CloseIcon from '@rsuite/icons/Close';
-import {MdOutlineDarkMode, MdOutlineLightMode} from "react-icons/md";
-import useCurrentUser from "@/hooks/useCurrentUser";
+import MenuData from "../../data/menu/HeaderMenu.json";
+import OffcanvasMenu from './OffcanvasMenu';
 
-const buttonStyles = {
-    width: "72px",
-    fontSize: "1.6rem",
-    fontFamily: "Roboto",
-    fontWeight: 700
-}
 
 const HeaderThree = () => {
+
     // Main Menu Toggle
     var menuRef = useRef();
-    const {language, handleLanguageChange, theme, setTheme} = useContext(AppContext);
-    const [languageSelect, setLanguageSelect] = useState("EN");
-    const user = useCurrentUser();
-    const [MenuData, setMenuData] = useState([]);
-    const router = useRouter();
+
+    const toggleDropdownMenu = () => {
+        const dropdownSelect = menuRef.current.childNodes;
+        let dropdownList = [];
+
+        for (let i = 0; i < dropdownSelect.length; i++) {
+            const element = dropdownSelect[i];
+            if (element.classList.contains("has-dropdown")) {
+                dropdownList.push(element)
+            }
+        }
+
+        dropdownList.forEach(element => {
+
+            element.children[0].addEventListener('click', () => {
+
+                if (element.classList.contains('active')) {
+                    element.classList.remove('active');
+                    element.childNodes[1].classList.remove('opened');
+                } else {
+                    dropdownList.forEach(submenu => {
+                        if (element !== submenu) {
+                            submenu.classList.remove('active');
+                            submenu.childNodes[1].classList.remove('opened');
+                        } else {
+                            submenu.classList.add('active');
+                            submenu.childNodes[1].classList.add('opened');
+                        }
+                    })
+                }
+            })
+        });
+    }
+
     useEffect(() => {
-        setMenuData(HeaderMenu.filter((menu) => menu.language === language)[0].data);
-        setLanguageSelect(language);
-    }, [language]);
+        toggleDropdownMenu();
+    }, []);
+
 
     // Offcanvas Menu
 
@@ -49,36 +60,38 @@ const HeaderThree = () => {
 
     const headerSearchShow = () => {
         setSearchShow(true);
-    };
+    }
     const headerSearchClose = () => {
         setSearchShow(false);
-    };
+    }
 
     // Mobile Menu Toggle
     const [mobileToggle, setMobileToggle] = useState(false);
 
     const MobileMenuToggler = () => {
         setMobileToggle(!mobileToggle);
-        const HtmlTag = document.querySelector("html");
-        const menuSelect = document.querySelectorAll(".main-navigation li");
+        const HtmlTag = document.querySelector('html');
+        const menuSelect = document.querySelectorAll('.main-navigation li');
 
-        if (HtmlTag.classList.contains("main-menu-opened")) {
-            HtmlTag.classList.remove("main-menu-opened");
+        if (HtmlTag.classList.contains('main-menu-opened')) {
+            HtmlTag.classList.remove('main-menu-opened');
         } else {
             setTimeout(() => {
-                HtmlTag.classList.add("main-menu-opened");
-            }, 800);
+                HtmlTag.classList.add('main-menu-opened');
+            }, 800)
         }
 
-        menuSelect.forEach((element) => {
-            element.addEventListener("click", function () {
-                if (!element.classList.contains("has-dropdown")) {
-                    HtmlTag.classList.remove("main-menu-opened");
+        menuSelect.forEach(element => {
+            element.addEventListener('click', function () {
+                if (!element.classList.contains('has-dropdown')) {
+                    HtmlTag.classList.remove('main-menu-opened');
                     setMobileToggle(false);
                 }
-            });
+            })
+
         });
-    };
+    }
+
 
     return (
         <>
@@ -89,70 +102,61 @@ const HeaderThree = () => {
                         <div className="navbar-inner justify-content-between">
                             <div className="brand-logo-container">
                                 <Link href="/">
-                                    <Image
-                                        src="/images/logo.png"
-                                        alt="brand-logo"
-                                        width={48}
-                                        height={48}
-                                    />
+                                    <a>
+                                        <Image
+                                            src="/images/logo-black.svg"
+                                            alt="brand-logo"
+                                            width={102}
+                                            height={34}
+                                        />
+                                    </a>
                                 </Link>
                             </div>
                             <div className="main-nav-wrapper">
                                 <ul className="main-navigation list-inline" ref={menuRef}>
-                                    {MenuData.map((data, index) =>
-                                        data.submenu ? (
-                                            <li className="has-dropdown" key={index}>
-                                                <Link href={data.path}>
-													<span>
-														{data.label}
-                                                        <FaChevronDown style={{top: "-100px", marginLeft: "3px"}}/>
-													</span>
-                                                </Link>
-                                                <ul className="submenu">
-                                                    {data.submenu.map((data, index) =>
-                                                        data.thirdmenu ? (
-                                                            <li className="has-dropdown" key={index}>
-                                                                <Link href={data.subpath}>
-																	<span>
-																		{data.sublabel}
-																	</span>
-                                                                </Link>
-                                                                <ul className="submenu">
-                                                                    {data.thirdmenu.map((data, index) => (
-                                                                        <li key={index}>
-                                                                            <Link href={data.tpath}>
-                                                                                <span>{data.tlabel}</span>
-                                                                            </Link>
-                                                                        </li>
-                                                                    ))}
-                                                                </ul>
-                                                            </li>
-                                                        ) : (
-                                                            <li key={index}>
-                                                                <Link href={data.subpath}>
-                                                                    <span>{data.sublabel}</span>
-                                                                </Link>
-                                                            </li>
-                                                        )
-                                                    )}
-                                                </ul>
-                                            </li>
-                                        ) : (
-                                            <li key={index}>
-                                                <Link href={data.path}>
-                                                    <span>{data.label}</span>
-                                                </Link>
-                                            </li>
-                                        )
-                                    )}
+                                    {
+                                        MenuData.map((data, index) => (
+                                            data.submenu ?
+                                                <li className="has-dropdown" key={index}>
+                                                    <Link href={data.path}>
+                                                        <a>{data.label}</a>
+                                                    </Link>
+                                                    <ul className="submenu">
+                                                        {data.submenu.map((data, index) => (
+                                                            data.thirdmenu ?
+                                                                <li className="has-dropdown" key={index}>
+                                                                    <Link href={data.subpath}>
+                                                                        <a>{data.sublabel}</a>
+                                                                    </Link>
+                                                                    <ul className="submenu">
+                                                                        {data.thirdmenu.map((data, index) => (
+                                                                            <li key={index}>
+                                                                                <Link href={data.tpath}>
+                                                                                    <a>{data.tlabel}</a>
+                                                                                </Link>
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                </li> :
+                                                                <li key={index}>
+                                                                    <Link href={data.subpath}>
+                                                                        <a>{data.sublabel}</a>
+                                                                    </Link>
+                                                                </li>
+                                                        ))}
+                                                    </ul>
+                                                </li> :
+                                                <li key={index}>
+                                                    <Link href={data.path}>
+                                                        <a>{data.label}</a>
+                                                    </Link>
+                                                </li>
+                                        ))
+                                    }
                                 </ul>
                             </div>
                             <div className="navbar-extra-features">
-                                <form
-                                    action="#"
-                                    className={`navbar-search ${searchshow ? "show-nav-search" : ""
-                                    }`}
-                                >
+                                <form action="#" className={`navbar-search ${searchshow ? "show-nav-search" : ""}`}>
                                     <div className="search-field">
                                         <input
                                             type="text"
@@ -163,47 +167,22 @@ const HeaderThree = () => {
                                             <i className="fal fa-search"/>
                                         </button>
                                     </div>
-                                    <span
-                                        className="navbar-search-close"
-                                        onClick={headerSearchClose}
-                                    >
-										<i className="fal fa-times"/>
-									</span>
+                                    <span className="navbar-search-close" onClick={headerSearchClose}>
+									<i className="fal fa-times"/>
+								</span>
                                 </form>
-                                <div style={{display: "flex", alignItems: "center", gap: "10px"}}>
-                                    <div>
-                                        <Toggle
-                                            style={{marginRight: "10px"}}
-                                            size="lg"
-                                            color="yellow"
-                                            checkedChildren={<MdOutlineLightMode color={"yellow"}/>}
-                                            unCheckedChildren={<MdOutlineDarkMode color={"white"}/>}
-                                            defaultChecked
-                                            onChange={() => {
-                                                setTheme(theme === "light" ? "dark" : "light")
-                                            }}
-                                        />
-                                        <Dropdown title={languageSelect.toUpperCase()} size="lg"
-                                                  className="rsuite-langDropdown">
-                                            <Dropdown.Item onClick={() => handleLanguageChange("en")}
-                                                           style={buttonStyles}>EN</Dropdown.Item>
-                                            <Dropdown.Item onClick={() => handleLanguageChange("vi")}
-                                                           style={buttonStyles}>VI</Dropdown.Item>
-                                        </Dropdown>
-                                    </div>
-                                    {
-                                        user.status === "unauthenticated" && router.pathname !== "/login" &&
-                                        <button className={"btn btn-primary"}
-                                                onClick={() => router.push("/login")}>Sign In
-                                        </button>
-                                    }
-                                    {user.status === "authenticated" && <AvatarOne user={user}/>}
-                                </div>
+
+                                <button className="nav-search-field-toggler" onClick={headerSearchShow}>
+                                    <i className="far fa-search"/>
+                                </button>
+                                <button className="side-nav-toggler" onClick={handleShow}>
+                                    <span/>
+                                    <span/>
+                                    <span/>
+                                </button>
                             </div>
                             <div
-                                className={`main-nav-toggler d-block d-lg-none ${mobileToggle ? "expanded" : ""
-                                }`}
-                            >
+                                className={`main-nav-toggler d-block d-lg-none ${mobileToggle ? "expanded" : ""}`}>
                                 <div className="toggler-inner" onClick={MobileMenuToggler}>
                                     <span/>
                                     <span/>

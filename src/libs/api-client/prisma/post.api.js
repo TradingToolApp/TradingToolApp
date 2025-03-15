@@ -1,4 +1,5 @@
 import db from "@/libs/prisma/db";
+import {StatusType} from "@prisma/client";
 
 export const getPosts = async (fields = []) => {
     const data = await db.post.findMany({
@@ -52,57 +53,59 @@ export const getPosts = async (fields = []) => {
 }
 
 export const getPublicPosts = async (fields = []) => {
-    const data = await db.post.findMany({
-        where: {
-            status: "public",
-        },
-        include: {
-            translations: true,
-            tags: {
-                include: {
-                    translations: true,
-                }
+    try {
+        const data = await db.post.findMany({
+            where: {
+                status: StatusType.PUBLIC,
             },
-            author: {
-                include: {
-                    translations: true,
-                }
+            include: {
+                translations: true,
+                tags: {
+                    include: {
+                        translations: true,
+                    }
+                },
+                author: {
+                    include: {
+                        translations: true,
+                    }
+                },
+                category: {
+                    include: {
+                        translations: true,
+                    }
+                },
             },
-            category: {
-                include: {
-                    translations: true,
-                }
-            },
-        },
-        orderBy: [
-            {
-                trending: 'desc',
-            },
-            {
-                updatedAt: 'desc',
-            },
-            {
-                id: 'asc',
-            }
-        ],
-    });
+            orderBy: [
+                {
+                    trending: 'desc',
+                },
+                {
+                    updatedAt: 'desc',
+                },
+            ],
+        });
 
-    if (fields.length === 0) {
-        return JSON.parse(JSON.stringify(data));
+        if (fields.length === 0) {
+            return JSON.parse(JSON.stringify(data));
+        }
+
+        const posts = data.map((post) => {
+            const items = {};
+            fields.map((field) => {
+                    if (typeof post[field] !== 'undefined') {
+                        items[field] = post[field]
+                    }
+                }
+            )
+            return items;
+        })
+
+        return JSON.parse(JSON.stringify(posts));
+    } catch (error) {
+        console.log(error.stack);
+        return error;
     }
-
-    const posts = data.map((post) => {
-        const items = {};
-        fields.map((field) => {
-                if (typeof post[field] !== 'undefined') {
-                    items[field] = post[field]
-                }
-            }
-        )
-        return items;
-    })
-
-    return JSON.parse(JSON.stringify(posts));
 }
 
 export const getPostBySlug = async (slug) => {

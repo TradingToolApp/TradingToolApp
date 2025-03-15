@@ -40,7 +40,7 @@
         "./src/middlewares/*"
       ],
       "@/types/*": [
-        "./src/types/*"
+        "./src/utils/types/*"
       ]
     }
   },

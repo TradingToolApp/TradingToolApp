@@ -1,66 +1,69 @@
-import React, {useState} from "react";
-import {Button, Table} from "rsuite";
-import {DateTimeCell, LicenseKeyCell, ArrayCell} from "./CellLisenseInfo";
-import useWindowSize from "@/hooks/useWindowSize";
+import React from "react";
+import {Loader, Table} from "rsuite";
+import {useGetUserSubscriptionsById} from "@/hooks/data/user/useUser";
+import {DateTimeCell} from "@/components/table/user/lisense-info/CellLisenseInfo";
 
 const {Column, HeaderCell, Cell} = Table;
 
-const TableLicenseInfo = ({tableData}) => {
-    const {screenHeight} = useWindowSize();
-    const [show, setShow] = useState(false);
-    const [showLicenseKey, setShowLicenseKey] = useState(false);
-    const [showRegisteredDevices, setShowRegisteredDevices] = useState(false);
+const TableLicenseInfo = ({user}) => {
+    const {subscriptions} = useGetUserSubscriptionsById(user.id);
 
-    const handleToggleLicenseKey = () => {
-        setShowLicenseKey(!showLicenseKey)
-    }
-    const handleToggleRegisteredDevices = () => {
-        setShowRegisteredDevices(!showRegisteredDevices)
+    if (subscriptions === undefined) {
+        return <Loader size="md" style={{minHeight: "100vh", margin: "0"}} backdrop
+                       content="loading..." vertical/>
     }
 
     return (
-        <Table
-            height={screenHeight - 400}
-            data={tableData}
-            rowHeight={80}
-        >
-            <Column width={120}>
-                <HeaderCell>Type</HeaderCell>
-                <Cell dataKey="type"/>
-            </Column>
-            <Column width={120}>
-                <HeaderCell>Start Date</HeaderCell>
-                <DateTimeCell dataKey="startDate"/>
-            </Column>
-            <Column width={120}>
-                <HeaderCell>End Date</HeaderCell>
-                <DateTimeCell dataKey="endDate"/>
-            </Column>
-            <Column width={200}
-                    flexGrow={1}
-                    rowSpan={() => showLicenseKey ? 10 : 1}
+        <>
+            <h5>Packages</h5>
+            <Table
+                height={250}
+                data={subscriptions.packages}
             >
-                <HeaderCell>
-                    <div style={{display: "flex", justifyContent: "space-between"}}>
-                        License Key
-                        <Button size="xs" onClick={handleToggleLicenseKey}>Show</Button>
-                    </div>
-                </HeaderCell>
-                <LicenseKeyCell dataKey="licenseKey" show={showLicenseKey}/>
-            </Column>
-            <Column width={120}
-                    flexGrow={1}
-                    rowSpan={() => showRegisteredDevices ? 10 : 1}
+                <Column width={120}>
+                    <HeaderCell>Name</HeaderCell>
+                    <Cell>{rowData => rowData.package.name.toString()}</Cell>
+                </Column>
+                <Column width={120}>
+                    <HeaderCell>Type</HeaderCell>
+                    <Cell dataKey="subscriptionType"/>
+                </Column>
+                <Column width={120}>
+                    <HeaderCell>Start Date</HeaderCell>
+                    <DateTimeCell dataKey="startDate"/>
+                </Column>
+                <Column width={120}>
+                    <HeaderCell>End Date</HeaderCell>
+                    <DateTimeCell dataKey="endDate"/>
+                </Column>
+            </Table>
+            <h5 className="mt-5">Products</h5>
+            <Table
+                height={300}
+                data={subscriptions.products}
             >
-                <HeaderCell>
-                    <div style={{display: "flex", justifyContent: "space-between"}}>
-                        Registered Devices
-                        <Button size="xs" onClick={handleToggleRegisteredDevices}>Show</Button>
-                    </div>
-                </HeaderCell>
-                <ArrayCell dataKey="devices" show={showRegisteredDevices}/>
-            </Column>
-        </Table>
+                <Column width={120}>
+                    <HeaderCell>Name</HeaderCell>
+                    <Cell>{rowData => rowData.product.name.toString()}</Cell>
+                </Column>
+                <Column width={120}>
+                    <HeaderCell>Type</HeaderCell>
+                    <Cell dataKey="subscriptionType"/>
+                </Column>
+                <Column width={120}>
+                    <HeaderCell>Platform</HeaderCell>
+                    <Cell>{rowData => rowData.product.platform.toString()}</Cell>
+                </Column>
+                <Column width={120}>
+                    <HeaderCell>Start Date</HeaderCell>
+                    <DateTimeCell dataKey="startDate"/>
+                </Column>
+                <Column width={120}>
+                    <HeaderCell>End Date</HeaderCell>
+                    <DateTimeCell dataKey="endDate"/>
+                </Column>
+            </Table>
+        </>
     );
 };
 

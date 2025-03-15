@@ -6,7 +6,6 @@ import {
     Schema,
     ButtonToolbar,
     Button,
-    HStack,
 } from "rsuite";
 import {useUpdateUserById} from "@/hooks/data/user/useUser";
 import {TextField} from "@/components/form/customElement";
@@ -73,15 +72,11 @@ const FormUserInfo = ({formData, handleClose, action, ...rests}: any) => {
                   onChange={setFormValue} formValue={formValue} {...rests}>
                 <TextField name="name" label={"Name"}/>
                 <TextField name="phone" label={"Phone"}/>
-                {/*<Form.Group controlId="phone">*/}
-                {/*    <Form.ControlLabel>Phone</Form.ControlLabel>*/}
-                {/*    <Form.Control name="phone"/>*/}
-                {/*</Form.Group>*/}
                 <ButtonToolbar style={{marginTop: "20px", marginRight: "10px", float: "right"}}>
-                    <Button appearance="primary" onClick={handleSubmit}>
+                    <Button appearance="primary" onClick={handleSubmit} disabled={loading}>
                         Submit
                     </Button>
-                    <Button appearance="default" onClick={handleClose}>
+                    <Button appearance="default" onClick={handleClose} disabled={loading}>
                         Cancel
                     </Button>
                 </ButtonToolbar>

@@ -36,7 +36,6 @@ const getPosts = async (req, res) => {
                         translations: true,
                     }
                 },
-                comments: true
             },
             orderBy: [
                 {
@@ -45,15 +44,17 @@ const getPosts = async (req, res) => {
                 {
                     updatedAt: 'desc',
                 },
-                {
-                    id: 'asc',
-                }
             ],
         });
 
-        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: posts});
+        return res.status(200).json({
+            success: true,
+            code: SUCCESS_CODE,
+            message: SUCCESS_MESSAGE,
+            data: posts
+        });
     } catch (error) {
-        console.log(error);
+        console.log(error.stack);
         return res.status(500).json({success: true, code: ERROR_CODE, message: error, data: []});
     }
 }

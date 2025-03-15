@@ -1,13 +1,14 @@
 // schema.prisma
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("RAILWAY_POSTGRESQL_PUBLIC_URL") // uses connection pooling
+
   // directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+generator client {
+  provider = "prisma-client-js"
 }
 
 model Language {
@@ -21,35 +22,37 @@ model Language {
   tagTranslations      TagTranslation[]
   authorTranslations   AuthorTranslation[]
   productTranslations  ProductTranslation[]
+  packageTranslations  PackageTranslation[]
 }
 
 // Table for posts
 model Post {
-  id          String    @id @default(cuid())
-  author_slug String
-  cate_slug   String
+  id          String     @id @default(cuid())
   postFormat  String
-  slug        String    @unique
+  slug        String     @unique
   featureImg  String
   date        String
   videoLink   String?
   audioLink   String?
-  gallery     String[]  @default([])
-  story       Boolean   @default(false)
-  trending    Boolean   @default(false)
-  status      String    @default("public")
-  post_views  String    @default("0")
-  post_share  String    @default("0")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  gallery     String[]   @default([])
+  story       Boolean    @default(false)
+  trending    Boolean    @default(false)
+  status      StatusType @default(PUBLIC)
+  post_views  String     @default("0")
+  post_share  String     @default("0")
   publishedAt DateTime?
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  translations PostTranslation[]
-  tags         Tag[]
+  author_slug  String
   author       Author            @relation(fields: [author_slug], references: [author_slug])
+  cate_slug    String
   category     Category          @relation(fields: [cate_slug], references: [cate_slug])
+  tags         Tag[]
   comments     Comment[]
+  translations PostTranslation[]
 }
 
 // Table for post translations
@@ -70,16 +73,17 @@ model PostTranslation {
 }
 
 model Comment {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   post_slug   String
   author_slug String?
   name        String
   email       String
   comment     String
-  reply       String?  @default("")
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  reply       String? @default("")
+  published   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   post   Post    @relation(fields: [post_slug], references: [slug])
@@ -88,10 +92,11 @@ model Comment {
 
 // Table for categories
 model Category {
-  id        String   @id @default(cuid())
-  cate_slug String   @unique
+  id        String  @id @default(cuid())
+  cate_slug String  @unique
   cate_bg   String?
   cate_img  String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -117,8 +122,9 @@ model CategoryTranslation {
 
 // Table for tags
 model Tag {
-  id        String   @id @default(cuid())
-  tag_slug  String   @unique
+  id       String @id @default(cuid())
+  tag_slug String @unique
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -172,21 +178,61 @@ model AuthorTranslation {
   @@unique([authorId, languageCode]) // Ensure each author has a unique translation per language
 }
 
+model Image {
+  id           String  @id @default(cuid())
+  originalname String  @unique
+  encoding     String
+  mimetype     String
+  size         Int?
+  Key          String  @unique
+  url          String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Youtube {
+  id        String  @id @default(cuid())
+  videoId   String  @unique
+  title     String
+  videoUrl  String  @unique
+  embedUrl  String  @unique
+  published Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// PRODUCT
+
 model Product {
-  id           String               @id @default(cuid())
-  image        String
-  url          String
-  active       Boolean              @default(true)
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
-  translations ProductTranslation[]
+  id              String       @id @unique
+  name            String       @unique
+  image           String
+  type            ProductType
+  platform        PlatformType
+  price           String
+  urlDownload     String
+  urlPost         String
+  allowedVersion  String
+  latestVersion   String
+  forceUpdateCode String
+  status          StatusType   @default(PUBLIC)
+  active          Boolean      @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  packages      Package[]
+  subscriptions Subscription[]
+  translations  ProductTranslation[]
 }
 
 model ProductTranslation {
   id           String @id @default(cuid())
   productId    String
   languageCode String
-  name         String @unique
   description  String
 
   // Relations
@@ -196,74 +242,104 @@ model ProductTranslation {
   @@unique([productId, languageCode]) // Ensure each product has a unique translation per language
 }
 
-model Image {
-  id           String   @id @default(cuid())
-  originalname String   @unique
-  encoding     String
-  mimetype     String
-  size         Int?
-  Key          String   @unique
-  url          String?  @unique
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}
+model Package {
+  id                        String       @id @unique
+  name                      String       @unique
+  image                     String
+  type                      ProductType
+  platform                  PlatformType
+  urlDownload               String
+  urlPost                   String
+  monthlyPrice              String
+  originalMonthlyPrice      String
+  yearlyPrice               String
+  originalYearlyPrice       String
+  monthlyPriceByYearlyPrice String
+  status                    StatusType   @default(PUBLIC)
+  active                    Boolean      @default(true)
 
-model Youtube {
-  id        String   @id @default(cuid())
-  videoId   String   @unique
-  title     String
-  videoUrl  String   @unique
-  embedUrl  String   @unique
-  published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relations
+  translations  PackageTranslation[]
+  products      Product[]
+  subscriptions Subscription[]
 }
 
+model PackageTranslation {
+  id           String @id @default(cuid())
+  packageId    String
+  languageCode String
+  description  String
+
+  // Relations
+  package  Package  @relation(fields: [packageId], references: [id])
+  language Language @relation(fields: [languageCode], references: [code])
+
+  @@unique([packageId, languageCode]) // Ensure each package has a unique translation per language
+}
+
+// SUBSCRIPTION
+
+model Subscription {
+  id               String           @id @default(cuid())
+  subscriptionType SubscriptionType
+  startDate        DateTime
+  endDate          DateTime
+  licenseKey       String
+  active           Boolean          @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+  packageId String?
+  package   Package? @relation(fields: [packageId], references: [id])
+}
+
+model SubscriptionDevice {
+  id    String @id @default(cuid())
+  name  String
+  login String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+// AUTHENTICATE
+
 model User {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String    @unique
   phone         String?
-  emailVerified DateTime?
   image         String?
   password      String?
-  role          Role            @default(USER)
+  emailVerified DateTime?
+  role          RoleType  @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  devices       SubscriptionDevice[]
   subscriptions Subscription[]
   accounts      Account[]
   sessions      Session[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Subscription {
-  id         String               @id @default(cuid())
-  userId     String
-  type       SubscriptionType
-  startDate  DateTime
-  endDate    DateTime
-  licenseKey String               @unique
-  active     Boolean              @default(true)
-  createdAt  DateTime             @default(now())
-  updatedAt  DateTime             @updatedAt
-  devices    SubscriptionDevice[]
-  user       User                 @relation(fields: [userId], references: [id])
-}
-
-model SubscriptionDevice {
-  id             String       @id @default(cuid())
-  subscriptionId String
-  name           String
-  macAddress     String
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
 }
 
 model Account {
-  userId            String
   type              String
   provider          String
   providerAccountId String
@@ -278,7 +354,9 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Relations
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
 }
@@ -294,11 +372,12 @@ model Session {
 }
 
 model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
+  id      String   @id @default(cuid())
+  email   String
+  token   String
+  expires DateTime
 
-  @@id([identifier, token])
+  @@unique([email, token])
 }
 
 // Optional for WebAuthn support
@@ -320,9 +399,31 @@ model Authenticator {
 enum SubscriptionType {
   MONTHLY
   YEARLY
+  LIFETIME
+  TRIAL
 }
 
-enum Role {
+enum RoleType {
   USER
   ADMIN
+}
+
+enum ProductType {
+  INDICATOR
+  EA
+  INDI_PRO
+  EA_PRO
+  PLUS
+}
+
+enum PlatformType {
+  MT5
+  MT4
+}
+
+enum StatusType {
+  PUBLIC
+  PRIVATE
+  PROTECTED // can't be deleted
+  HIDDEN
 }

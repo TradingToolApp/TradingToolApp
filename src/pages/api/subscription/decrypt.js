@@ -1,5 +1,5 @@
 import {ERROR_CODE, SUCCESS_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
-import {decryptData} from "../libs-server/cryptojs";
+import {decryptData} from "@/libs/cryptojs";
 
 /**
  * @swagger
@@ -21,7 +21,13 @@ const handler = async (req, res) => {
 const decrypt = async (req, res) => {
     try {
         const {licenseKey, secret} = req.body;
+
+        if (!licenseKey || !secret) {
+            return res.status(400).json({error: "Missing licenseKey or secret"})
+        }
+
         const decryptObj = decryptData(licenseKey.toString(), secret)
+
         return res.status(200).json({
             success: true,
             code: SUCCESS_CODE,

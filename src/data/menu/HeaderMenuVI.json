@@ -1,0 +1,36 @@
+[
+  {
+    "label": "Bài viết",
+    "path": "#",
+    "submenu": [
+      {
+        "sublabel": "Tin Tức",
+        "subpath": "/category/news"
+      },
+      {
+        "sublabel": "Công Cụ",
+        "subpath": "/category/tools"
+      },
+      {
+        "sublabel": "Nghiên Cứu",
+        "subpath": "/category/study"
+      },
+      {
+        "sublabel": "Thảo Luận",
+        "subpath": "/category/discussion"
+      }
+    ]
+  },
+  {
+    "label": "Công cụ MT4/MT5",
+    "path": "/mt4-mt5"
+  },
+  {
+    "label": "Gói Dịch Vụ",
+    "path": "/packages"
+  },
+  {
+    "label": "Mua Dịch Vụ",
+    "path": "/pricing"
+  }
+]

@@ -1,6 +1,8 @@
 import db from "@/libs/prisma/db";
 import {SUCCESS_CODE, ERROR_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
-import {hashedPassword} from "../libs-server/bcrypt";
+import {hashedPassword} from "@/libs/bcrypt";
+import {generateVerificationToken} from "@/libs/resend/token";
+import {sendVerificationEmail} from "@/libs/resend/mail";
 
 const handler = async (req, res) => {
     switch (req.method) {
@@ -41,6 +43,7 @@ const createUser = async (req, res) => {
         if (isUserExist) {
             return res.status(400).json({success: false, code: ERROR_CODE, message: "User already exist!", data: []});
         }
+
         const hashed = await hashedPassword(data.password);
         const newUser = await db.user.create({
             data: {
@@ -48,6 +51,9 @@ const createUser = async (req, res) => {
                 password: hashed,
             }
         });
+
+        const verificationToken = await generateVerificationToken(data.email)
+        await sendVerificationEmail(data.email, verificationToken.token);
 
         return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: newUser});
     } catch (error) {

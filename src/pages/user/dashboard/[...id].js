@@ -1,47 +1,47 @@
-import React, {useEffect} from "react";
-import {Grid, Row, Col, Loader, HStack, Avatar, Text, Card, VStack, Button, Table} from 'rsuite';
+import React from "react";
+import {Grid, Row, Loader, HStack, Card, VStack} from 'rsuite';
 import HeadMeta from "@/components/elements/HeadMeta";
-import HeaderThree from "@/components/header/HeaderThree";
-import dynamic from "next/dynamic";
+import HeaderFive from "@/components/header/HeaderFive";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import useWindowSize from "@/hooks/useWindowSize";
 import TableLicenseInfo from "@/components/table/user/lisense-info/TableLisenseInfo";
 import UserInfoCard from "@/components/card/UserInfoCard";
+import FormUserAccounts from "@/components/form/user/FormUserAccounts";
 
-const SideBarUser = dynamic(() => import("@/components/sidebar/SideBarUser"), {ssr: false})
 
 const UserDashboard = () => {
     const user = useCurrentUser();
-    const {screenHeight} = useWindowSize();
 
-    if (user.status !== 'authenticated') {
+    if (user.profile === undefined || user.status === "loading") {
         return <Loader size="md" style={{minHeight: "100vh", margin: "0"}} backdrop
                        content="loading..." vertical/>
     }
-                       
+
     return (
         <>
             <Grid className="d-flex flex-column vh-100 vw-100" fluid>
                 <Row>
                     <HeadMeta metaTitle="User Dashboard"/>
-                    <HeaderThree/>
+                    <HeaderFive/>
                 </Row>
                 <HStack>
-                    <HStack.Item style={{height: `${screenHeight - 120}px`}}>
-                        <SideBarUser/>
-                    </HStack.Item>
-                    <HStack.Item grow={1} style={{height: `${screenHeight - 120}px`}}>
+                    <HStack.Item grow={1}>
                         <VStack className="h-100 w-100">
                             <VStack.Item>
                                 <UserInfoCard user={user}/>
                             </VStack.Item>
                             <VStack.Item grow={1} flex={1} className="h-100 w-100">
-                                <Card size="lg" shaded className="h-100 w-100">
-                                    <Card.Header as="h5">Subscription</Card.Header>
-                                    <Card.Body className="h-100">
-                                        <TableLicenseInfo tableData={user.profile.subscriptions}/>
-                                    </Card.Body>
-                                </Card>
+                                <div className="d-flex flex-row h-100 w-100">
+                                    <Card size="lg" shaded className="w-75">
+                                        <Card.Header className="mb-0" as="h4">Subscription</Card.Header>
+                                        <Card.Body className="d-flex flex-column h-100 mx-2">
+                                            <TableLicenseInfo user={user.profile}/>
+                                        </Card.Body>
+                                    </Card>
+                                    <div className="mx-4 bordered w-25 p-4">
+                                        <h4>Accounts</h4>
+                                        <FormUserAccounts user={user.profile}/>
+                                    </div>
+                                </div>
                             </VStack.Item>
                         </VStack>
                     </HStack.Item>

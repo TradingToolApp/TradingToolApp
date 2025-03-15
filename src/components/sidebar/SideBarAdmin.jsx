@@ -31,25 +31,23 @@ const SideBarAdmin = () => {
                         <Nav onSelect={handleSelect} activeKey={selectedKey}>
                             <NavMenu eventKey="1" title="Dashboard" icon={<DashboardIcon/>}>
                                 <NavItem eventKey="1-1" id="1-1" as={Link} href="/admin/dashboard/posts">Posts</NavItem>
-                                {/*<NavItem eventKey="1-2" id="1-2" as={Link}*/}
-                                {/*         href="/admin/dashboard/comments">Comments</NavItem>*/}
-                                <NavItem eventKey="1-3" id="1-3" as={Link}
+                                <NavItem eventKey="1-2" id="1-3" as={Link}
                                          href="/admin/dashboard/categories">Categories</NavItem>
-                                <NavItem eventKey="1-4" as={Link}
+                                <NavItem eventKey="1-3" as={Link}
                                          href="/admin/dashboard/authors">Authors</NavItem>
-                                <NavItem eventKey="1-5" as={Link} href="/admin/dashboard/tags">Tags</NavItem>
+                                <NavItem eventKey="1-4" as={Link} href="/admin/dashboard/tags">Tags</NavItem>
                                 <NavItem divider/>
-                                <NavItem eventKey="1-5-1" as={Link} href="/admin/assets/images">Images</NavItem>
+                                <NavItem eventKey="1-5" as={Link} href="/admin/assets/images">Images</NavItem>
                                 <NavItem divider/>
-                                <NavItem eventKey="1-5-2" as={Link}
+                                <NavItem eventKey="1-6" as={Link}
                                          href="/admin/widgets/youtube-widgets">Youtube</NavItem>
                             </NavMenu>
                             <NavMenu eventKey="2" title="Users" icon={<PeoplesIcon/>}>
                                 <NavItem eventKey="2-1" as={Link} href="/admin/users/subscribed">Subscribed</NavItem>
                             </NavMenu>
                             <NavMenu eventKey="3" title="Products" icon={<ProjectIcon/>}>
-                                <NavItem eventKey="3-1" as={Link} href="/admin/products/trading-tools">Trading
-                                    Tools</NavItem>
+                                <NavItem eventKey="3-1" as={Link} href="/admin/products/mt4-mt5">MT4/MT5</NavItem>
+                                <NavItem eventKey="3-2" as={Link} href="/admin/products/packages">Packages</NavItem>
                             </NavMenu>
                         </Nav>
                     </Sidenav.Body>

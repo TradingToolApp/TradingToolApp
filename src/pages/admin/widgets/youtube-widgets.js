@@ -1,6 +1,6 @@
 import {Grid, Row, Col} from 'rsuite';
 import HeadMeta from "@/components/elements/HeadMeta";
-import HeaderThree from "@/components/header/HeaderThree";
+import HeaderFive from "@/components/header/HeaderFive";
 import {getYoutubeWidgetData} from "@/libs/api-client/prisma/youtube-widget.api";
 import dynamic from "next/dynamic";
 
@@ -12,7 +12,7 @@ const YoutubeWidgets = ({youtubeVideos}) => {
         <Grid className="d-flex flex-column vh-100 vw-100" fluid>
             <Row>
                 <HeadMeta metaTitle="Admin Dashboard"/>
-                <HeaderThree/>
+                <HeaderFive/>
             </Row>
             <Row className="h-100 overflow-y-auto d-flex flex-row">
                 <Col className="h-100">

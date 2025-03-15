@@ -1,26 +1,51 @@
 {
-    "button": {
-        "readMore": "Read More",
-        "share": "Share"
-    },
-    "category": {
-        "news": "News",
-        "tools": "Tools",
-        "study": "Study",
-        "discussion": "Discussion"
-    },
-    "page": {
-        "home": "Home",
-        "blog": "Blog",
-        "team": "About Us",
-        "contact": "Contact Us"
-    },
-    "widget": {
-        "recent": "RECENT",
-        "popular": "POPULAR",
-        "comment": "COMMENT"
-    },
-    "english": "english",
-    "welcome": "welcome to my blog",
-    "home": "Home"
+  "button": {
+    "readMore": "Read More",
+    "share": "Share"
+  },
+  "category": {
+    "news": "News",
+    "tools": "Tools",
+    "study": "Study",
+    "discussion": "Discussion"
+  },
+  "page": {
+    "home": "Home",
+    "blog": "Blog",
+    "team": "About Us",
+    "contact": "Contact Us"
+  },
+  "widget": {
+    "recent": "RECENT",
+    "popular": "POPULAR",
+    "comment": "COMMENT"
+  },
+  "english": "english",
+  "welcome": "welcome to my blog",
+  "home": "Home",
+  "login": {
+    "title": "Login",
+    "description": "Your email address will not be published. All the fields are required.",
+    "submit": "SUBMIT",
+    "register": "Do not have an account? Sign Up",
+    "forgot": "Forgot password?"
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "description": "Enter your email address to reset your password.",
+    "submit": "SUBMIT",
+    "login": "Have account? Back to Login"
+  },
+  "register": {
+    "title": "Register",
+    "description": "Your email address will not be published. All the fields are required.",
+    "submit": "SUBMIT",
+    "login": "Already have an account? Login"
+  },
+  "resetPassword": {
+    "title": "Reset Password",
+    "description": "Enter your new password.",
+    "submit": "SUBMIT",
+    "login": "Already have an account? Login"
+  }
 }

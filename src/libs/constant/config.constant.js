@@ -1,4 +1,4 @@
-import {Role, SubscriptionType} from "@prisma/client";
+import {SubscriptionType, StatusType, PlatformType, ProductType} from "@prisma/client";
 
 export const ACTION = {
     CREATE: 'CREATE',
@@ -6,15 +6,32 @@ export const ACTION = {
     DELETE: 'DELETE'
 }
 
-export const PostStatus = {
-    PUBLIC: "public",
-    PRIVATE: "private",
-}
+export const StatusListForm = [
+    {label: "Public", value: StatusType.PUBLIC},
+    {label: "Private", value: StatusType.PRIVATE},
+];
+
+export const SubscriptionTypeListForm = {
+    MONTHLY: SubscriptionType.MONTHLY,
+    YEARLY: SubscriptionType.YEARLY,
+    LIFETIME: SubscriptionType.LIFETIME,
+    TRIAL: SubscriptionType.TRIAL,
+};
+
+export const PlatformListForm = [
+    {label: "MT5", value: PlatformType.MT5},
+    {label: "MT4", value: PlatformType.MT4},
+]
+
+export const ProductTypeListForm = [
+    {label: "Indicator", value: ProductType.INDICATOR},
+    {label: "EA", value: ProductType.EA},
+]
 
 export const toastConfig = {
     error: {
-        position: "top-center",
-        autoClose: 3000,
+        position: "top-right",
+        autoClose: 4000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -22,42 +39,10 @@ export const toastConfig = {
     },
     success: {
         position: "top-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
     }
 }
-
-export const UserRoles = [
-    {
-        type: Role.ADMIN,
-        name: "Admin"
-    },
-    {
-        type: Role.USER,
-        name: "User"
-    }
-]
-
-export const SubscriptionPlans = [
-    {
-        type: SubscriptionType.MONTHLY,
-        title: "Monthly",
-        amount: "5",
-        duration: "30",
-        description: "Get started with our monthly plan.",
-        buttonText: "Subscribe",
-        buttonColor: "cyan"
-    },
-    {
-        type: SubscriptionType.YEARLY,
-        title: "Yearly",
-        amount: "60",
-        duration: "365",
-        description: "Get started with our yearly plan.",
-        buttonText: "Subscribe",
-        buttonColor: "orange"
-    }
-]

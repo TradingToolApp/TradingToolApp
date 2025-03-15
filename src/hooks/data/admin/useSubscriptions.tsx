@@ -2,6 +2,7 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import subscriptionAPI from "@/libs/api-client/restful/subscription.api";
 import {toast} from "react-toastify";
 import {toastConfig} from "@/libs/constant";
+import {formatSubscribedUsers} from "@/utils/formatData";
 
 export function useSubscribedUsers(initialData = []) {
     const queryInfo = useQuery({
@@ -11,7 +12,7 @@ export function useSubscribedUsers(initialData = []) {
     })
     return {
         ...queryInfo,
-        subscribedUsers: queryInfo.data.data,
+        subscribedUsers: formatSubscribedUsers(queryInfo.data.data),
     }
 }
 

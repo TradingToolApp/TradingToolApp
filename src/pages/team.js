@@ -3,7 +3,7 @@ import Breadcrumb from "../components/common/Breadcrumb";
 import BreadcrumbBanner from "../components/common/BreadcrumbBanner";
 import HeadMeta from "../components/elements/HeadMeta";
 import FooterOne from "../components/footer/FooterOne";
-import HeaderThree from "../components/header/HeaderThree";
+import HeaderFive from "../components/header/HeaderFive";
 import TeamOne from "../components/team/TeamOne";
 import useTranslation from "@/hooks/useTranslation";
 import {getAuthors} from "@/libs/api-client/prisma/author.api";
@@ -15,7 +15,7 @@ const TeamPage = ({allAuthor}) => {
     return (
         <>
             <HeadMeta metaTitle="Team"/>
-            <HeaderThree/>
+            <HeaderFive/>
             <Breadcrumb aPage={t.page.team}/>
             <BreadcrumbBanner pageTitle={t.page.team}/>
             <div className="axil-our-team section-gap">

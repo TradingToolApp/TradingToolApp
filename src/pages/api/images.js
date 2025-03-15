@@ -74,7 +74,6 @@ const createImages = async (req, res) => {
             });
         });
 
-
         // Access the 'file' property after the multer middleware processes the file
         const files = req.files;
 
@@ -84,7 +83,7 @@ const createImages = async (req, res) => {
 
         // Upload to S3
         for (let i = 0; i < files.length; i++) {
-            const keyS3 = "admin/images/" + files[i].originalname;
+            const keyS3 = "admin/assets/images/" + files[i].originalname;
             const command = new PutObjectCommand({
                 Bucket: process.env.AWS_S3_BUCKET_NAME,
                 Key: keyS3,
@@ -96,7 +95,7 @@ const createImages = async (req, res) => {
         }
 
         const images = files.map((file) => {
-            const keyS3 = "admin/images/" + file.originalname;
+            const keyS3 = "admin/assets/images/" + file.originalname;
             return {
                 originalname: file.originalname,
                 mimetype: file.mimetype,
@@ -112,9 +111,10 @@ const createImages = async (req, res) => {
             data: images,
         });
 
-        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: images});
+        return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: {}});
     } catch (error) {
-        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
+        console.log(error)
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error.message, data: []});
     }
 };
 

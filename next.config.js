@@ -13,7 +13,7 @@ const nextConfig = {
         forceSwcTransforms: true,
     },
     reactStrictMode: false,
-    swcMinify: true,
+    // swcMinify: true,
     // basePath: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASEPATH : "/",
     webpack: (config) => {
         config.externals = [...config.externals, "bcrypt"];

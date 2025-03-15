@@ -1,13 +1,15 @@
-import {Avatar, Button, Card, Dropdown, HStack, IconButton, Popover, Text, VStack, Whisper} from "rsuite";
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {Avatar, Button, Card, Dropdown, HStack, Popover, Text, VStack, Whisper} from "rsuite";
 import ModalUpdateUserInfo from "@/components/modal/user/info/ModalUpdateUserInfo";
 import ModalChangeAvatar from "@/components/modal/user/info/ModalChangeAvatar";
 import ModalChangePassword from "@/components/modal/user/info/ModalChangePassword";
+import ModalVerifyEmail from "@/components/modal/user/ModalVerifyEmail";
 
 const UserInfoCard = ({user}: any) => {
-    const [openEditAvatar, setOpenEditAvatar] = React.useState(false);
-    const [openEditUserData, setOpenEditUserData] = React.useState(false);
-    const [openChangePassword, setOpenChangePassword] = React.useState(false);
+    const [openEditAvatar, setOpenEditAvatar] = useState(false);
+    const [openEditUserData, setOpenEditUserData] = useState(false);
+    const [openChangePassword, setOpenChangePassword] = useState(false);
+    const [openVerifyEmail, setOpenVerifyEmail] = useState(false);
 
     const handleOpenEditAvatar = () => setOpenEditAvatar(true);
     const handleCloseEditAvatar = () => setOpenEditAvatar(false);
@@ -15,6 +17,8 @@ const UserInfoCard = ({user}: any) => {
     const handleCloseEditUserData = () => setOpenEditUserData(false);
     const handleOpenChangePassword = () => setOpenChangePassword(true);
     const handleCloseChangePassword = () => setOpenChangePassword(false);
+    const handleOpenVerifyEmail = () => setOpenVerifyEmail(true);
+    const handleCloseVerifyEmail = () => setOpenVerifyEmail(false);
 
     const renderMenu = ({onClose, left, top, right, className}: any, ref: any) => {
         const handleSelect = (eventKey: any) => {
@@ -46,13 +50,19 @@ const UserInfoCard = ({user}: any) => {
         );
     }
 
+    useEffect(() => {
+        if (user.profile.emailVerified === null) {
+            handleOpenVerifyEmail();
+        }
+    }, [user]);
+
     return (
         <>
             <Card width={320} shaded>
                 <Card.Header>
                     <HStack justifyContent={"space-between"}>
                         <HStack>
-                            <Avatar circle src={user.profile.image}/>
+                            <Avatar circle src={user.profile.image} alt="User's avatar"/>
                             <VStack spacing={2}>
                                 <Text>{user.profile.name}</Text>
                                 <Text muted size="sm">
@@ -74,6 +84,7 @@ const UserInfoCard = ({user}: any) => {
             <ModalUpdateUserInfo modalData={user.profile} open={openEditUserData}
                                  handleClose={handleCloseEditUserData}/>
             <ModalChangePassword open={openChangePassword} handleClose={handleCloseChangePassword} user={user}/>
+            <ModalVerifyEmail open={openVerifyEmail} handleClose={handleCloseVerifyEmail} modalData={user.profile}/>
         </>
     )
 }

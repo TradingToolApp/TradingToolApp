@@ -6,13 +6,7 @@ export const getSubscribedUsers = async () => {
     try {
         const subscribedUsers = await db.subscription.findMany({
             include: {
-                user: {
-                    select: {
-                        name: true,
-                        email: true,
-                        phone: true,
-                    }
-                }
+                user: true
             },
             orderBy: [
                 {endDate: "asc"},
@@ -34,9 +28,9 @@ export const getSubscribedUsers = async () => {
             }
         })
         return JSON.parse(JSON.stringify(data));
-    } catch (e) {
-        console.error(e);
-        return ERROR_CODE;
+    } catch (error) {
+        console.error(error.stack);
+        return error;
     }
 }
 

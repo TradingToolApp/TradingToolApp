@@ -21,8 +21,8 @@ const TableTags = ({tableData}) => {
     const [sortColumn, setSortColumn] = useState("id");
     const [sortType, setSortType] = useState();
     const [searchKeyword, setSearchKeyword] = useState("");
-    const [limit, setLimit] = React.useState(8);
-    const [page, setPage] = React.useState(1);
+    const [limit, setLimit] = useState(10);
+    const [page, setPage] = useState(1);
     const [openAddTag, setOpenAddTag] = useState(false);
 
     const handleOpenAddTag = () => setOpenAddTag(true);

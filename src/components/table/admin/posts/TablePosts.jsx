@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useMemo} from "react";
 import {
     Input,
     InputGroup,
@@ -13,21 +13,21 @@ import MoreIcon from '@rsuite/icons/More';
 import {ActionCell, BooleanCell, UpperCaseCell} from "./CellPosts";
 import ModalAddPost from "../../../modal/admin/posts/ModalAddPost";
 import useWindowSize from "@/hooks/useWindowSize";
-import {useGetPosts} from "@/hooks/data/admin/usePosts";
+import {usePosts} from "@/hooks/data/admin/usePosts";
 import {useGetCategories} from "@/hooks/data/admin/useCategories";
 
 const {Column, HeaderCell, Cell} = Table;
 
 const TablePosts = ({tableData, allCategoriesData}) => {
     const {screenHeight} = useWindowSize();
-    const {posts} = useGetPosts(tableData);
-    const {categories} = useGetCategories(allCategoriesData);
+    const [searchKeyword, setSearchKeyword] = useState("");
+    const [limit, setLimit] = useState(10);
+    const [page, setPage] = useState(1);
     const [sortColumn, setSortColumn] = useState("id");
     const [sortType, setSortType] = useState();
-    const [searchKeyword, setSearchKeyword] = useState("");
-    const [limit, setLimit] = React.useState(8);
-    const [page, setPage] = React.useState(1);
+    const {posts} = usePosts(tableData);
     const [cate, setCate] = useState("");
+    const {categories} = useGetCategories(allCategoriesData);
     const [openAddPost, setOpenAddPost] = useState(false);
 
     const handleOpenAddPost = () => setOpenAddPost(true);
@@ -48,53 +48,56 @@ const TablePosts = ({tableData, allCategoriesData}) => {
         setSearchKeyword(value);
     }
 
-    const filteredData = () => {
-        const filtered = posts.filter((item) => {
-            if (!item.title.toLowerCase().includes(searchKeyword.toLowerCase())) {
-                return false;
-            }
-
-            if (cate && item.cate_slug !== cate) {
-                return false;
-            }
-
-            return true;
-        });
-
-        if (sortColumn && sortType) {
-            return filtered.sort((a, b) => {
-                let x = a[sortColumn];
-                let y = b[sortColumn];
-
-                if (sortColumn === "active") {
-                    return sortType === "asc" ? (x === "public" ? -1 : 1) : (x === "public" ? 1 : -1);
+    // tableData for usePaginatePosts hook
+    const filteredPosts = useMemo(() => {
+        if (posts === null || posts === undefined || posts.length === 0 || !posts) return [];
+        const filteredData = () => {
+            const filtered = posts.filter((item) => {
+                if (cate && item.cate_slug !== cate) {
+                    return false;
                 }
 
-                if (sortColumn === "createdAt" || sortColumn === "updatedAt") {
-                    x = new Date(x).getTime();
-                    y = new Date(y).getTime();
-                    return sortType === "asc" ? x - y : y - x;
-                }
-
-                if (typeof x === 'string') {
-                    x = x.charCodeAt(0);
-                }
-                if (typeof y === 'string') {
-                    y = y.charCodeAt(0);
-                }
-
-                if (sortType === 'asc') {
-                    return x > y ? 1 : -1;
-                } else {
-                    return y > x ? 1 : -1;
-                }
+                return true;
             });
-        }
 
-        return filtered;
-    };
+            if (sortColumn && sortType) {
+                return filtered.sort((a, b) => {
+                    let x = a[sortColumn];
+                    let y = b[sortColumn];
 
-    const data = filteredData().filter((v, i) => {
+                    if (sortColumn === "active") {
+                        return sortType === "asc" ? (x === "public" ? -1 : 1) : (x === "public" ? 1 : -1);
+                    }
+
+                    if (sortColumn === "createdAt" || sortColumn === "updatedAt") {
+                        x = new Date(x).getTime();
+                        y = new Date(y).getTime();
+                        return sortType === "asc" ? x - y : y - x;
+                    }
+
+                    if (typeof x === 'string') {
+                        x = x.charCodeAt(0);
+                    }
+                    if (typeof y === 'string') {
+                        y = y.charCodeAt(0);
+                    }
+
+                    if (sortType === 'asc') {
+                        return x > y ? 1 : -1;
+                    } else {
+                        return y > x ? 1 : -1;
+                    }
+                });
+            }
+
+            return filtered;
+        };
+
+        return filteredData();
+    }, [posts, cate, sortColumn, sortType]);
+
+    // tableData for usePosts hooks
+    const paginationData = filteredPosts.filter((v, i) => {
         const start = limit * (page - 1);
         const end = start + limit;
         return i >= start && i < end;
@@ -132,7 +135,7 @@ const TablePosts = ({tableData, allCategoriesData}) => {
             </Stack>
             <Table
                 height={screenHeight - 300}
-                data={data}
+                data={paginationData}
                 sortColumn={sortColumn}
                 sortType={sortType}
                 onSortColumn={handleSortColumn}
@@ -190,7 +193,7 @@ const TablePosts = ({tableData, allCategoriesData}) => {
                     maxButtons={5}
                     size="xs"
                     layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-                    total={filteredData().length}
+                    total={filteredPosts.length}
                     limitOptions={[5, 10, 15]}
                     limit={limit}
                     activePage={page}

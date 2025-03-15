@@ -1,0 +1,36 @@
+[
+  {
+    "label": "Posts",
+    "path": "#",
+    "submenu": [
+      {
+        "sublabel": "News",
+        "subpath": "/category/news"
+      },
+      {
+        "sublabel": "Tools",
+        "subpath": "/category/tools"
+      },
+      {
+        "sublabel": "Study",
+        "subpath": "/category/study"
+      },
+      {
+        "sublabel": "Discussion",
+        "subpath": "/category/discussion"
+      }
+    ]
+  },
+  {
+    "label": "Tools MT4/MT5",
+    "path": "/mt4-mt5"
+  },
+  {
+    "label": "Packages",
+    "path": "/packages"
+  },
+  {
+    "label": "Pricing",
+    "path": "/pricing"
+  }
+]

@@ -9,6 +9,15 @@ async function getProducts() {
     }
 }
 
+async function getPublicProducts() {
+    try {
+        const res = await axios.get('/api/products/public-products');
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
+
 async function createProduct(data) {
     try {
         const res = await axios.post('/api/products', {data});
@@ -38,6 +47,7 @@ async function deleteProduct(data) {
 
 const productAPI = {
     getProducts,
+    getPublicProducts,
     createProduct,
     updateProduct,
     deleteProduct

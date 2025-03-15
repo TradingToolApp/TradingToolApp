@@ -6,7 +6,7 @@ import ContactInfo from "../components/contact/ContactInfo";
 import HeadMeta from "../components/elements/HeadMeta";
 import SectionTitleTwo from "../components/elements/SectionTitleTwo";
 import FooterOne from "../components/footer/FooterOne";
-import HeaderThree from "../components/header/HeaderThree";
+import HeaderFive from "../components/header/HeaderFive";
 import useTranslation from "@/hooks/useTranslation";
 
 const ContactPage = () => {
@@ -14,7 +14,7 @@ const ContactPage = () => {
     return (
         <>
             <HeadMeta metaTitle="Contact Us"/>
-            <HeaderThree/>
+            <HeaderFive/>
             <Breadcrumb aPage={t.page.contact}/>
             <BreadcrumbBanner pageTitle={t.page.contact}/>
             <div className="axil-about-us section-gap  section-gap-top__with-text">

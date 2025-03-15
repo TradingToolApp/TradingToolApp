@@ -21,7 +21,7 @@ const TableAuthors = ({tableData}) => {
     const [sortColumn, setSortColumn] = useState("id");
     const [sortType, setSortType] = useState();
     const [searchKeyword, setSearchKeyword] = useState("");
-    const [limit, setLimit] = React.useState(8);
+    const [limit, setLimit] = React.useState(10);
     const [page, setPage] = React.useState(1);
     const [openAddAuthor, setOpenAddAuthor] = useState(false);
 

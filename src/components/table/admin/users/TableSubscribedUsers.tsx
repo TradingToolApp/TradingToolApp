@@ -10,18 +10,16 @@ import {ActionCell, BooleanCell} from "./CellSubscribedUsers";
 import SearchIcon from "@rsuite/icons/Search";
 import MoreIcon from '@rsuite/icons/More';
 import useWindowSize from "@/hooks/useWindowSize";
-import {useSubscribedUsers} from "@/hooks/data/admin/useSubscriptions";
 
 const {Column, HeaderCell, Cell} = Table;
 
 const TableSubcribedUsers = ({tableData}: any) => {
-    const {subscribedUsers} = useSubscribedUsers(tableData);
     const {screenHeight} = useWindowSize();
     const [sortColumn, setSortColumn] = useState("id");
     const [sortType, setSortType] = useState();
     const [searchKeyword, setSearchKeyword] = useState("");
-    const [limit, setLimit] = React.useState(8);
-    const [page, setPage] = React.useState(1);
+    const [limit, setLimit] = useState(10);
+    const [page, setPage] = useState(1);
 
     const handleSortColumn = (sortColumn: any, sortType: any) => {
         setSortColumn(sortColumn);
@@ -39,7 +37,7 @@ const TableSubcribedUsers = ({tableData}: any) => {
     }
 
     const filteredData = () => {
-        const filtered = subscribedUsers.filter((item: any) => {
+        const filtered = tableData.filter((item: any) => {
             if (!item.name.toLowerCase().includes(searchKeyword.toLowerCase())
                 || !item.email.toLowerCase().includes(searchKeyword.toLowerCase())
                 || !item.phone.toLowerCase().includes(searchKeyword.toLowerCase())) {
@@ -97,7 +95,7 @@ const TableSubcribedUsers = ({tableData}: any) => {
                 </Column>
                 <Column width={150} flexGrow={1} sortable>
                     <HeaderCell>Subscription Type</HeaderCell>
-                    <Cell dataKey="type"/>
+                    <Cell dataKey="subscriptionType"/>
                 </Column>
                 <Column width={150} flexGrow={1} sortable>
                     <HeaderCell>Start Date</HeaderCell>

@@ -27,10 +27,40 @@ async function deactivateKey(id) {
     }
 }
 
+async function checkTrial(userId, productId) {
+    try {
+        const res = await axios.post('/api/subscription/check-trial', {userId, productId});
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
+
+async function activateTrial(userId, productId) {
+    try {
+        const res = await axios.post('/api/subscription/activate-trial', {userId, productId});
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
+
+async function checkLicense(userId, productId) {
+    try {
+        const res = await axios.post('/api/subscription/check-license', {userId, productId});
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
+
 const subscriptionAPI = {
     getSubscribedUsers,
     activateKey,
-    deactivateKey
+    deactivateKey,
+    checkTrial,
+    activateTrial,
+    checkLicense
 };
 
 export default subscriptionAPI;

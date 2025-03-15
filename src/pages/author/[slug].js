@@ -3,7 +3,7 @@ import Image from "next/image";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import HeadMeta from "../../components/elements/HeadMeta";
 import FooterOne from "../../components/footer/FooterOne";
-import HeaderThree from "../../components/header/HeaderThree";
+import HeaderFive from "../../components/header/HeaderFive";
 import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
 import WidgetPost from "../../components/widget/WidgetPost";
 import WidgetYoutubeList from "@/components/widget/WidgetYoutubeVideo";
@@ -11,8 +11,6 @@ import {getPublicPosts} from "@/libs/api-client/prisma/post.api";
 import {translatePosts} from "@/utils/formatData";
 import {AppContext} from "@/providers/app.provider";
 import {useGetPublicPosts} from "@/hooks/data/admin/usePosts";
-import {useRouter} from 'next/router'
-import {Loader} from "rsuite";
 
 const PostAuthor = ({authorData, allPostsData}) => {
     const {language} = useContext(AppContext);
@@ -29,7 +27,7 @@ const PostAuthor = ({authorData, allPostsData}) => {
     return (
         <>
             <HeadMeta metaTitle={authorContent.author_name}/>
-            <HeaderThree/>
+            <HeaderFive/>
             <Breadcrumb aPage={authorContent.author_name}/>
             <div className="banner banner__default bg-grey-light-three">
                 <div className="container">
@@ -103,6 +101,21 @@ const PostAuthor = ({authorData, allPostsData}) => {
 
 export default PostAuthor;
 
+export async function getStaticPaths() {
+    const posts = await getPublicPosts(['author'])
+
+    const paths = posts.map(post => ({
+        params: {
+            slug: post.author.author_slug
+        }
+    }))
+
+    return {
+        paths,
+        fallback: 'blocking',
+    }
+}
+
 export async function getStaticProps({params}) {
     const postParams = params.slug;
 
@@ -132,21 +145,6 @@ export async function getStaticProps({params}) {
             allPostsData
         },
         // notFound,
-        revalidate: 1,
-    }
-}
-
-export async function getStaticPaths() {
-    const posts = await getPublicPosts(['author'])
-
-    const paths = posts.map(post => ({
-        params: {
-            slug: post.author.author_slug
-        }
-    }))
-
-    return {
-        paths,
-        fallback: 'blocking',
+        revalidate: 300,
     }
 }

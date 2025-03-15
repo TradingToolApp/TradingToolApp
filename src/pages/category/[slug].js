@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {AppContext} from "@/providers/app.provider";
 import FooterOne from "../../components/footer/FooterOne";
-import HeaderThree from "../../components/header/HeaderThree";
+import HeaderFive from "../../components/header/HeaderFive";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import HeadMeta from "../../components/elements/HeadMeta";
 import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
@@ -24,12 +24,11 @@ const PostCategory = ({cateData, allPostsData}) => {
         setCateContent(translatePosts(cateData, language)[0]);
     }, [language, cateData]);
 
-
     return (
         <>
             <HeadMeta metaTitle={cateContent.cate}/>
-            <HeaderThree/>
-            <Breadcrumb bCat={cateContent.cate_slug} cateTitle={cateContent.cate} aPage={cateContent.cate}/>
+            <HeaderFive/>
+            <Breadcrumb bCat={cateContent.cate_slug} cateTitle={cateContent.cate}/>
             {/* Banner Start here  */}
             <div className="banner banner__default bg-grey-light-three">
                 <div className="container">
@@ -69,6 +68,18 @@ const PostCategory = ({cateData, allPostsData}) => {
 
 export default PostCategory;
 
+export async function getStaticPaths() {
+    const categories = await getCategories();
+    const paths = categories.map(category => ({
+        params: {slug: category.cate_slug}
+    }));
+
+    return {
+        paths,
+        fallback: 'blocking',
+    }
+}
+
 export async function getStaticProps(context) {
     const postParams = context.params.slug;
 
@@ -95,18 +106,6 @@ export async function getStaticProps(context) {
             cateData,
             allPostsData
         },
-        revalidate: 1,
-    }
-}
-
-export async function getStaticPaths() {
-    const categories = await getCategories();
-    const paths = categories.map(category => ({
-        params: {slug: category.cate_slug}
-    }));
-
-    return {
-        paths,
-        fallback: 'blocking',
+        revalidate: 300,
     }
 }

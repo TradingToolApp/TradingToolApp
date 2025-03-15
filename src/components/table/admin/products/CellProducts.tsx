@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import Image from "next/image";
 import {Popover, Whisper, Dropdown, IconButton, Table} from "rsuite";
 import MoreIcon from '@rsuite/icons/More';
 import ModalUpdateProduct from "@/components/modal/admin/products/ModalUpdateProduct";
@@ -59,5 +60,17 @@ export const ActionCell = ({rowData, ...rests}: any) => {
 export const BooleanCell = ({rowData, dataKey, ...props}: any) => (
     <Cell {...props} style={{padding: "13px"}}>
         {rowData[dataKey] === true ? "Yes" : "No"}
+    </Cell>
+);
+
+export const ImageCell = ({rowData, dataKey, ...props}: any) => (
+    <Cell {...props} style={{padding: "13px"}}>
+        <Image src={rowData[dataKey]} alt={rowData.name} width={50} height={50}/>
+    </Cell>
+);
+
+export const PriceCell = ({rowData, dataKey, ...props}: any) => (
+    <Cell {...props} style={{padding: "13px"}}>
+        ${rowData[dataKey]}
     </Cell>
 );

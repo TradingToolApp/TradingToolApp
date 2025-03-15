@@ -17,3 +17,12 @@ export const getUserById = async (id) => {
     });
     return JSON.parse(JSON.stringify(User));
 }
+
+export const getUserByEmail = async (email) => {
+    const User = await db.user.findUnique({
+        where: {
+            email: email
+        }
+    });
+    return JSON.parse(JSON.stringify(User));
+}
