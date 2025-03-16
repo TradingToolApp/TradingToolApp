@@ -5,7 +5,7 @@ import HeaderFive from "@/components/header/HeaderFive";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import TableLicenseInfo from "@/components/table/user/lisense-info/TableLisenseInfo";
 import UserInfoCard from "@/components/card/UserInfoCard";
-import FormUserAccounts from "@/components/form/user/FormUserAccounts";
+import FormUserAccounts from "@/components/form/user/user-accounts/FormUserAccounts";
 
 
 const UserDashboard = () => {
