@@ -10905,10 +10905,18 @@ li {
     background-color: orange;
 }
 
+.package-card:hover, .package-card:hover button {
+    border: 5px solid var(--rs-orange-300);
+}
+
 .package-card button {
     width: 100%;
     border: 5px solid var(--rs-gray-300);
     border-radius: 20px;
+}
+
+.package-card .rs-card-body {
+    height: 180px;
 }
 
 .border-color-orange-300 {

@@ -10,8 +10,10 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import ModalCreatePayment from "@/components/modal/payments/ModalCreatePayment";
 import ModalConfirmGetTrial from "@/components/modal/product/ModalConfirmGetTrial";
 import subscriptionAPI from "@/libs/api-client/restful/subscription.api";
+import useWindowSize from "@/hooks/useWindowSize";
 
 const ProductCardTwo = ({products}: any) => {
+    const {screenWidth} = useWindowSize();
     const user = useCurrentUser();
     const router = useRouter();
     const [product, setProduct] = useState<any>({});
@@ -85,6 +87,8 @@ const ProductCardTwo = ({products}: any) => {
                 return toast.error(license.message, toastConfig.error as any);
             }
             window.open(license.data[0].product.urlDownload, "_blank");
+        } else {
+            toast.error("Please login to download", toastConfig.error as any);
         }
     }
 
@@ -111,17 +115,18 @@ const ProductCardTwo = ({products}: any) => {
                 </ButtonGroup>
             </div>
             <div className="product-card-two">
-                <CardGroup className="card-group-two" columns={5}>
+                <CardGroup className="card-group-two" columns={screenWidth > 1500 ? 8 : 6}>
                     {filteredProduct.map((product: any, index: any) => (
-                        <Card key={index} width={250} size="sm" shaded bordered>
+                        <Card key={index} width={200} size="sm" shaded bordered>
                             <Image
                                 src={product.image}
                                 alt="Image product"
-                                width={250}
-                                height={250}
+                                width={200}
+                                height={200}
                             />
-                            <Card.Header as="h5" className="text-center">
+                            <Card.Header as="h5" className="text-center mb-2">
                                 {product.name}
+                                <Text size="sm" color="orange">{product.type}</Text>
                             </Card.Header>
                             <Divider className="m-0"/>
                             <Card.Body className="p-2">
@@ -153,7 +158,7 @@ const ProductCardTwo = ({products}: any) => {
                             <Divider className="m-0"/>
                             <Card.Footer className="p-4">
                                 <VStack>
-                                    <Text align="justify" maxLines={10}>
+                                    <Text size="md" align="justify" maxLines={5}>
                                         {product.description}</Text>
                                     <VStack.Item alignSelf="flex-end">
                                         <Button appearance="link" color="red" className="m-0"

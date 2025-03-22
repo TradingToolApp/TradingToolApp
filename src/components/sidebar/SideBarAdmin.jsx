@@ -46,7 +46,8 @@ const SideBarAdmin = () => {
                                 <NavItem eventKey="2-1" as={Link} href="/admin/users/subscribed">Subscribed</NavItem>
                             </NavMenu>
                             <NavMenu eventKey="3" title="Products" icon={<ProjectIcon/>}>
-                                <NavItem eventKey="3-1" as={Link} href="/admin/products/mt4-mt5">MT4/MT5</NavItem>
+                                <NavItem eventKey="3-1" as={Link}
+                                         href="/admin/products/solutions-tools">Solutions/Tools</NavItem>
                                 <NavItem eventKey="3-2" as={Link} href="/admin/products/packages">Packages</NavItem>
                             </NavMenu>
                         </Nav>

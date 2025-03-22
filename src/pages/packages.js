@@ -10,6 +10,8 @@ import {SubscriptionType} from "@prisma/client";
 import ModalBuyPackage from "@/components/modal/payments/ModalBuyPackage";
 import {useGetPackages} from "@/hooks/data/admin/usePackages";
 import {getPackages} from "@/libs/api-client/prisma/package.api";
+import {toast} from "react-toastify";
+import {toastConfig} from "@/libs/constant";
 
 const rokkitt = Rokkitt({
     weight: '700',
@@ -27,17 +29,21 @@ const PackagesPage = ({allPackages}) => {
     const handleClosePayment = () => setOpenPayment(false);
 
     const handleBuy = (product) => {
-        switch (plan) {
-            case SubscriptionType.MONTHLY:
-                product.price = product.monthlyPrice;
-                break;
-            case SubscriptionType.YEARLY:
-                product.price = product.yearlyPrice;
-                break;
+        if (user.status === "authenticated") {
+            switch (plan) {
+                case SubscriptionType.MONTHLY:
+                    product.price = product.monthlyPrice;
+                    break;
+                case SubscriptionType.YEARLY:
+                    product.price = product.yearlyPrice;
+                    break;
+            }
+            product.subscriptionType = plan;
+            setSelectedProduct(product);
+            handleOpenPayment();
+        } else {
+            toast.error("Please login to continue", toastConfig.error);
         }
-        product.subscriptionType = plan;
-        setSelectedProduct(product);
-        handleOpenPayment();
     }
 
     return (
@@ -61,7 +67,7 @@ const PackagesPage = ({allPackages}) => {
                 </ButtonGroup>
                 {plan === SubscriptionType.MONTHLY &&
                     <CardGroup className="m-4" columns={3}>
-                        {packages.slice(0, 2).map((product, index) => (
+                        {packages.slice(0, 3).map((product, index) => (
                             <Card key={index} className="package-card" classPrefix="rsuite-card">
                                 <Card.Header className="w-100">
                                     <div className={"position-relative w-100"}>
@@ -89,40 +95,12 @@ const PackagesPage = ({allPackages}) => {
 
                         ))
                         }
-                        {packages.slice(2, 3).map((product, index) => (
-                            <Card key={index} className="package-card border-color-orange-300"
-                                  classPrefix="rsuite-card">
-                                <Card.Header className="w-100">
-                                    <div className={"position-relative w-100"}>
-                                        <Image className="position-absolute start-0 top-0" src="/images/sale.png"
-                                               alt="sale"
-                                               width="80"
-                                               height="80"/>
-                                        <Text className="p-4" size={24}>{product.name}</Text>
-                                    </div>
-                                </Card.Header>
-                                <Card.Body>
-                                    <Text className="m-2" as="del" size={28}
-                                          muted>${product.originalMonthlyPrice}/mo</Text>
-                                    <Text className="m-2" size={40}>${product.monthlyPrice}/mo</Text>
-                                    <Text className="m-2" size={20}>{product.description}</Text>
-                                </Card.Body>
-                                <Card.Footer className="m-auto">
-                                    <Button className="border-color-orange-300" size="lg"
-                                            onClick={() => handleBuy(product)}>
-                                        <Text size={20}>
-                                            Get PLUS
-                                        </Text>
-                                    </Button>
-                                </Card.Footer>
-                            </Card>
-                        ))}
                     </CardGroup>
                 }
 
                 {plan === SubscriptionType.YEARLY &&
                     <CardGroup className="m-4" columns={3}>
-                        {packages.slice(0, 2).map((product, index) => (
+                        {packages.slice(0, 3).map((product, index) => (
                             <Card key={index} className="package-card" classPrefix="rsuite-card">
                                 <Card.Header className="w-100">
                                     <div className={"position-relative w-100"}>
@@ -148,33 +126,6 @@ const PackagesPage = ({allPackages}) => {
                             </Card>
                         ))
                         }
-                        {packages.slice(2, 3).map((product, index) => (
-                            <Card key={index} className="package-card border-color-orange-300"
-                                  classPrefix="rsuite-card">
-                                <Card.Header className="w-100">
-                                    <div className={"position-relative w-100"}>
-                                        <Image className="position-absolute start-0 top-0" src="/images/sale.png"
-                                               alt="sale"
-                                               width="80"
-                                               height="80"/>
-                                        <Text className="p-4" size={24}>{product.name}</Text>
-                                    </div>
-                                </Card.Header>
-                                <Card.Body>
-                                    <Text className="m-2" size={40}>${product.monthlyPriceByYearlyPrice}/mo</Text>
-                                    <Text className="m-2" size={24}>${product.yearlyPrice} paid yearly</Text>
-                                    <Text className="m-2" size={20}>{product.description}</Text>
-                                </Card.Body>
-                                <Card.Footer className="m-auto">
-                                    <Button className="border-color-orange-300" size="lg"
-                                            onClick={() => handleBuy(product)}>
-                                        <Text size={20}>
-                                            Get PLUS
-                                        </Text>
-                                    </Button>
-                                </Card.Footer>
-                            </Card>
-                        ))}
                     </CardGroup>
                 }
             </div>
