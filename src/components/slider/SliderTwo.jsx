@@ -75,7 +75,7 @@ const SliderTwo = ({slidePost}) => {
 
 
     return (
-        <div className="banner banner__home-with-slider banner__home-with-slider-two grad-bg">
+        <div className="banner banner__home-with-slider banner__home-with-slider-two grad-bg shadow-lg rounded-2">
             <div className={`axil-shape-circle ${shape}`}/>
             <div className={`axil-shape-circle__two ${shape}`}/>
             <div className="container">

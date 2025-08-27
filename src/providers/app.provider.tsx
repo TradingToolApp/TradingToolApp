@@ -1,7 +1,5 @@
-import React, {createContext, useState, useEffect, useLayoutEffect} from 'react';
-
+import React, {createContext, useState} from 'react';
 import {CustomProvider} from "rsuite"
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 interface contextDefaultValues {
     language: "en",

@@ -30,7 +30,7 @@ const PostCategory = ({cateData, allPostsData}) => {
             <HeaderFive/>
             <Breadcrumb bCat={cateContent.cate_slug} cateTitle={cateContent.cate}/>
             {/* Banner Start here  */}
-            <div className="banner banner__default bg-grey-light-three">
+            <div className="banner banner__default bg-grey-light-three shadow-dark rounded-2">
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-lg-12">

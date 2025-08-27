@@ -44,8 +44,8 @@ const SignIn = () => {
     }
 
     return (
-        <div className="flex justify-center max-2xl:min-h-52">
-            <div className="axil-contact-form-block m-b-xs-30 w-1/2">
+        <div className="flex w-50 m-auto shadow-lg rounded-3 justify-center max-2xl:min-h-52">
+            <div className="axil-contact-form-block m-b-xs-30">
                 <div className="section-title d-block">
                     <h2 className="h3 axil-title m-b-xs-20">{t.login.title}</h2>
                     <p>

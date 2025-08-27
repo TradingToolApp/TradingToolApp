@@ -28,9 +28,5 @@
   {
     "label": "Gói Dịch Vụ",
     "path": "/packages"
-  },
-  {
-    "label": "Mua Dịch Vụ",
-    "path": "/pricing"
   }
 ]

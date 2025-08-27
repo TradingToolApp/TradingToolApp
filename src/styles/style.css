@@ -5944,9 +5944,9 @@ input[type="radio"] + label::after {
 
 .submenu {
     position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: 25rem;
+    top: 80%;
+    left: -50%;
+    min-width: 10rem;
     background: var(--grey-dark-one);
     padding: 2rem 0;
     list-style: none;

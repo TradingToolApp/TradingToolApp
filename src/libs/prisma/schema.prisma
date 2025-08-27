@@ -2,7 +2,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("RAILWAY_POSTGRESQL_PUBLIC_URL") // uses connection pooling
+  url      = env("NEON_POSTGRESQL_PUBLIC_URL") // uses connection pooling
 
   // directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }

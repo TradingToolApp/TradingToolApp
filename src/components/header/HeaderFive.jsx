@@ -35,27 +35,41 @@ const HeaderFive = () => {
                 dropdownList.push(element)
             }
         }
-
         dropdownList.forEach(element => {
-
-            element.children[0].addEventListener('click', () => {
-
-                if (element.classList.contains('active')) {
-                    element.classList.remove('active');
-                    element.childNodes[1].classList.remove('opened');
-                } else {
-                    dropdownList.forEach(submenu => {
-                        if (element !== submenu) {
-                            submenu.classList.remove('active');
-                            submenu.childNodes[1].classList.remove('opened');
-                        } else {
-                            submenu.classList.add('active');
-                            submenu.childNodes[1].classList.add('opened');
-                        }
-                    })
-                }
-            })
+            element.children[0].addEventListener("mouseover", () => {
+                element.classList.add('active');
+                element.childNodes[1].classList.add('opened');
+                element.querySelector("ul").addEventListener("mouseleave", () => {
+                        element.classList.remove('active');
+                        element.childNodes[1].classList.remove('opened');
+                });
+                element.addEventListener("mouseleave", () => {
+                        element.classList.remove('active');
+                        element.childNodes[1].classList.remove('opened');
+                });
+            });
         });
+        // dropdownList.forEach(element => {
+        //     element.children[0].addEventListener('mouseover', () => {
+        //         if (element.classList.contains('active')) {
+        //             element.classList.remove('active');
+        //             element.childNodes[1].classList.remove('opened');
+        //         } else {
+        //             dropdownList.forEach(submenu => {
+        //                 if (element !== submenu) {
+        //                     setTimeout(() => {
+        //                         submenu.classList.remove('active');
+        //                         submenu.childNodes[1].classList.remove('opened');
+        //                     }, 1000)
+        //
+        //                 } else {
+        //                     submenu.classList.add('active');
+        //                     submenu.childNodes[1].classList.add('opened');
+        //                 }
+        //             })
+        //         }
+        //     })
+        // });
     }
 
     useEffect(() => {
@@ -107,7 +121,7 @@ const HeaderFive = () => {
         <>
             <OffcanvasMenu ofcshow={show} ofcHandleClose={handleClose}/>
             <header className="page-header">
-                <nav className="navbar bg-grey-light-three navbar__style-three">
+                <nav className="navbar shadow-dark rounded-2 bg-grey-light-three navbar__style-three">
                     <div className="container-fluid p-l-md-30 p-r-md-30">
                         <div className="navbar-inner justify-content-between">
                             <div className="brand-logo-container">

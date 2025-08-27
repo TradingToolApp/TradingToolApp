@@ -28,9 +28,5 @@
   {
     "label": "Packages",
     "path": "/packages"
-  },
-  {
-    "label": "Pricing",
-    "path": "/pricing"
   }
 ]

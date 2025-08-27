@@ -70,7 +70,7 @@ const SignUp = () => {
     };
 
     return (
-        <div className="axil-contact-form-block m-b-xs-30">
+        <div className="w-50 m-auto shadow-lg rounded-3 axil-contact-form-block m-b-xs-30">
             <div className="section-title d-block">
                 <h2 className="h3 axil-title m-b-xs-20">{t.register.title}</h2>
                 <p>
@@ -113,7 +113,7 @@ const SignUp = () => {
                         </button>
                     </div>
                 </form>
-                <div className="axil-contact-form-block m-b-xs-30 w-1/2">
+                <div className="mt-5 w-1/2">
                     <div className="col-12">
                         <div className="text-center font-weight-light">
                             <Link href={"/login"}>
