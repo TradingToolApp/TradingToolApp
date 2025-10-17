@@ -1,6 +1,7 @@
 import {Resend} from 'resend';
 import {verificationEmailTemplate} from "./templates/email-verification-template";
 import {resetPasswordTemplate} from "./templates/reset-password-template";
+import {sendGiftTemplate} from "./templates/send-gift-template";
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -25,5 +26,14 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
         to: email,
         subject: "Reset your password",
         html: resetPasswordTemplate(resetLink),
+    })
+}
+
+export const sendGiftEmail = async (email: string, amount: number) => {
+    await resend.emails.send({
+        from: `${process.env.RESEND_FROM_EMAIL}`,
+        to: email,
+        subject: "We have a gift for you!",
+        html: sendGiftTemplate(amount),
     })
 }

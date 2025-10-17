@@ -43,7 +43,8 @@ const SideBarAdmin = () => {
                                          href="/admin/widgets/youtube-widgets">Youtube</NavItem>
                             </NavMenu>
                             <NavMenu eventKey="2" title="Users" icon={<PeoplesIcon/>}>
-                                <NavItem eventKey="2-1" as={Link} href="/admin/users/subscribed">Subscribed</NavItem>
+                                <NavItem eventKey="2-1" as={Link} href="/admin/users/all-users">All Users</NavItem>
+                                <NavItem eventKey="2-2" as={Link} href="/admin/users/subscribed">Subscribed</NavItem>
                             </NavMenu>
                             <NavMenu eventKey="3" title="Products" icon={<ProjectIcon/>}>
                                 <NavItem eventKey="3-1" as={Link}

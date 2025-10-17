@@ -109,6 +109,24 @@ async function sendVerifyEmail(email) {
     }
 }
 
+async function toolPayment(data) {
+    try {
+        const res = await axios.post('/api/user/tool-payment', {data});
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
+
+async function packagePayment(data) {
+    try {
+        const res = await axios.post('/api/user/package-payment', {data});
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
+
 const userAPI = {
     getUsers,
     getUserById,
@@ -121,7 +139,9 @@ const userAPI = {
     createRegisteredDevice,
     updateRegisteredDevice,
     removeRegisteredDevice,
-    sendVerifyEmail
+    sendVerifyEmail,
+    toolPayment,
+    packagePayment
 };
 
 export default userAPI;

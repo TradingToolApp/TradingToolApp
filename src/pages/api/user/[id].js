@@ -28,6 +28,7 @@ const getUserById = async (req, res) => {
                 phone: true,
                 image: true,
                 role: true,
+                credit: true,
                 emailVerified: true,
             },
         })

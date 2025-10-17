@@ -2,19 +2,21 @@ import {Grid, Row, Col, Loader} from 'rsuite';
 import HeadMeta from "../../../components/elements/HeadMeta";
 import HeaderFive from "../../../components/header/HeaderFive";
 import dynamic from "next/dynamic";
-import {getSubscribedUsers} from "@/libs/api-client/prisma/subcription.api";
+import {getUsers} from "@/libs/api-client/prisma/subcription.api";
 import useWindowSize from "@/hooks/useWindowSize";
-import {useSubscribedUsers} from "@/hooks/data/admin/useSubscriptions";
+import {useGetUsers} from "@/hooks/data/admin/useSubscriptions";
 import React from "react";
+import db from "@/libs/prisma/db";
+import moment from "moment";
 
 const SideBarAdmin = dynamic(() => import("@/components/sidebar/SideBarAdmin"), {ssr: false})
-const TableSubscribedUsers = dynamic(() => import("@/components/table/admin/users/subscribed-users/TableSubscribedUsers"), {ssr: false});
+const TableUsers = dynamic(() => import("@/components/table/admin/users/all-users/TableUsers"), {ssr: false});
 
 const Subscribed = ({allData}) => {
-    const {subscribedUsers} = useSubscribedUsers(allData);
+    const {users} = useGetUsers(allData);
     const {screenHeight} = useWindowSize();
 
-    if (subscribedUsers === undefined) {
+    if (users === undefined) {
         return <Loader size="md" style={{minHeight: "100vh", margin: "0"}} backdrop
                        content="loading..." vertical/>
     }
@@ -32,7 +34,7 @@ const Subscribed = ({allData}) => {
                 </Col>
                 <Col className="flex-grow-1 bordered"
                      style={{height: `${screenHeight - 120}px`}}>
-                    <TableSubscribedUsers tableData={subscribedUsers}/>
+                    <TableUsers tableData={allData}/>
                 </Col>
             </Row>
         </Grid>
@@ -41,8 +43,7 @@ const Subscribed = ({allData}) => {
 export default Subscribed;
 
 export async function getStaticProps() {
-    const allData = await getSubscribedUsers();
-
+    const allData = await getUsers();
     return {
         props: {
             allData,

@@ -9,6 +9,14 @@ export const generateSecretKey = (): string => {
     ).join('');
 };
 
+export const generateRandomCode = (): string => {
+    const keyLength = 4; // 4 bytes = 32 bits (8 characters)
+    const buffer = new Uint8Array(keyLength);
+    crypto.getRandomValues(buffer);
+    return Array.from(buffer, (byte) =>
+        byte.toString(16).padStart(2, '0')
+    ).join('').substr(0, 8).toUpperCase();
+}
 export const encryptData = (data: any, secretKey: string): string => {
     const key = CryptoJS.enc.Utf8.parse(secretKey);
 

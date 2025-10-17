@@ -104,3 +104,45 @@ export const useRemoveRegisteredDevice = () => {
         },
     })
 }
+
+export const useToolPayment = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationKey: ['toolPayment'],
+        mutationFn: (data: any) => {
+            return userAPI.toolPayment(data)
+        },
+        onSuccess: async (result: any) => {
+            if (result.success) {
+                toast.success(result.message, toastConfig.success as any);
+            } else {
+                toast.error(result.message, toastConfig.error as any);
+            }
+            return await queryClient.invalidateQueries({queryKey: ['currentUser']})
+        },
+        onError: (error: any) => {
+            return toast.error(error.message, toastConfig.error as any);
+        }
+    })
+}
+
+export const usePackagePayment = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationKey: ['packagePayment'],
+        mutationFn: (data: any) => {
+            return userAPI.packagePayment(data)
+        },
+        onSuccess: async (result: any) => {
+            if (result.success) {
+                toast.success(result.message, toastConfig.success as any);
+            } else {
+                toast.error(result.message, toastConfig.error as any);
+            }
+            return await queryClient.invalidateQueries({queryKey: ['currentUser']})
+        },
+        onError: (error: any) => {
+            return toast.error(error.message, toastConfig.error as any);
+        }
+    })
+}

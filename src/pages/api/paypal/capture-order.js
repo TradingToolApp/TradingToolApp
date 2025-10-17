@@ -7,7 +7,7 @@ import client from '@/libs/paypal'
 import {encryptData} from "@/libs/cryptojs";
 import moment from "moment";
 import db from "@/libs/prisma/db";
-import {SUCCESS_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
+import {ERROR_CODE, SUCCESS_CODE, SUCCESS_MESSAGE} from "@/libs/constant";
 import {ProductType, SubscriptionType} from "@prisma/client";
 
 const ordersController = new OrdersController(client);
@@ -110,6 +110,6 @@ export default async function Handler(req, res) {
         return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: subscription});
     } catch (error) {
         console.error("Failed to create order:", error.stack);
-        return res.status(500).json({error: "Failed to capture order."});
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error.message, data: []});
     }
 }

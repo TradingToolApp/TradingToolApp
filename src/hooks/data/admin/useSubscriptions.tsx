@@ -4,6 +4,18 @@ import {toast} from "react-toastify";
 import {toastConfig} from "@/libs/constant";
 import {formatSubscribedUsers} from "@/utils/formatData";
 
+export function useGetUsers(initialData = []) {
+    const queryInfo = useQuery({
+        queryKey: ['all-users'],
+        queryFn: subscriptionAPI.getUsers,
+        placeholderData: {data: initialData}
+    })
+    return {
+        ...queryInfo,
+        users: queryInfo.data.data,
+    }
+}
+
 export function useSubscribedUsers(initialData = []) {
     const queryInfo = useQuery({
         queryKey: ['subscribedUsers'],
@@ -47,6 +59,27 @@ export function useDeactivateKey() {
                 return toast.error(result.message, toastConfig.error as any);
             }
             return queryClient.invalidateQueries({queryKey: ['activateKey']})
+        },
+        onError: (error: any) => {
+            return toast.error(error, toastConfig.error as any);
+        },
+    })
+}
+
+export function useSendGift() {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationKey: ['sendGift'],
+        mutationFn: (data: any) => {
+            return subscriptionAPI.sendGift(data)
+        },
+        onSuccess: (result: any) => {
+            if (!result.success) {
+                return toast.error(result.message, toastConfig.error as any);
+            } else {
+                toast.success(result.message, toastConfig.success as any);
+            }
+            return queryClient.invalidateQueries({queryKey: ['sendGift']})
         },
         onError: (error: any) => {
             return toast.error(error, toastConfig.error as any);

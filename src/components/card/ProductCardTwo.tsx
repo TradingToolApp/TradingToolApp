@@ -7,10 +7,11 @@ import {toastConfig} from "@/libs/constant";
 import {SubscriptionType} from "@prisma/client";
 import {PlatformType, ProductType} from "@prisma/client";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import ModalCreatePayment from "@/components/modal/payments/ModalCreatePayment";
+import ModalBuyTool from "@/components/modal/payments/ModalBuyTool";
 import ModalConfirmGetTrial from "@/components/modal/product/ModalConfirmGetTrial";
 import subscriptionAPI from "@/libs/api-client/restful/subscription.api";
 import useWindowSize from "@/hooks/useWindowSize";
+import {PiCurrencyCircleDollarFill} from "react-icons/pi";
 
 const ProductCardTwo = ({products}: any) => {
     const {screenWidth} = useWindowSize();
@@ -140,8 +141,9 @@ const ProductCardTwo = ({products}: any) => {
                                             <Button appearance="link" color="red" className="m-0"
                                                     onClick={() => router.push("/packages")}>Rent</Button>
                                         </VStack>
-                                        <h4 className="m-0">
-                                            ${product.price}
+                                        <h4 className="d-flex align-items-center m-0">
+                                            <PiCurrencyCircleDollarFill size="2rem"/>
+                                            {product.price}
                                         </h4>
                                         <VStack alignItems="center" divider={<Divider className="m-0"/>}>
                                             <Button appearance="link" color="red" className="m-0"
@@ -170,8 +172,8 @@ const ProductCardTwo = ({products}: any) => {
                     ))}
                 </CardGroup>
             </div>
-            <ModalCreatePayment open={openPayment} handleClose={handleClosePayment} product={product}
-                                user={user}/>
+            <ModalBuyTool open={openPayment} handleClose={handleClosePayment} product={product}
+                          user={user}/>
             <ModalConfirmGetTrial open={openConfirmGetTrial} handleClose={handleCloseConfirmGetTrial} user={user}
                                   product={product}/>
         </div>

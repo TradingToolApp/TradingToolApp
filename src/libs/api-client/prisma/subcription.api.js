@@ -2,6 +2,23 @@ import db from "@/libs/prisma/db";
 import {ERROR_CODE} from "@/libs/constant";
 import moment from "moment/moment";
 
+export const getUsers = async () => {
+    try {
+        const users = await db.user.findMany({
+            where: {
+                role: "USER",
+            },
+            orderBy: [
+                {name: "asc"},
+            ]
+        });
+        return JSON.parse(JSON.stringify(users));
+    } catch (error) {
+        console.error(error.stack);
+        return error;
+    }
+}
+
 export const getSubscribedUsers = async () => {
     try {
         const subscribedUsers = await db.subscription.findMany({
@@ -27,7 +44,8 @@ export const getSubscribedUsers = async () => {
                 phone: element.user.phone,
             }
         })
-        return JSON.parse(JSON.stringify(data));
+        // return JSON.parse(JSON.stringify(data));
+        return data;
     } catch (error) {
         console.error(error.stack);
         return error;

@@ -12,6 +12,7 @@ import {useGetPackages} from "@/hooks/data/admin/usePackages";
 import {getPackages} from "@/libs/api-client/prisma/package.api";
 import {toast} from "react-toastify";
 import {toastConfig} from "@/libs/constant";
+import {PiCurrencyCircleDollarFill} from "react-icons/pi";
 
 const rokkitt = Rokkitt({
     weight: '700',
@@ -80,8 +81,14 @@ const PackagesPage = ({allPackages}) => {
                                 </Card.Header>
                                 <Card.Body>
                                     <Text className="m-2" as="del" size={28}
-                                          muted>${product.originalMonthlyPrice}/mo</Text>
-                                    <Text className="m-2" size={40}>${product.monthlyPrice}/mo</Text>
+                                          muted>
+                                        <PiCurrencyCircleDollarFill />
+                                        {product.originalMonthlyPrice}/mo
+                                    </Text>
+                                    <Text className="m-2" size={40}>
+                                        <PiCurrencyCircleDollarFill />
+                                        {product.monthlyPrice}/mo
+                                    </Text>
                                     <Text className="m-2" size={20}>{product.description}</Text>
                                 </Card.Body>
                                 <Card.Footer className="m-auto">
@@ -92,9 +99,7 @@ const PackagesPage = ({allPackages}) => {
                                     </Button>
                                 </Card.Footer>
                             </Card>
-
-                        ))
-                        }
+                        ))}
                     </CardGroup>
                 }
 
@@ -112,7 +117,10 @@ const PackagesPage = ({allPackages}) => {
                                     </div>
                                 </Card.Header>
                                 <Card.Body>
-                                    <Text className="m-2" size={40}>${product.monthlyPriceByYearlyPrice}/mo</Text>
+                                    <Text className="m-2" size={40}>
+                                        <PiCurrencyCircleDollarFill />
+                                        {product.monthlyPriceByYearlyPrice}/mo
+                                    </Text>
                                     <Text className="m-2" size={24}>${product.yearlyPrice} paid yearly</Text>
                                     <Text className="m-2" size={20}>{product.description}</Text>
                                 </Card.Body>

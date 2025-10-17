@@ -10,7 +10,7 @@ exports.FIELDS_CANNOT_BE_UPDATE_CODE = 'FIELDS_CANNOT_BE_UPDATE'
 exports.USER_DO_NOT_NEED_TO_REGISTER_CODE = 'USER_DO_NOT_NEED_TO_REGISTER'
 
 // Messages
-exports.SUCCESS_MESSAGE = 'OK'
+exports.SUCCESS_MESSAGE = 'Success'
 exports.BAD_REQUEST_MESSAGE = 'Bad request'
 exports.INVALID_CREDENTIALS_MESSAGE = 'Invalid credentials'
 exports.TOKEN_EXPIRED_MESSAGE = 'Token has expired'

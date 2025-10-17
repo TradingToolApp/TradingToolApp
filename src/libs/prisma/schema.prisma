@@ -203,7 +203,7 @@ model Youtube {
   updatedAt DateTime @updatedAt
 }
 
-// PRODUCT
+//-------------------------PRODUCT---------------------------------------------------------------
 
 model Product {
   id              String       @id @unique
@@ -280,7 +280,7 @@ model PackageTranslation {
   @@unique([packageId, languageCode]) // Ensure each package has a unique translation per language
 }
 
-// SUBSCRIPTION
+//-------------------------SUBSCRIPTION---------------------------------------------------------------
 
 model Subscription {
   id               String           @id @default(cuid())
@@ -315,8 +315,20 @@ model SubscriptionDevice {
   user   User   @relation(fields: [userId], references: [id])
 }
 
-// AUTHENTICATE
+//-------------------------CODE---------------------------------------------------------------
 
+model Code {
+  id        String @id @default(cuid())
+  amount    Int
+  type      CodeType
+  code      String
+  used      Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//-------------------------AUTHENTICATE---------------------------------------------------------------
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -326,6 +338,7 @@ model User {
   password      String?
   emailVerified DateTime?
   role          RoleType  @default(USER)
+  credit        Int? @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -396,6 +409,8 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
+//-------------------------ENUM---------------------------------------------------------------
+
 enum SubscriptionType {
   MONTHLY
   YEARLY
@@ -426,4 +441,8 @@ enum StatusType {
   PRIVATE
   PROTECTED // can't be deleted
   HIDDEN
+}
+
+enum CodeType {
+  GIFT
 }

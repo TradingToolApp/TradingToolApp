@@ -1,8 +1,17 @@
 import axios from 'axios';
 
+async function getUsers() {
+    try {
+        const res = await axios.get('/api/subscription/all-users');
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
+
 async function getSubscribedUsers() {
     try {
-        const res = await axios.get('/api/subscription');
+        const res = await axios.get('/api/subscription/subscribed-users');
         return res.data;
     } catch (err) {
         return err.response.data;
@@ -54,13 +63,24 @@ async function checkLicense(userId, productId) {
     }
 }
 
+async function sendGift(data) {
+    try {
+        const res = await axios.post('/api/subscription/send-gift', {data});
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
+
 const subscriptionAPI = {
+    getUsers,
     getSubscribedUsers,
     activateKey,
     deactivateKey,
     checkTrial,
     activateTrial,
-    checkLicense
+    checkLicense,
+    sendGift
 };
 
 export default subscriptionAPI;

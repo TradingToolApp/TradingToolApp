@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import Image from "next/image";
 import {Popover, Whisper, Dropdown, IconButton, Table} from "rsuite";
 import MoreIcon from '@rsuite/icons/More';
-import ModalActivateKey from "@/components/modal/admin/subscriptions/ModalActivateKey";
-import ModalDeactivateKey from "@/components/modal/admin/subscriptions/ModalDeactivateKey";
+import ModalActivateKey from "@/components/modal/admin/subscriptions/subcribed-users/ModalActivateKey";
+import ModalDeactivateKey from "@/components/modal/admin/subscriptions/subcribed-users/ModalDeactivateKey";
 
 const {Cell} = Table;
 

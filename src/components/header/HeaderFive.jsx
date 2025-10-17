@@ -10,6 +10,7 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import {useRouter} from "next/router";
 import {MdOutlineDarkMode, MdOutlineLightMode} from "react-icons/md";
 import AvatarOne from "@/components/avatar/AvatarOne";
+import {PiCurrencyCircleDollarFill} from "react-icons/pi";
 
 const HeaderFive = () => {
     // Main Menu Toggle
@@ -40,36 +41,15 @@ const HeaderFive = () => {
                 element.classList.add('active');
                 element.childNodes[1].classList.add('opened');
                 element.querySelector("ul").addEventListener("mouseleave", () => {
-                        element.classList.remove('active');
-                        element.childNodes[1].classList.remove('opened');
+                    element.classList.remove('active');
+                    element.childNodes[1].classList.remove('opened');
                 });
                 element.addEventListener("mouseleave", () => {
-                        element.classList.remove('active');
-                        element.childNodes[1].classList.remove('opened');
+                    element.classList.remove('active');
+                    element.childNodes[1].classList.remove('opened');
                 });
             });
         });
-        // dropdownList.forEach(element => {
-        //     element.children[0].addEventListener('mouseover', () => {
-        //         if (element.classList.contains('active')) {
-        //             element.classList.remove('active');
-        //             element.childNodes[1].classList.remove('opened');
-        //         } else {
-        //             dropdownList.forEach(submenu => {
-        //                 if (element !== submenu) {
-        //                     setTimeout(() => {
-        //                         submenu.classList.remove('active');
-        //                         submenu.childNodes[1].classList.remove('opened');
-        //                     }, 1000)
-        //
-        //                 } else {
-        //                     submenu.classList.add('active');
-        //                     submenu.childNodes[1].classList.add('opened');
-        //                 }
-        //             })
-        //         }
-        //     })
-        // });
     }
 
     useEffect(() => {
@@ -113,7 +93,6 @@ const HeaderFive = () => {
                     setMobileToggle(false);
                 }
             })
-
         });
     }
 
@@ -181,6 +160,13 @@ const HeaderFive = () => {
                             </div>
                             <div className="navbar-extra-features">
                                 <div className="d-flex justify-content-center align-items-center gap-3">
+                                    {user.status === "authenticated" && user.profile && user.profile.role === "USER" && (
+                                        <div
+                                            className="credit-icon d-flex justify-content-center align-items-center gap-1">
+                                            <span>{user.profile.credit}</span>
+                                            <PiCurrencyCircleDollarFill size="2rem"/>
+                                        </div>
+                                    )}
                                     <Toggle
                                         size="lg"
                                         color="yellow"
