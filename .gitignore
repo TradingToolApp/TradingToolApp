@@ -42,3 +42,7 @@ client.iml
 
 /migrations
 /test
+
+.claude/
+CHANGELOG.md
+CLAUDE.md

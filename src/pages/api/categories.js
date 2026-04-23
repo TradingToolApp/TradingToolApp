@@ -21,16 +21,17 @@ const getCategories = async (req, res) => {
         const categories = await db.category.findMany({
             include: {
                 translations: true,
+                _count: {
+                    select: {posts: true}
+                },
             },
-            orderBy: {
-                id: 'asc'
-            }
+            orderBy: {id: 'asc'}
         });
 
         return res.status(200).json({success: true, code: SUCCESS_CODE, message: SUCCESS_MESSAGE, data: categories});
     } catch (error) {
         console.log(error);
-        return res.status(500).json({success: true, code: ERROR_CODE, message: error, data: []});
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error.message, data: []});
     }
 }
 
@@ -73,7 +74,7 @@ const createCategory = async (req, res) => {
             }
         }
         console.log(error.code);
-        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error.message, data: []});
     }
 }
 
@@ -149,7 +150,7 @@ const updateCategory = async (req, res) => {
             }
         }
         console.log(error.code);
-        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error.message, data: []});
     }
 }
 
@@ -200,7 +201,7 @@ const deleteCategory = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({success: false, code: ERROR_CODE, message: error, data: []});
+        return res.status(500).json({success: false, code: ERROR_CODE, message: error.message, data: []});
     }
 }
 

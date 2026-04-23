@@ -6373,10 +6373,9 @@ input[type="radio"] + label::after {
     color: var(--grey-dark-one);
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
     .navbar__style-three .main-navigation li {
         color: #fff;
-        /*color: var(--rs-sidenav-subtle-text);*/
     }
 
     .navbar__style-three .main-navigation a::before,

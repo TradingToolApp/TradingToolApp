@@ -1,31 +1,24 @@
 import {Tab, Nav} from "react-bootstrap";
 import PostVideoTwo from "../post/layout/PostVideoTwo";
-import {useEffect, useState} from "react";
+import {useMemo, useState} from "react";
 import useTranslation from "@/hooks/useTranslation";
+import {useWidgetPosts} from "@/hooks/data/admin/usePosts";
 
-const WidgetPost = ({dataPost}) => {
+const sortRecent = (posts) => [...posts].sort((a, b) => (new Date(b.date) - new Date(a.date) || a.slug.localeCompare(b.slug))).slice(0, 4);
+const sortPopular = (posts) => [...posts].sort((a, b) => (b.post_views - a.post_views || a.slug.localeCompare(b.slug))).slice(0, 4);
+
+const WidgetPost = () => {
     const t = useTranslation();
-    const [data, setData] = useState([]);
+    const {widgetPosts} = useWidgetPosts();
+    const [activeKey, setActiveKey] = useState('recent');
 
-    const handleData = (key) => {
-        switch (key) {
-            case 'recent':
-                setData(dataPost.sort((a, b) => (new Date(b.date) - new Date(a.date) || a.slug.localeCompare(b.slug))).slice(0, 4));
-                break;
-            case 'popular':
-                setData(dataPost.sort((a, b) => (b.post_views - a.post_views || a.slug.localeCompare(b.slug))).slice(0, 4));
-                break;
-            case 'comments':
-                setData(dataPost.sort((a, b) => (b.comments - a.comments || a.slug.localeCompare(b.slug))).slice(0, 4));
-                break;
-            default:
-                break;
-        }
-    }
+    const data = useMemo(() => {
+        if (!widgetPosts?.length) return [];
+        if (activeKey === 'popular') return sortPopular(widgetPosts);
+        return sortRecent(widgetPosts);
+    }, [widgetPosts, activeKey]);
 
-    useEffect(() => {
-        setData(dataPost.sort((a, b) => (new Date(b.date) - new Date(a.date) || a.slug.localeCompare(b.slug))).slice(0, 4));
-    }, [dataPost])
+    const handleData = (key) => setActiveKey(key);
 
     return (
         <div className="post-widget sidebar-post-widget m-b-xs-40">
@@ -37,9 +30,6 @@ const WidgetPost = ({dataPost}) => {
                     </Nav.Item>
                     <Nav.Item className="col">
                         <Nav.Link eventKey="popular">{t.widget.popular}</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item className="col">
-                        <Nav.Link eventKey="comments">{t.widget.comment}</Nav.Link>
                     </Nav.Item>
                 </Nav>
 

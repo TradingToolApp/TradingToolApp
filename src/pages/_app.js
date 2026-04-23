@@ -16,8 +16,8 @@ const queryClient = new QueryClient()
 
 function MyApp({Component, pageProps: {session, ...pageProps}}) {
     return (
-        <>
-            {/*  Global site tag (gtag.js) - Google Analytics */}
+        <div>
+              {/*Global site tag (gtag.js) - Google Analytics */}
             <Script
                 src="https://www.googletagmanager.com/gtag/js?id=G-E448GXQHG8"
                 strategy="afterInteractive"
@@ -35,7 +35,7 @@ function MyApp({Component, pageProps: {session, ...pageProps}}) {
                     </ToastProvider>
                 </QueryClientProvider>
             </SessionProvider>
-        </>
+        </div>
     )
 }
 

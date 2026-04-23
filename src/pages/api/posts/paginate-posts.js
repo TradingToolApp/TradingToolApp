@@ -12,48 +12,34 @@ export default async function handler(req, res) {
 
 const getPaginatePosts = async (req, res) => {
     try {
-        const {searchKeyword, limit, page} = req.query;
+        const {searchKeyword, limit, page, status} = req.query;
+
+        const where = {
+            slug: {contains: searchKeyword ?? ''},
+            ...(status ? {status} : {}),
+        };
 
         const query = {
-            where: {
-                slug: {
-                    contains: searchKeyword
-                }
-            },
+            where,
             take: parseInt(limit),
             skip: (parseInt(page) - 1) * parseInt(limit),
             include: {
-                translations: true,
-                tags: {
-                    include: {
-                        translations: true,
-                    }
-                },
-                author: {
-                    include: {
-                        translations: true,
-                    }
-                },
-                category: {
-                    include: {
-                        translations: true,
-                    }
-                },
-                comments: true
+                translations: status === 'PUBLIC'
+                    ? {select: {id: true, postId: true, languageCode: true, title: true, excerpt: true, quoteText: true}}
+                    : true,
+                tags: {include: {translations: true}},
+                author: {include: {translations: true}},
+                category: {include: {translations: true}},
             },
             orderBy: [
-                {
-                    trending: 'desc',
-                },
-                {
-                    updatedAt: 'desc',
-                },
+                {trending: 'desc'},
+                {updatedAt: 'desc'},
             ],
-        }
+        };
 
         const [posts, total] = await db.$transaction([
             db.post.findMany(query),
-            db.post.count()
+            db.post.count({where}),
         ]);
         return res.status(200).json({
             success: true,

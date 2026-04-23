@@ -4,8 +4,10 @@ import Link from "next/link";
 import Slider from "react-slick";
 import {FaChevronCircleLeft, FaChevronCircleRight} from "react-icons/fa";
 import useTranslation from "@/hooks/useTranslation";
+import {useSliderPosts} from "@/hooks/data/admin/usePosts";
 
-const SliderTwo = ({slidePost}) => {
+const SliderTwo = () => {
+    const {sliderPosts: slidePost = []} = useSliderPosts();
     const t = useTranslation();
 
     function SlickNextArrow(props) {

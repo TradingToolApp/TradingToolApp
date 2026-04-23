@@ -14,13 +14,8 @@ export const getCategories = async () => {
 
 export const getCategoryBySlug = async (slug) => {
     const category = await db.category.findFirst({
-        where: {},
-        include: {
-            translations: true,
-        },
-        orderBy: {
-            id: 'asc'
-        }
+        where: {cate_slug: slug},
+        include: {translations: true},
     });
     return JSON.parse(JSON.stringify(category));
 }
