@@ -8,18 +8,21 @@ import PostLayoutTwo from "../../components/post/layout/PostLayoutTwo";
 import WidgetPost from "../../components/widget/WidgetPost";
 import WidgetYoutubeList from "@/components/widget/WidgetYoutubeVideo";
 import {Pagination} from "rsuite";
+import {Loader} from "rsuite";
 import {getPostsByCategory} from "@/libs/api-client/prisma/post.api";
 import {getValueByLanguage} from "@/utils/formatData";
 import {AppContext} from "@/providers/app.provider";
 import {usePostsByCategory} from "@/hooks/data/admin/usePosts";
+import db from "@/libs/prisma/db";
 
 const LIMIT = 8;
 
-const PostCategory = ({slug, currentPage, ssrData}) => {
+const PostCategory = ({slug, ssrData}) => {
     const router = useRouter();
     const {language} = useContext(AppContext);
+    const currentPage = parseInt(router.query.page) || 1;
 
-    const {posts, total, category} = usePostsByCategory(slug, LIMIT, currentPage, ssrData);
+    const {posts, total, category, isFetching, isLoading} = usePostsByCategory(slug, LIMIT, currentPage, ssrData);
 
     const cateName = category
         ? (getValueByLanguage(category.translations, language)?.cate ?? slug)
@@ -50,10 +53,26 @@ const PostCategory = ({slug, currentPage, ssrData}) => {
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-8 d-flex flex-column">
-                            <div className="axil-content flex-grow-1">
-                                {posts.map((data) => (
-                                    <PostLayoutTwo data={data} postSizeMd={true} key={data.slug}/>
-                                ))}
+                            <div className="axil-content flex-grow-1" style={{position: 'relative'}}>
+                                {isFetching && (
+                                    <div style={{
+                                        position: 'absolute', inset: 0,
+                                        background: 'rgba(255,255,255,0.65)',
+                                        zIndex: 10,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        minHeight: '200px',
+                                    }}>
+                                        <Loader size="md"/>
+                                    </div>
+                                )}
+                                {isLoading
+                                    ? <div style={{minHeight: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                        <Loader size="lg"/>
+                                    </div>
+                                    : posts.map((data) => (
+                                        <PostLayoutTwo data={data} postSizeMd={true} key={data.slug}/>
+                                    ))
+                                }
                             </div>
                             <div className="row mb-4">
                                 <Pagination
@@ -82,21 +101,26 @@ const PostCategory = ({slug, currentPage, ssrData}) => {
 
 export default PostCategory;
 
-export async function getServerSideProps(context) {
-    const {slug} = context.params;
-    const currentPage = parseInt(context.query.page) || 1;
+export async function getStaticPaths() {
+    try {
+        const categories = await db.category.findMany({select: {cate_slug: true}});
+        const paths = (categories ?? []).map((cat) => ({params: {slug: cat.cate_slug}}));
+        return {paths, fallback: 'blocking'};
+    } catch {
+        return {paths: [], fallback: 'blocking'};
+    }
+}
 
-    const data = await getPostsByCategory(slug, LIMIT, currentPage);
+export async function getStaticProps({params}) {
+    const {slug} = params;
+    const data = await getPostsByCategory(slug, LIMIT, 1);
 
     if (!data.category) {
         return {notFound: true};
     }
 
     return {
-        props: {
-            slug,
-            currentPage,
-            ssrData: {data},
-        },
+        props: {slug, ssrData: {data}},
+        revalidate: 60,
     };
 }

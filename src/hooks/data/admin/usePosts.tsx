@@ -33,12 +33,13 @@ export function usePaginatePosts(searchKeyword = '', limit = 10, page = 1) {
     }
 }
 
-export function useSliderPosts() {
+export function useSliderPosts(initialData?: any) {
     const {language} = useContext(AppContext);
     const queryInfo = useQuery({
         queryKey: ['sliderPosts'],
         queryFn: postAPI.getSliderPosts,
         staleTime: 1000 * 60 * 10,
+        ...(initialData ? {initialData, initialDataUpdatedAt: Date.now()} : {}),
     })
     return {
         ...queryInfo,
@@ -59,12 +60,13 @@ export function useWidgetPosts() {
     }
 }
 
-export function usePublicPaginatePosts(limit = 4, page = 1) {
+export function usePublicPaginatePosts(limit = 4, page = 1, ssrData?: any) {
     const {language} = useContext(AppContext);
     const queryInfo = useQuery({
         queryKey: ['publicPosts', limit, page],
         queryFn: () => postAPI.getPaginatePosts('', limit, page, 'PUBLIC'),
         placeholderData: keepPreviousData,
+        ...(page === 1 && ssrData ? {initialData: ssrData, initialDataUpdatedAt: Date.now()} : {}),
     })
     return {
         ...queryInfo,

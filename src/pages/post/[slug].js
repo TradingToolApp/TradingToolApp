@@ -52,12 +52,15 @@ const PostDetails = ({postData, allPostsData}) => {
 export default PostDetails;
 
 export async function getStaticPaths() {
-    const publicPosts = await getPublicPosts();
-    const paths = publicPosts.map((post) => ({
-        params: {slug: post.slug},
-    }));
-
-    return {paths, fallback: "blocking"};
+    try {
+        const publicPosts = await getPublicPosts();
+        const paths = (publicPosts ?? []).map((post) => ({
+            params: {slug: post.slug},
+        }));
+        return {paths, fallback: "blocking"};
+    } catch {
+        return {paths: [], fallback: "blocking"};
+    }
 }
 
 export async function getStaticProps({params}) {

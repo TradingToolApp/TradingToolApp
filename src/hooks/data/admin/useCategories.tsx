@@ -6,12 +6,13 @@ import {formatCategories, getValueByLanguage} from "@/utils/formatData";
 import {toast} from "react-toastify";
 import {toastConfig} from "@/libs/constant";
 
-export function usePublicCategories() {
+export function usePublicCategories(initialData?: any) {
     const {language} = useContext(AppContext);
     const queryInfo = useQuery({
         queryKey: ['publicCategories'],
         queryFn: categoryAPI.getCategories,
         staleTime: 1000 * 60 * 10,
+        ...(initialData ? {initialData, initialDataUpdatedAt: Date.now()} : {}),
     })
 
     const categories = (queryInfo.data?.data ?? [])

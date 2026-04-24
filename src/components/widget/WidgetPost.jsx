@@ -1,4 +1,5 @@
 import {Tab, Nav} from "react-bootstrap";
+import {Loader} from "rsuite";
 import PostVideoTwo from "../post/layout/PostVideoTwo";
 import {useMemo, useState} from "react";
 import useTranslation from "@/hooks/useTranslation";
@@ -9,7 +10,7 @@ const sortPopular = (posts) => [...posts].sort((a, b) => (b.post_views - a.post_
 
 const WidgetPost = () => {
     const t = useTranslation();
-    const {widgetPosts} = useWidgetPosts();
+    const {widgetPosts, isFetching} = useWidgetPosts();
     const [activeKey, setActiveKey] = useState('recent');
 
     const data = useMemo(() => {
@@ -34,9 +35,14 @@ const WidgetPost = () => {
                 </Nav>
 
                 <Tab.Content>
-                    {data.map((data) => (
-                        <PostVideoTwo data={data} pClass="" key={data.slug}/>
-                    ))}
+                    {isFetching && data.length === 0
+                        ? <div style={{minHeight: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                            <Loader size="sm"/>
+                        </div>
+                        : data.map((item) => (
+                            <PostVideoTwo data={item} pClass="" key={item.slug}/>
+                        ))
+                    }
                 </Tab.Content>
             </Tab.Container>
         </div>
