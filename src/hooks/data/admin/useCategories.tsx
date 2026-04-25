@@ -2,9 +2,29 @@ import {useContext} from "react";
 import {AppContext} from "@/providers/app.provider";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import categoryAPI from "@/libs/api-client/restful/category-api";
-import {formatCategories} from "@/utils/formatData";
+import {formatCategories, getValueByLanguage} from "@/utils/formatData";
 import {toast} from "react-toastify";
 import {toastConfig} from "@/libs/constant";
+
+export function usePublicCategories(initialData?: any) {
+    const {language} = useContext(AppContext);
+    const queryInfo = useQuery({
+        queryKey: ['publicCategories'],
+        queryFn: categoryAPI.getCategories,
+        staleTime: 1000 * 60 * 10,
+        ...(initialData ? {initialData, initialDataUpdatedAt: Date.now()} : {}),
+    })
+
+    const categories = (queryInfo.data?.data ?? [])
+        .filter((cat: any) => cat.cate_img)
+        .map((cat: any) => ({
+            name: getValueByLanguage(cat.translations, language)?.cate ?? '',
+            slug: cat.cate_slug,
+            count: cat._count?.posts ?? 0,
+            cateImg: cat.cate_img,
+        }));
+    return {...queryInfo, categories}
+}
 
 export function useGetCategories(initialData = []) {
     const {language} = useContext(AppContext);

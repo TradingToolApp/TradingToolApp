@@ -3,9 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import Slider from "react-slick";
 import {FaChevronCircleLeft, FaChevronCircleRight} from "react-icons/fa";
+import {Loader} from "rsuite";
 import useTranslation from "@/hooks/useTranslation";
+import {useSliderPosts} from "@/hooks/data/admin/usePosts";
 
-const SliderTwo = ({slidePost}) => {
+const SliderTwo = ({initialData}) => {
+    const {sliderPosts: slidePost = [], isLoading} = useSliderPosts(initialData);
     const t = useTranslation();
 
     function SlickNextArrow(props) {
@@ -74,6 +77,15 @@ const SliderTwo = ({slidePost}) => {
     }, []);
 
 
+    if (isLoading) {
+        return (
+            <div className="banner banner__home-with-slider banner__home-with-slider-two grad-bg shadow-lg rounded-2"
+                 style={{minHeight: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <Loader size="lg" inverse/>
+            </div>
+        );
+    }
+
     return (
         <div className="banner banner__home-with-slider banner__home-with-slider-two grad-bg shadow-lg rounded-2">
             <div className={`axil-shape-circle ${shape}`}/>
@@ -105,13 +117,14 @@ const SliderTwo = ({slidePost}) => {
                 <div className="banner-slider-container-synced banner-slider-container-synced__two">
                     <Slider {...slideSettingsImage} asNavFor={nav1} ref={(slider2 => setNav2(slider2))}
                             className="slick-slider slick-slider-nav">
-                        {slidePost.map((data) => (
+                        {slidePost.map((data, index) => (
                             <div className="item" key={data.slug}>
                                 <Image
                                     src={data.featureImg}
                                     alt={data.title}
                                     width={495}
                                     height={550}
+                                    priority={index === 0}
                                 />
                             </div>
                         ))}

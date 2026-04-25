@@ -6373,10 +6373,9 @@ input[type="radio"] + label::after {
     color: var(--grey-dark-one);
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
     .navbar__style-three .main-navigation li {
         color: #fff;
-        /*color: var(--rs-sidenav-subtle-text);*/
     }
 
     .navbar__style-three .main-navigation a::before,
@@ -10951,3 +10950,6 @@ li {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+/* NProgress route-change bar */
+#nprogress .bar { background: #ff2c54; height: 3px; }
+#nprogress .peg { box-shadow: 0 0 10px #ff2c54, 0 0 5px #ff2c54; }

@@ -102,17 +102,14 @@ const PostAuthor = ({authorData, allPostsData}) => {
 export default PostAuthor;
 
 export async function getStaticPaths() {
-    const posts = await getPublicPosts(['author'])
-
-    const paths = posts.map(post => ({
-        params: {
-            slug: post.author.author_slug
-        }
-    }))
-
-    return {
-        paths,
-        fallback: 'blocking',
+    try {
+        const posts = await getPublicPosts(['author'])
+        const paths = (posts ?? []).map(post => ({
+            params: {slug: post.author.author_slug}
+        }))
+        return {paths, fallback: 'blocking'}
+    } catch {
+        return {paths: [], fallback: 'blocking'}
     }
 }
 

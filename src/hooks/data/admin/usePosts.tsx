@@ -33,6 +33,65 @@ export function usePaginatePosts(searchKeyword = '', limit = 10, page = 1) {
     }
 }
 
+export function useSliderPosts(initialData?: any) {
+    const {language} = useContext(AppContext);
+    const queryInfo = useQuery({
+        queryKey: ['sliderPosts'],
+        queryFn: postAPI.getSliderPosts,
+        staleTime: 1000 * 60 * 10,
+        ...(initialData ? {initialData, initialDataUpdatedAt: Date.now()} : {}),
+    })
+    return {
+        ...queryInfo,
+        sliderPosts: translatePosts(queryInfo?.data?.data, language),
+    }
+}
+
+export function useWidgetPosts() {
+    const {language} = useContext(AppContext);
+    const queryInfo = useQuery({
+        queryKey: ['widgetPosts'],
+        queryFn: postAPI.getWidgetPosts,
+        staleTime: 1000 * 60 * 5,
+    })
+    return {
+        ...queryInfo,
+        widgetPosts: translatePosts(queryInfo?.data?.data, language),
+    }
+}
+
+export function usePublicPaginatePosts(limit = 4, page = 1, ssrData?: any) {
+    const {language} = useContext(AppContext);
+    const queryInfo = useQuery({
+        queryKey: ['publicPosts', limit, page],
+        queryFn: () => postAPI.getPaginatePosts('', limit, page, 'PUBLIC'),
+        placeholderData: keepPreviousData,
+        ...(page === 1 && ssrData ? {initialData: ssrData, initialDataUpdatedAt: Date.now()} : {}),
+    })
+    return {
+        ...queryInfo,
+        posts: translatePosts(queryInfo?.data?.data?.posts, language),
+        total: queryInfo?.data?.data?.total ?? 0,
+    }
+}
+
+export function usePostsByCategory(cate_slug: string, limit = 8, page = 1, ssrData?: any) {
+    const {language} = useContext(AppContext);
+    const queryInfo = useQuery({
+        queryKey: ['postsByCategory', cate_slug, limit, page],
+        queryFn: () => postAPI.getPostsByCategory(cate_slug, limit, page),
+        placeholderData: (prev: any) =>
+            prev?.data?.category?.cate_slug === cate_slug ? prev : undefined,
+        ...(page === 1 && ssrData ? {initialData: ssrData, initialDataUpdatedAt: Date.now()} : {}),
+    })
+    return {
+        ...queryInfo,
+        posts: translatePosts(queryInfo?.data?.data?.posts, language),
+        total: queryInfo?.data?.data?.total ?? 0,
+        category: queryInfo?.data?.data?.category,
+    }
+}
+
 export function useGetPublicPosts(initialData = []) {
     const {language} = useContext(AppContext);
     const queryInfo = useQuery({

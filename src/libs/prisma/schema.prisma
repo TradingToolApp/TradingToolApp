@@ -102,7 +102,7 @@ model Category {
 
   // Relations
   translations CategoryTranslation[]
-  Post         Post[]
+  posts         Post[]
 }
 
 // Table for category translations
